@@ -25,7 +25,20 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 		super.tearDown();
 	}
 	
-	public void testCorrectActivity() throws Exception {
-		solo.assertCurrentActivity("Wrong activity", Quesionnaire.class);
+	public void testHasQuestions() throws Exception {
+		checkForText("Sjukdomskänsla");
+		checkForText("Feber > 38");
+		checkForText("Öronvärk");
+		checkForText("Halsont");
+		checkForText("Snuva");
+		checkForText("Magbesvär");
+		checkForText("Torrhosta");
+		checkForText("Slemhosta");
+		checkForText("Morgonupphostning");
+		checkForText("Väsentligen frisk");
+	}
+	
+	private void checkForText(String text)  {
+		assertTrue("Should have text: " + text, solo.searchText(text));
 	}
 }
