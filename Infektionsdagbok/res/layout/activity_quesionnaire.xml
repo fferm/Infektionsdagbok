@@ -1,79 +1,205 @@
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    >
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/malaiseTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:text="Sjukdomskänsla"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <ToggleButton
+        android:id="@+id/malaiseSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/malaiseTV"
+        android:layout_toRightOf="@+id/malaiseTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/feverTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/malaiseTV"
+        android:layout_gravity="left"
         android:text="Feber > 38"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView3"
+    <ToggleButton
+        android:id="@+id/feverSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/feverTV"
+        android:layout_below="@+id/malaiseSCT"
+        android:layout_toRightOf="@+id/feverTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/earAcheTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/feverTV"
+        android:layout_gravity="left"
         android:text="Öronvärk"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView4"
+    <ToggleButton
+        android:id="@+id/earAcheSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/earAcheTV"
+        android:layout_below="@id/feverSCT"
+        android:layout_toRightOf="@+id/earAcheTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/soreThroatTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/earAcheTV"
+        android:layout_gravity="left"
         android:text="Halsont"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView5"
+    <ToggleButton
+        android:id="@+id/soreThroatSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/soreThroatTV"
+        android:layout_below="@id/earAcheSCT"
+        android:layout_toRightOf="@+id/soreThroatTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/runnyNoseTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/soreThroatTV"
+        android:layout_gravity="left"
         android:text="Snuva"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView6"
+    <ToggleButton
+        android:id="@+id/runnyNoseSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/runnyNoseTV"
+        android:layout_below="@+id/soreThroatSCT"
+        android:layout_toRightOf="@+id/runnyNoseTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/stommacAcheTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/runnyNoseTV"
+        android:layout_gravity="left"
         android:text="Magbesvär"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView7"
+    <ToggleButton
+        android:id="@+id/stommacAcheSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/stommacAcheTV"
+        android:layout_below="@+id/runnyNoseSCT"
+        android:layout_toRightOf="@+id/stommacAcheTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/dryCoughTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/stommacAcheTV"
+        android:layout_gravity="left"
         android:text="Torrhosta"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView8"
+    <ToggleButton
+        android:id="@+id/dryCoughSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dryCoughTV"
+        android:layout_below="@+id/stommacAcheSCT"
+        android:layout_toRightOf="@+id/dryCoughTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/wetCoughTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dryCoughTV"
+        android:layout_gravity="left"
         android:text="Slemhosta"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView9"
+    <ToggleButton
+        android:id="@+id/wetCoughSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/wetCoughTV"
+        android:layout_below="@+id/dryCoughSCT"
+        android:layout_toRightOf="@+id/wetCoughTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+    <TextView
+        android:id="@+id/morningCoughTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wetCoughTV"
+        android:layout_gravity="left"
         android:text="Morgonupphostning"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <TextView
-        android:id="@+id/textView10"
+    <ToggleButton
+        android:id="@+id/morningCoughSCT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Väsentligen frisk"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
-</LinearLayout>
+        android:layout_alignBottom="@+id/morningCoughTV"
+        android:layout_below="@+id/wetCoughSCT"
+        android:layout_toRightOf="@+id/morningCoughTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
 
+    <TextView
+        android:id="@+id/generallyWellTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/morningCoughTV"
+        android:layout_gravity="left"
+        android:text="Väsentligen frisk"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ToggleButton
+        android:id="@+id/generallyWellSCT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/generallyWellTV"
+        android:layout_below="@+id/morningCoughSCT"
+        android:layout_toRightOf="@+id/generallyWellTV"
+        android:text="ToggleButton"
+        android:textOff="Nej"
+        android:textOn="Ja" />
+
+</RelativeLayout>
