@@ -1,11 +1,12 @@
 package se.fermitet.android.infektionsdagbok.test;
 
-import com.robotium.solo.Solo;
-
 import se.fermitet.android.infektionsdagbok.Quesionnaire;
+import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
-import android.widget.ToggleButton;
+
+import com.robotium.solo.Solo;
 
 public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionnaire> {
 
@@ -28,43 +29,24 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 	}
 	
 	public void testHasQuestions() throws Exception {
-		checkForText("Sjukdomskänsla");
-		checkForText("Feber > 38");
-		checkForText("Öronvärk");
-		checkForText("Halsont");
-		checkForText("Snuva");
-		checkForText("Magbesvär");
-		checkForText("Torrhosta");
-		checkForText("Slemhosta");
-		checkForText("Morgonupphostning");
-		checkForText("Väsentligen frisk");
-		
-		checkToggleButton("malaise");
-		checkToggleButton("fever");
-		checkToggleButton("earAche");
-		checkToggleButton("soreThroat");
-		checkToggleButton("runnyNose");
-		checkToggleButton("stommacAche");
-		checkToggleButton("dryCough");
-		checkToggleButton("wetCough");
-		checkToggleButton("morningCough");
-		checkToggleButton("generallyWell");
+		checkQuestion(R.id.malaise, "Sjukdomskänsla");
+		checkQuestion(R.id.fever, "Feber > 38");
+		checkQuestion(R.id.earAche, "Öronvärk");
+		checkQuestion(R.id.soreThroat, "Halsont");
+		checkQuestion(R.id.runnyNose, "Snuva");
+		checkQuestion(R.id.stommacAche, "Magbesvär");
+		checkQuestion(R.id.dryCough, "Torrhosta");
+		checkQuestion(R.id.wetCough, "Slemhosta");
+		checkQuestion(R.id.morningCough, "Morgonupphostning");
+		checkQuestion(R.id.generallyWell, "Väsentligen frisk");
 	}
 	
-	private void checkForText(String text)  {
-		assertTrue("Should have text: " + text, solo.searchText(text));
-	}
-	
-	private void checkToggleButton(String name) {
-		View view = solo.getView("@id/" + name + "SCT");
+	private void checkQuestion(int id, String questionText) {
+		View view = solo.getView(id);
 		assertNotNull(view);
 		
-		assertTrue(name + " view should be a ToggleButton", view instanceof ToggleButton);
-		ToggleButton tb = (ToggleButton) view;
-		
-		assertEquals(name + " toggle button off text", "Nej", tb.getTextOff().toString());
-		assertEquals(name + " toggle button on text", "Ja", tb.getTextOn().toString());
-	}
+		assertTrue(questionText + " view should be a QuestionView", view instanceof QuestionView);
 
+	}
 }
 
