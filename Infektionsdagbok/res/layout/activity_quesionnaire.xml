@@ -73,6 +73,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/morningCough"
         android:text="Väsentligen frisk" />
- />
+
 
 </RelativeLayout>
