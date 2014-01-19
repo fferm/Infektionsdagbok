@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/se.fermitet.android.infektionsdagbok.views"
     android:id="@+id/parentOfQuestions"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -7,84 +6,72 @@
     android:paddingTop="16dp" >
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
+        android:id="@+id/generallyWell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Väsentligen frisk" />
+
+    <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/malaise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sjukdomskänsla"
-         />
+        android:layout_below="@id/generallyWell"
+        android:text="Sjukdomskänsla" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/fever"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/malaise"
-        android:text="Feber > 38" 
-        />
+        android:text="Feber > 38" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/earAche"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fever"
-        android:text="Öronvärk" 
-      />
+        android:text="Öronvärk" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/soreThroat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/earAche"
-        android:text="Halsont" 
-        />
+        android:text="Halsont" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/runnyNose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/soreThroat"
-        android:text="Snuva" 
-        />
+        android:text="Snuva" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/stommacAche"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/runnyNose"
-        android:text="Magbesvär" 
-       />
+        android:text="Magbesvär" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/dryCough"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/stommacAche"
-        android:text="Torrhosta" 
-        
-/>
+        android:text="Torrhosta" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/wetCough"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dryCough"
-        android:text="Slemhosta" 
-      />
+        android:text="Slemhosta" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/morningCough"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/wetCough"
-        android:text="Morgonupphostning" 
-/>
-
-    <se.fermitet.android.infektionsdagbok.views.QuestionView
-        android:id="@+id/generallyWell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/morningCough"
-        android:text="Väsentligen frisk"
-   />
-
+        android:text="Morgonupphostning" />
 
 </RelativeLayout>
