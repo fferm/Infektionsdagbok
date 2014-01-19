@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok;
 
+import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,19 +23,9 @@ public class Quesionnaire extends Activity {
     }
 
 	private void setupViews() {
-/*		QuestionView view = (QuestionView) findViewById(R.id.aQuestionLast);
-		
-    	ViewGroup parentOfQuestions = (ViewGroup) findViewById(R.id.parentOfQuestions);
-    	
-    	QuestionView newView = new QuestionView(this);
-    	
-    	RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    	params.addRule(RelativeLayout.BELOW, R.id.aQuestionLast);
-    	newView.setQuestion("en ny fråga");
-
-    	parentOfQuestions.addView(newView, params);*/
-    	
+		QuestionView generallyWell = (QuestionView) findViewById(R.id.generallyWell);
+		generallyWell.setChecked(true);
 	}
-	
+
 
 }
