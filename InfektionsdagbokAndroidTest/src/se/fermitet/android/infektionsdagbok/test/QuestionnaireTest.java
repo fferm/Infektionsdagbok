@@ -30,19 +30,19 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 	}
 
 	public void testInitialsOnQuestions() throws Exception {
-		checkQuestion(R.id.malaise, "Sjukdomskänsla", false);
-		checkQuestion(R.id.fever, "Feber > 38", false);
-		checkQuestion(R.id.earAche, "Öronvärk", false);
-		checkQuestion(R.id.soreThroat, "Halsont", false);
-		checkQuestion(R.id.runnyNose, "Snuva", false);
-		checkQuestion(R.id.stommacAche, "Magbesvär", false);
-		checkQuestion(R.id.dryCough, "Torrhosta", false);
-		checkQuestion(R.id.wetCough, "Slemhosta", false);
-		checkQuestion(R.id.morningCough, "Morgonupphostning", false);
-		checkQuestion(R.id.generallyWell, "Väsentligen frisk", true);
+		checkQuestionInitialSetup(R.id.generallyWell, "Väsentligen frisk", true, true);
+		checkQuestionInitialSetup(R.id.malaise, "Sjukdomskänsla", false, false);
+		checkQuestionInitialSetup(R.id.fever, "Feber > 38", false, false);
+		checkQuestionInitialSetup(R.id.earAche, "Öronvärk", false, false);
+		checkQuestionInitialSetup(R.id.soreThroat, "Halsont", false, false);
+		checkQuestionInitialSetup(R.id.runnyNose, "Snuva", false, false);
+		checkQuestionInitialSetup(R.id.stommacAche, "Magbesvär", false, false);
+		checkQuestionInitialSetup(R.id.dryCough, "Torrhosta", false, false);
+		checkQuestionInitialSetup(R.id.wetCough, "Slemhosta", false, false);
+		checkQuestionInitialSetup(R.id.morningCough, "Morgonupphostning", false, false);
 	}
 
-	private void checkQuestion(int id, String questionText, boolean checked) {
+	private void checkQuestionInitialSetup(int id, String questionText, boolean checked, boolean enabled) {
 		QuestionView view = (QuestionView) solo.getView(id);
 		assertNotNull(view);
 
@@ -51,6 +51,9 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 
 		CompoundButton selector =  (CompoundButton) view.findViewById(R.id.answerSelector);
 		assertEquals(getNameFromId(id) + " selector has wrong state", checked, selector.isChecked());
+
+		assertTrue(getNameFromId(id) + " text should be enabled", tv.isEnabled());
+		assertEquals(getNameFromId(id) + " selector enabled value", enabled, selector.isEnabled());
 	}
 
 

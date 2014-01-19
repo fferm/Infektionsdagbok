@@ -25,6 +25,7 @@ public class Quesionnaire extends Activity {
 	private void setupViews() {
 		QuestionView generallyWell = (QuestionView) findViewById(R.id.generallyWell);
 		generallyWell.setChecked(true);
+		generallyWell.setEnabled(true);
 	}
 
 

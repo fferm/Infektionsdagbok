@@ -16,6 +16,7 @@ public class QuestionView extends LinearLayout {
 
 	private final String questionText;
 	private boolean checked = false;
+	private boolean enabled = false;
 
 	public QuestionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -40,6 +41,11 @@ public class QuestionView extends LinearLayout {
 		setupQuestionItems();
 	}
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		setupQuestionItems();
+	}
 
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
@@ -47,6 +53,7 @@ public class QuestionView extends LinearLayout {
 
 		CompoundButton selector = (CompoundButton) findViewById(R.id.answerSelector);
 		selector.setChecked(this.checked);
+		selector.setEnabled(this.enabled);
 	}
 
 
