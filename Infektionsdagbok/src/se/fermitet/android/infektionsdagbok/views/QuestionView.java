@@ -16,8 +16,6 @@ public class QuestionView extends LinearLayout {
 	private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
 
 	private final String questionText;
-	private boolean checked = false;
-	private boolean enabled = false;
 
 	public QuestionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,38 +36,32 @@ public class QuestionView extends LinearLayout {
 	}
 
 	public void setChecked(boolean checked) {
-		this.checked = checked;
-		setupQuestionItems();
+		getAnswerSelector().setChecked(checked);
 	}
 
 	public boolean isChecked() {
-		return this.checked;
+		return getAnswerSelector().isChecked();
 	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-		setupQuestionItems();
+		getAnswerSelector().setEnabled(enabled);
 	}
 
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
 
-		CompoundButton selector = (CompoundButton) findViewById(R.id.answerSelector);
-		selector.setChecked(this.checked);
-		selector.setEnabled(this.enabled);
-		selector.setOnClickListener(new OnClickListener() {
+		getAnswerSelector().setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				answerSelectorClicked((CompoundButton) v);
+				QuestionView.this.performClick();
 			}
 		});
 	}
 
-	private void answerSelectorClicked(CompoundButton answerSelector) {
-		this.checked = answerSelector.isChecked();
-		this.performClick();
+	private CompoundButton getAnswerSelector() {
+		return (CompoundButton) findViewById(R.id.answerSelector);
 	}
 }

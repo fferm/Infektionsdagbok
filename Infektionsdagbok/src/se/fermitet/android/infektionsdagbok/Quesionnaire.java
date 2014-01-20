@@ -1,5 +1,8 @@
 package se.fermitet.android.infektionsdagbok;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,7 +30,6 @@ public class Quesionnaire extends Activity {
 	private void setupViews() {
 		QuestionView generallyWell = (QuestionView) findViewById(R.id.generallyWell);
 		generallyWell.setChecked(true);
-		generallyWell.setEnabled(true);
 		generallyWell.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -35,6 +37,12 @@ public class Quesionnaire extends Activity {
 				generallyWellClicked((QuestionView) v);
 			}
 		});
+
+		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
+			QuestionView question = iter.next();
+			question.setEnabled(question.getId() == R.id.generallyWell);
+		}
+
 	}
 
 	private void generallyWellClicked(QuestionView generallyWell) {
@@ -46,23 +54,30 @@ public class Quesionnaire extends Activity {
 	}
 
 	private void enableAllQuestions() {
-		ViewGroup parentOfQuestions = (ViewGroup) findViewById(R.id.parentOfQuestions);
-
-		for (int i = 0; i < parentOfQuestions.getChildCount(); i++) {
-			QuestionView question = (QuestionView) parentOfQuestions.getChildAt(i);
+		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
+			QuestionView question = iter.next();
 			question.setEnabled(true);
 		}
 	}
 
 	private void disableAllSicknessQuestions() {
-		ViewGroup parentOfQuestions = (ViewGroup) findViewById(R.id.parentOfQuestions);
-
-		for (int i = 0; i < parentOfQuestions.getChildCount(); i++) {
-			QuestionView question = (QuestionView) parentOfQuestions.getChildAt(i);
+		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
+			QuestionView question = iter.next();
 			if (question.getId() != R.id.generallyWell) {
 				question.setEnabled(false);
 			}
 		}
+	}
+
+	private Iterator<QuestionView> questionIterator() {
+		ArrayList<QuestionView> arrayList = new ArrayList<QuestionView>();
+
+		ViewGroup parentOfQuestions = (ViewGroup) findViewById(R.id.parentOfQuestions);
+		for (int i = 0; i < parentOfQuestions.getChildCount(); i++) {
+			arrayList.add((QuestionView) parentOfQuestions.getChildAt(i));
+		}
+
+		return arrayList.iterator();
 	}
 
 
