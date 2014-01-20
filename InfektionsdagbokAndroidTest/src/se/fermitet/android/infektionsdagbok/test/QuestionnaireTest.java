@@ -30,32 +30,92 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 	}
 
 	public void testInitialsOnQuestions() throws Exception {
-		checkQuestionInitialSetup(R.id.generallyWell, "Väsentligen frisk", true, true);
-		checkQuestionInitialSetup(R.id.malaise, "Sjukdomskänsla", false, false);
-		checkQuestionInitialSetup(R.id.fever, "Feber > 38", false, false);
-		checkQuestionInitialSetup(R.id.earAche, "Öronvärk", false, false);
-		checkQuestionInitialSetup(R.id.soreThroat, "Halsont", false, false);
-		checkQuestionInitialSetup(R.id.runnyNose, "Snuva", false, false);
-		checkQuestionInitialSetup(R.id.stommacAche, "Magbesvär", false, false);
-		checkQuestionInitialSetup(R.id.dryCough, "Torrhosta", false, false);
-		checkQuestionInitialSetup(R.id.wetCough, "Slemhosta", false, false);
-		checkQuestionInitialSetup(R.id.morningCough, "Morgonupphostning", false, false);
+		assertQuestionFullState(R.id.generallyWell, "Väsentligen frisk", true, true);
+		assertQuestionFullState(R.id.malaise, "Sjukdomskänsla", false, false);
+		assertQuestionFullState(R.id.fever, "Feber > 38", false, false);
+		assertQuestionFullState(R.id.earAche, "Öronvärk", false, false);
+		assertQuestionFullState(R.id.soreThroat, "Halsont", false, false);
+		assertQuestionFullState(R.id.runnyNose, "Snuva", false, false);
+		assertQuestionFullState(R.id.stommacAche, "Magbesvär", false, false);
+		assertQuestionFullState(R.id.dryCough, "Torrhosta", false, false);
+		assertQuestionFullState(R.id.wetCough, "Slemhosta", false, false);
+		assertQuestionFullState(R.id.morningCough, "Morgonupphostning", false, false);
 	}
 
-	private void checkQuestionInitialSetup(int id, String questionText, boolean checked, boolean enabled) {
+	private void assertQuestionFullState(int id, String questionText, boolean checked, boolean enabled) {
 		QuestionView view = (QuestionView) solo.getView(id);
 		assertNotNull(view);
 
+		assertText(id, questionText);
+		assertChecked(id, checked);
+		assertEnabled(id, enabled);
+	}
+
+	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
+		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
+
+		assertEnabled(R.id.malaise, true);
+		assertEnabled(R.id.fever, true);
+		assertEnabled(R.id.earAche, true);
+		assertEnabled(R.id.soreThroat, true);
+		assertEnabled(R.id.runnyNose, true);
+		assertEnabled(R.id.stommacAche, true);
+		assertEnabled(R.id.dryCough, true);
+		assertEnabled(R.id.wetCough, true);
+		assertEnabled(R.id.morningCough, true);
+		assertEnabled(R.id.generallyWell, true);
+		assertChecked(R.id.generallyWell, false);
+
+		clickOnCompoundButtonOfQuestionWithId(R.id.dryCough); // Change some state
+		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
+		Thread.sleep(500);
+
+
+		assertEnabled(R.id.malaise, false);
+		assertEnabled(R.id.fever, false);
+		assertEnabled(R.id.earAche, false);
+		assertEnabled(R.id.soreThroat, false);
+		assertEnabled(R.id.runnyNose, false);
+		assertEnabled(R.id.stommacAche, false);
+		assertEnabled(R.id.dryCough, false);
+		assertEnabled(R.id.wetCough, false);
+		assertEnabled(R.id.morningCough, false);
+		assertEnabled(R.id.generallyWell, true);
+		assertChecked(R.id.dryCough, true);
+		assertChecked(R.id.generallyWell, true);
+	}
+
+
+	private void assertText(int id, String text) {
+		QuestionView view = (QuestionView) solo.getView(id);
+
 		TextView tv = (TextView) view.findViewById(R.id.questionText);
-		assertEquals(getNameFromId(id) + " question text", questionText, tv.getText());
+		assertEquals(getNameFromId(id) + " question text", text, tv.getText());
+	}
+
+	private void assertChecked(int id, boolean checked) {
+		QuestionView view = (QuestionView) solo.getView(id);
 
 		CompoundButton selector =  (CompoundButton) view.findViewById(R.id.answerSelector);
 		assertEquals(getNameFromId(id) + " selector has wrong state", checked, selector.isChecked());
+	}
+
+	private void assertEnabled(int id, boolean enabled) {
+		QuestionView view = (QuestionView) solo.getView(id);
+
+		CompoundButton selector =  (CompoundButton) view.findViewById(R.id.answerSelector);
+		TextView tv = (TextView) view.findViewById(R.id.questionText);
 
 		assertTrue(getNameFromId(id) + " text should be enabled", tv.isEnabled());
 		assertEquals(getNameFromId(id) + " selector enabled value", enabled, selector.isEnabled());
 	}
 
+	private void clickOnCompoundButtonOfQuestionWithId(int id) {
+		QuestionView questionView = (QuestionView) solo.getView(id);
+
+		CompoundButton answer = (CompoundButton) questionView.findViewById(R.id.answerSelector);
+		solo.clickOnView(answer);
+	}
 
 	private String getNameFromId(int id) {
 		if (id == R.id.malaise) return "malaise";

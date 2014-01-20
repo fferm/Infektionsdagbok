@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +42,10 @@ public class QuestionView extends LinearLayout {
 		setupQuestionItems();
 	}
 
+	public boolean isChecked() {
+		return this.checked;
+	}
+
 	@Override
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -54,7 +59,17 @@ public class QuestionView extends LinearLayout {
 		CompoundButton selector = (CompoundButton) findViewById(R.id.answerSelector);
 		selector.setChecked(this.checked);
 		selector.setEnabled(this.enabled);
+		selector.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				answerSelectorClicked((CompoundButton) v);
+			}
+		});
 	}
 
-
+	private void answerSelectorClicked(CompoundButton answerSelector) {
+		this.checked = answerSelector.isChecked();
+		this.performClick();
+	}
 }
