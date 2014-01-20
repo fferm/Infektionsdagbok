@@ -28,6 +28,12 @@ public class Quesionnaire extends Activity {
     }
 
 	private void setupViews() {
+		setupGenerallyWell();
+		diableAllButGenerallyWell();
+	}
+
+
+	private void setupGenerallyWell() {
 		QuestionView generallyWell = (QuestionView) findViewById(R.id.generallyWell);
 		generallyWell.setChecked(true);
 		generallyWell.setOnClickListener(new View.OnClickListener() {
@@ -37,12 +43,14 @@ public class Quesionnaire extends Activity {
 				generallyWellClicked((QuestionView) v);
 			}
 		});
+	}
 
+
+	private void diableAllButGenerallyWell() {
 		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
 			QuestionView question = iter.next();
 			question.setEnabled(question.getId() == R.id.generallyWell);
 		}
-
 	}
 
 	private void generallyWellClicked(QuestionView generallyWell) {
