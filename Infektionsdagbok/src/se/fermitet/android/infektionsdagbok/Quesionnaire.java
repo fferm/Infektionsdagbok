@@ -3,12 +3,15 @@ package se.fermitet.android.infektionsdagbok;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.joda.time.DateTime;
+
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class Quesionnaire extends Activity {
 
@@ -30,6 +33,13 @@ public class Quesionnaire extends Activity {
 	private void setupViews() {
 		setupGenerallyWell();
 		diableAllButGenerallyWell();
+		setupWeekDisplay();
+	}
+
+
+	private void setupWeekDisplay() {
+		TextView tv = (TextView) findViewById(R.id.weekDisplay);
+		tv.setText("Vecka: " + new DateTime().weekOfWeekyear().getAsText());
 	}
 
 
@@ -80,9 +90,12 @@ public class Quesionnaire extends Activity {
 	private Iterator<QuestionView> questionIterator() {
 		ArrayList<QuestionView> arrayList = new ArrayList<QuestionView>();
 
-		ViewGroup parentOfQuestions = (ViewGroup) findViewById(R.id.parentOfQuestions);
-		for (int i = 0; i < parentOfQuestions.getChildCount(); i++) {
-			arrayList.add((QuestionView) parentOfQuestions.getChildAt(i));
+		ViewGroup topLayout = (ViewGroup) findViewById(R.id.questionsLayout);
+		for (int i = 0; i < topLayout.getChildCount(); i++) {
+			View v = topLayout.getChildAt(i);
+			if (v instanceof QuestionView) {
+				arrayList.add((QuestionView) v);
+			}
 		}
 
 		return arrayList.iterator();

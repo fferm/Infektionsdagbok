@@ -1,14 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parentOfQuestions"
+    android:id="@+id/questionsLayout"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingTop="16dp" >
 
+    <TextView
+        android:id="@+id/weekDisplay"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:paddingBottom="10dp"/>
+
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/generallyWell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/weekDisplay"
         android:text="Väsentligen frisk" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView

@@ -1,5 +1,7 @@
 package se.fermitet.android.infektionsdagbok.test;
 
+import org.joda.time.DateTime;
+
 import se.fermitet.android.infektionsdagbok.Quesionnaire;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
@@ -29,7 +31,14 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 		super.tearDown();
 	}
 
-	public void testInitialsOnQuestions() throws Exception {
+	public void testInitials() throws Exception {
+		assertInitialsOnQuestions();
+
+		TextView weekView = solo.getText(new DateTime().weekOfWeekyear().getAsText());
+		assertTrue("Week number should be visible", R.id.weekDisplay == weekView.getId());
+	}
+
+	private void assertInitialsOnQuestions() {
 		assertQuestionFullState(R.id.generallyWell, "VŠsentligen frisk", true, true);
 		assertQuestionFullState(R.id.malaise, "SjukdomskŠnsla", false, false);
 		assertQuestionFullState(R.id.fever, "Feber > 38", false, false);
