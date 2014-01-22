@@ -2,8 +2,6 @@ package se.fermitet.android.infektionsdagbok;
 
 import org.joda.time.DateTime;
 
-import se.fermitet.android.infektionsdagbok.Quesionnaire;
-import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.CompoundButton;
@@ -34,8 +32,9 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 	public void testInitials() throws Exception {
 		assertInitialsOnQuestions();
 
-		TextView weekView = solo.getText(new DateTime().weekOfWeekyear().getAsText());
-		assertTrue("Week number should be visible", R.id.weekDisplay == weekView.getId());
+		TextView weekView = (TextView) solo.getView(R.id.weekDisplay);
+		DateTime now = new DateTime();
+		assertEquals("week text", "" + now.getYear() + ":" + now.getWeekOfWeekyear(), weekView.getText());
 	}
 
 	private void assertInitialsOnQuestions() {

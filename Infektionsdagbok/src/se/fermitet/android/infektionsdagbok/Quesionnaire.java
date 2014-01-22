@@ -39,7 +39,9 @@ public class Quesionnaire extends Activity {
 
 	private void setupWeekDisplay() {
 		TextView tv = (TextView) findViewById(R.id.weekDisplay);
-		tv.setText("Vecka: " + new DateTime().weekOfWeekyear().getAsText());
+		DateTime now = new DateTime();
+
+		tv.setText("" + now.getYear() + ":" + now.getWeekOfWeekyear());
 	}
 
 
