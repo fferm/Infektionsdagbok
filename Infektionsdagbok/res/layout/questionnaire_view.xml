@@ -1,5 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/questionsLayout"
+<?xml version="1.0" encoding="utf-8"?>
+<se.fermitet.android.infektionsdagbok.views.QuestionnaireView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/questionnaireView"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="16dp"
@@ -106,4 +108,6 @@
         android:layout_below="@id/wetCough"
         android:text="Morgonupphostning" />
 
-</RelativeLayout>
+    
+
+</se.fermitet.android.infektionsdagbok.views.QuestionnaireView>
