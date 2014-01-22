@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.views;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
@@ -15,6 +16,10 @@ import android.widget.TextView;
 
 public class QuestionnaireView extends RelativeLayout {
 
+	private QuestionView generallyWell;
+	private TextView weekDisplay;
+	private List<QuestionView> questionList;
+
 	public QuestionnaireView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -22,17 +27,31 @@ public class QuestionnaireView extends RelativeLayout {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
+		attachReferencesToViews();
         setupViews();
+	}
+
+	private void attachReferencesToViews() {
+		generallyWell = (QuestionView) findViewById(R.id.generallyWell);
+		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
+
+		questionList = new ArrayList<QuestionView>();
+		ViewGroup topLayout = (ViewGroup) findViewById(R.id.questionnaireView);
+		for (int i = 0; i < topLayout.getChildCount(); i++) {
+			View v = topLayout.getChildAt(i);
+			if (v instanceof QuestionView) {
+				questionList.add((QuestionView) v);
+			}
+		}
 	}
 
 	private void setupViews() {
 		setupGenerallyWell();
-		diableAllButGenerallyWell();
+		disableAllButGenerallyWell();
 		setupWeekDisplay();
 	}
 
 	private void setupGenerallyWell() {
-		QuestionView generallyWell = (QuestionView) findViewById(R.id.generallyWell);
 		generallyWell.setChecked(true);
 		generallyWell.setOnClickListener(new View.OnClickListener() {
 
@@ -43,56 +62,31 @@ public class QuestionnaireView extends RelativeLayout {
 		});
 	}
 
-	private void diableAllButGenerallyWell() {
-		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
+	private void disableAllButGenerallyWell() {
+		for (Iterator<QuestionView> iter = questionList.iterator(); iter.hasNext(); ) {
 			QuestionView question = iter.next();
-			question.setEnabled(question.getId() == R.id.generallyWell);
+			question.setEnabled(question == this.generallyWell);
 		}
 	}
 
 	private void setupWeekDisplay() {
-		TextView tv = (TextView) findViewById(R.id.weekDisplay);
 		DateTime now = new DateTime();
-
-		tv.setText("" + now.getYear() + ":" + now.getWeekOfWeekyear());
+		weekDisplay.setText("" + now.getYear() + ":" + now.getWeekOfWeekyear());
 	}
 
 	private void generallyWellClicked(QuestionView generallyWell) {
 		if (! generallyWell.isChecked()) {
 			enableAllQuestions();
 		} else {
-			disableAllSicknessQuestions();
+			disableAllButGenerallyWell();
 		}
 	}
 
 	private void enableAllQuestions() {
-		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
+		for (Iterator<QuestionView> iter = questionList.iterator(); iter.hasNext(); ) {
 			QuestionView question = iter.next();
 			question.setEnabled(true);
 		}
-	}
-
-	private void disableAllSicknessQuestions() {
-		for (Iterator<QuestionView> iter = questionIterator(); iter.hasNext(); ) {
-			QuestionView question = iter.next();
-			if (question.getId() != R.id.generallyWell) {
-				question.setEnabled(false);
-			}
-		}
-	}
-
-	private Iterator<QuestionView> questionIterator() {
-		ArrayList<QuestionView> arrayList = new ArrayList<QuestionView>();
-
-		ViewGroup topLayout = (ViewGroup) findViewById(R.id.questionnaireView);
-		for (int i = 0; i < topLayout.getChildCount(); i++) {
-			View v = topLayout.getChildAt(i);
-			if (v instanceof QuestionView) {
-				arrayList.add((QuestionView) v);
-			}
-		}
-
-		return arrayList.iterator();
 	}
 
 
