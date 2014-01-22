@@ -1,4 +1,4 @@
-package se.fermitet.android.infektionsdagbok.test;
+package se.fermitet.android.infektionsdagbok;
 
 import org.joda.time.DateTime;
 
