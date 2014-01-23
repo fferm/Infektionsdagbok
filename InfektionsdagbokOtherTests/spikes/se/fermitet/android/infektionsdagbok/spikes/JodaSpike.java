@@ -8,7 +8,6 @@ public class JodaSpike {
 		System.out.println("Short text: " + dt.weekOfWeekyear().getAsShortText());
 		System.out.println("String: " + dt.weekOfWeekyear().getAsString());
 		System.out.println("Text: " + dt.weekOfWeekyear().getAsText());
-
 	}
 
 }
