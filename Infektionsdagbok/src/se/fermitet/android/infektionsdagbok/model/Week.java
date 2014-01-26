@@ -23,6 +23,7 @@ public class Week {
 		return dateTime.getWeekOfWeekyear();
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (! (o instanceof Week)) return false;

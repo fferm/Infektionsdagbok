@@ -17,44 +17,61 @@ public class WeekAnswers {
 	public boolean wetCough;
 	public boolean morningCough;
 
+
 	@Override
-	public boolean equals(Object o) {
-		if (!(o instanceof WeekAnswers)) return false;
-
-		WeekAnswers other = (WeekAnswers) o;
-
-		return (this.week.equals(other.week)) &&
-				(this.generallyWell == other.generallyWell) &&
-				(this.malaise == other.malaise) &&
-				(this.fever == other.fever) &&
-				(this.earAche == other.earAche) &&
-				(this.soreThroat == other.soreThroat) &&
-				(this.runnyNose == other.runnyNose) &&
-				(this.stommacAche == other.stommacAche) &&
-				(this.dryCough == other.dryCough) &&
-				(this.wetCough == other.wetCough) &&
-				(this.morningCough == other.morningCough);
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		WeekAnswers other = (WeekAnswers) obj;
+		if (this.dryCough != other.dryCough)
+			return false;
+		if (this.earAche != other.earAche)
+			return false;
+		if (this.fever != other.fever)
+			return false;
+		if (this.generallyWell != other.generallyWell)
+			return false;
+		if (this.malaise != other.malaise)
+			return false;
+		if (this.morningCough != other.morningCough)
+			return false;
+		if (this.runnyNose != other.runnyNose)
+			return false;
+		if (this.soreThroat != other.soreThroat)
+			return false;
+		if (this.stommacAche != other.stommacAche)
+			return false;
+		if (this.week == null) {
+			if (other.week != null)
+				return false;
+		} else if (!this.week.equals(other.week))
+			return false;
+		if (this.wetCough != other.wetCough)
+			return false;
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		int hash = week == null ? 0 : week.hashCode();
-		hash = addBooleanHash(hash, generallyWell);
-		hash = addBooleanHash(hash, malaise);
-		hash = addBooleanHash(hash, fever);
-		hash = addBooleanHash(hash, earAche);
-		hash = addBooleanHash(hash, soreThroat);
-		hash = addBooleanHash(hash, runnyNose);
-		hash = addBooleanHash(hash, stommacAche);
-		hash = addBooleanHash(hash, dryCough);
-		hash = addBooleanHash(hash, wetCough);
-		hash = addBooleanHash(hash, morningCough);
-
-		return hash;
-	}
-
-	private int addBooleanHash(int prevHash, boolean value) {
-		return (37 * prevHash) + (value ? 0 : 1);
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (this.dryCough ? 1231 : 1237);
+		result = prime * result + (this.earAche ? 1231 : 1237);
+		result = prime * result + (this.fever ? 1231 : 1237);
+		result = prime * result + (this.generallyWell ? 1231 : 1237);
+		result = prime * result + (this.malaise ? 1231 : 1237);
+		result = prime * result + (this.morningCough ? 1231 : 1237);
+		result = prime * result + (this.runnyNose ? 1231 : 1237);
+		result = prime * result + (this.soreThroat ? 1231 : 1237);
+		result = prime * result + (this.stommacAche ? 1231 : 1237);
+		result = prime * result
+				+ ((this.week == null) ? 0 : this.week.hashCode());
+		result = prime * result + (this.wetCough ? 1231 : 1237);
+		return result;
 	}
 
 }
