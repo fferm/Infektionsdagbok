@@ -87,7 +87,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertChecked(R.id.generallyWell, true);
 	}
 
-	public void testClickingChangesModel() throws Exception {
+	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
 
 		assertTrue("Generally well before", model.generallyWell);
@@ -129,6 +129,20 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertFalse("morningCough before", model.morningCough);
 		clickOnCompoundButtonOfQuestionWithId(R.id.morningCough);
 		assertTrue("morningCough after", model.morningCough);
+	}
+
+	public void testClickingArrowNavigation() throws Exception {
+		WeekAnswers beforeModel = getActivity().model;
+
+		solo.clickOnView(solo.getView(R.id.previousWeekIcon));
+
+		WeekAnswers afterModel = getActivity().model;
+
+		assertFalse("not same model", beforeModel == afterModel);
+		assertFalse("not equal models", beforeModel.equals(afterModel));
+
+		// TODO: Check that it is one week before
+
 	}
 
 
