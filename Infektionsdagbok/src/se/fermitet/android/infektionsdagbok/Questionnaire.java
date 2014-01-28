@@ -1,19 +1,27 @@
 package se.fermitet.android.infektionsdagbok;
 
+import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
-public class Quesionnaire extends Activity {
+public class Questionnaire extends Activity {
 
 	private QuestionnaireView view;
+
+	WeekAnswers model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
+
+        model = new WeekAnswers();
+        view.setModel(model);
+
         setContentView(view);
     }
 

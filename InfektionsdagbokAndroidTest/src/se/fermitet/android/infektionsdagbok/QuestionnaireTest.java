@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok;
 
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.test.ActivityInstrumentationTestCase2;
 import android.widget.CompoundButton;
@@ -9,10 +10,10 @@ import android.widget.TextView;
 
 import com.robotium.solo.Solo;
 
-public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionnaire> {
+public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Questionnaire> {
 
 	public QuestionnaireTest() {
-		super(Quesionnaire.class);
+		super(Questionnaire.class);
 	}
 
 	private Solo solo;
@@ -50,15 +51,6 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 		assertQuestionFullState(R.id.morningCough, "Morgonupphostning", false, false);
 	}
 
-	private void assertQuestionFullState(int id, String questionText, boolean checked, boolean enabled) {
-		QuestionView view = (QuestionView) solo.getView(id);
-		assertNotNull(view);
-
-		assertText(id, questionText);
-		assertChecked(id, checked);
-		assertEnabled(id, enabled);
-	}
-
 	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
 		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
 		Thread.sleep(500);
@@ -90,10 +82,64 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Quesionn
 		assertEnabled(R.id.wetCough, false);
 		assertEnabled(R.id.morningCough, false);
 		assertEnabled(R.id.generallyWell, true);
+
 		assertChecked(R.id.dryCough, true);
 		assertChecked(R.id.generallyWell, true);
 	}
 
+	public void testClickingChangesModel() throws Exception {
+		WeekAnswers model = getActivity().model;
+
+		assertTrue("Generally well before", model.generallyWell);
+		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
+		assertFalse("Generally well after", model.generallyWell);
+
+		assertFalse("malaise before", model.malaise);
+		clickOnCompoundButtonOfQuestionWithId(R.id.malaise);
+		assertTrue("malaise after", model.malaise);
+
+		assertFalse("fever before", model.fever);
+		clickOnCompoundButtonOfQuestionWithId(R.id.fever);
+		assertTrue("fever after", model.fever);
+
+		assertFalse("earAche before", model.earAche);
+		clickOnCompoundButtonOfQuestionWithId(R.id.earAche);
+		assertTrue("earAche after", model.earAche);
+
+		assertFalse("soreThroat before", model.soreThroat);
+		clickOnCompoundButtonOfQuestionWithId(R.id.soreThroat);
+		assertTrue("soreThroat after", model.soreThroat);
+
+		assertFalse("runnyNose before", model.runnyNose);
+		clickOnCompoundButtonOfQuestionWithId(R.id.runnyNose);
+		assertTrue("runnyNose after", model.runnyNose);
+
+		assertFalse("stommacAche before", model.stommacAche);
+		clickOnCompoundButtonOfQuestionWithId(R.id.stommacAche);
+		assertTrue("stommacAche after", model.stommacAche);
+
+		assertFalse("dryCough before", model.dryCough);
+		clickOnCompoundButtonOfQuestionWithId(R.id.dryCough);
+		assertTrue("dryCough after", model.dryCough);
+
+		assertFalse("wetCough before", model.wetCough);
+		clickOnCompoundButtonOfQuestionWithId(R.id.wetCough);
+		assertTrue("wetCough after", model.wetCough);
+
+		assertFalse("morningCough before", model.morningCough);
+		clickOnCompoundButtonOfQuestionWithId(R.id.morningCough);
+		assertTrue("morningCough after", model.morningCough);
+	}
+
+
+	private void assertQuestionFullState(int id, String questionText, boolean checked, boolean enabled) {
+		QuestionView view = (QuestionView) solo.getView(id);
+		assertNotNull(view);
+
+		assertText(id, questionText);
+		assertChecked(id, checked);
+		assertEnabled(id, enabled);
+	}
 
 	private void assertText(int id, String text) {
 		QuestionView view = (QuestionView) solo.getView(id);
