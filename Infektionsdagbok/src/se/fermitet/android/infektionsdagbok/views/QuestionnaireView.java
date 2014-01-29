@@ -88,16 +88,23 @@ public class QuestionnaireView extends RelativeLayout {
 	private void bindUIToModel() {
 		weekDisplay.setText(model.week.toString());
 
-		generallyWell.setChecked(model.generallyWell);
-		malaise.setChecked(model.malaise);
-		fever.setChecked(model.fever);
-		earAche.setChecked(model.earAche);
-		soreThroat.setChecked(model.soreThroat);
-		runnyNose.setChecked(model.runnyNose);
-		stommacAche.setChecked(model.stommacAche);
-		dryCough.setChecked(model.dryCough);
-		wetCough.setChecked(model.wetCough);
-		morningCough.setChecked(model.morningCough);
+		bindAnswer(R.id.generallyWell);
+		bindAnswer(R.id.malaise);
+		bindAnswer(R.id.fever);
+		bindAnswer(R.id.earAche);
+		bindAnswer(R.id.soreThroat);
+		bindAnswer(R.id.runnyNose);
+		bindAnswer(R.id.stommacAche);
+		bindAnswer(R.id.dryCough);
+		bindAnswer(R.id.wetCough);
+		bindAnswer(R.id.morningCough);
+
+		// TODO: bör loopas genom collection av QuestionView istället. Då behöver dock den vara accessbar via id
+	}
+
+	private void bindAnswer(int id) {
+		QuestionView view = (QuestionView) findViewById(id);
+		view.setChecked(model.getAnswer(id));
 	}
 
 
@@ -105,27 +112,11 @@ public class QuestionnaireView extends RelativeLayout {
 	private void questionClicked(QuestionView qv) {
 		boolean checked = qv.isChecked();
 
-		if (qv == generallyWell) {
-			model.generallyWell = checked;
+		int id = qv.getId();
+		model.setAnswer(id, checked);
+
+		if (id == R.id.generallyWell) {
 			handleEnabledQuestions();
-		} else if (qv == malaise) {
-			model.malaise = checked;
-		} else if (qv == fever) {
-			model.fever = checked;
-		} else if (qv == earAche) {
-			model.earAche = checked;
-		} else if (qv == soreThroat) {
-			model.soreThroat = checked;
-		} else if (qv == runnyNose) {
-			model.runnyNose = checked;
-		} else if (qv == stommacAche) {
-			model.stommacAche = checked;
-		} else if (qv == dryCough) {
-			model.dryCough = checked;
-		} else if (qv == wetCough) {
-			model.wetCough = checked;
-		} else if (qv == morningCough) {
-			model.morningCough = checked;
 		}
 	}
 

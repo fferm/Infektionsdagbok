@@ -2,20 +2,73 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.R;
+
 public class WeekAnswers {
 
 	public Week week = new Week(new DateTime());
 
-	public boolean generallyWell = true;
-	public boolean malaise;
-	public boolean fever;
-	public boolean earAche;
-	public boolean soreThroat;
-	public boolean runnyNose;
-	public boolean stommacAche;
-	public boolean dryCough;
-	public boolean wetCough;
-	public boolean morningCough;
+	private boolean generallyWell = true;
+	private boolean malaise;
+	private boolean fever;
+	private boolean earAche;
+	private boolean soreThroat;
+	private boolean runnyNose;
+	private boolean stommacAche;
+	private boolean dryCough;
+	private boolean wetCough;
+	private boolean morningCough;
+
+	public boolean getAnswer(int id) {
+		if (id == R.id.generallyWell) {
+			return generallyWell;
+		} else if (id == R.id.malaise) {
+			return malaise;
+		} else if (id == R.id.fever) {
+			return fever;
+		} else if (id == R.id.earAche) {
+			return earAche;
+		} else if (id == R.id.soreThroat) {
+			return soreThroat;
+		} else if (id == R.id.runnyNose) {
+			return runnyNose;
+		} else if (id == R.id.stommacAche) {
+			return stommacAche;
+		} else if (id == R.id.dryCough) {
+			return dryCough;
+		} else if (id == R.id.wetCough) {
+			return wetCough;
+		} else if (id == R.id.morningCough) {
+			return morningCough;
+		}
+		return false;
+	}
+
+	public void setAnswer(int id, boolean value) {
+		if (id == R.id.generallyWell) {
+			this.generallyWell = value;
+		} else if (id == R.id.malaise) {
+			this.malaise = value;
+		} else if (id == R.id.fever) {
+			this.fever = value;
+		} else if (id == R.id.earAche) {
+			this.earAche = value;
+		} else if (id == R.id.soreThroat) {
+			this.soreThroat = value;
+		} else if (id == R.id.runnyNose) {
+			this.runnyNose = value;
+		} else if (id == R.id.stommacAche) {
+			this.stommacAche = value;
+		} else if (id == R.id.dryCough) {
+			this.dryCough = value;
+		} else if (id == R.id.wetCough) {
+			this.wetCough = value;
+		} else if (id == R.id.morningCough) {
+			this.morningCough = value;
+		}
+	}
+
+
 
 
 	@Override
@@ -73,5 +126,7 @@ public class WeekAnswers {
 		result = prime * result + (this.wetCough ? 1231 : 1237);
 		return result;
 	}
+
+
 
 }
