@@ -62,7 +62,6 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
 		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
-		Thread.sleep(500);
 
 		assertEnabled(R.id.malaise, true);
 		assertEnabled(R.id.fever, true);
@@ -78,7 +77,6 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 		clickOnCompoundButtonOfQuestionWithId(R.id.dryCough); // Change some state
 		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
-		Thread.sleep(500);
 
 
 		assertEnabled(R.id.malaise, false);
