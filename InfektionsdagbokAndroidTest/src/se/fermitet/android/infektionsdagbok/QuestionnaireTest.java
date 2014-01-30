@@ -30,6 +30,15 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		super.tearDown();
 	}
 
+	/*
+	 * There seems to be some timing and threading issues for the first test that runs.
+	 * Therefore this will wait one second to give time for everything to be set up properly
+	 * This test should be the first one run
+	 */
+	public void test0001FirstTest() throws Exception {
+		Thread.sleep(1000);
+	}
+
 	public void testInitials() throws Exception {
 		assertInitialsOnQuestions();
 
@@ -103,13 +112,13 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	}
 
 
-	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) {
+	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) throws InterruptedException {
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " before", before == wa.getAnswer(id));
 		clickOnCompoundButtonOfQuestionWithId(id);
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != wa.getAnswer(id));
 	}
 
-/*	public void testClickingArrowNavigation() throws Exception {
+	public void testClickingArrowNavigation() throws Exception {
 		WeekAnswers beforeModel = getActivity().model;
 
 		solo.clickOnView(solo.getView(R.id.previousWeekIcon));
@@ -121,7 +130,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 		// TODO: Check that it is one week before
 
-	}*/
+	}
 
 
 	private void assertQuestionFullState(int id, String questionText, boolean checked, boolean enabled) {
