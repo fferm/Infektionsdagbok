@@ -103,10 +103,10 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	}
 
 
-	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean deflt) {
-		assertTrue(NameFromIdHelper.getNameFromId(id) + " before", deflt == wa.getAnswer(id));
+	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) {
+		assertTrue(NameFromIdHelper.getNameFromId(id) + " before", before == wa.getAnswer(id));
 		clickOnCompoundButtonOfQuestionWithId(id);
-		assertTrue(NameFromIdHelper.getNameFromId(id) + " after", deflt != wa.getAnswer(id));
+		assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != wa.getAnswer(id));
 	}
 
 /*	public void testClickingArrowNavigation() throws Exception {

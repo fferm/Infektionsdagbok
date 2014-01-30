@@ -1,13 +1,10 @@
 package se.fermitet.android.infektionsdagbok.views;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,18 +13,7 @@ public class QuestionnaireView extends RelativeLayout {
 
 	private TextView weekDisplay;
 
-	private QuestionView generallyWell;
-	private QuestionView malaise;
-	private QuestionView fever;
-	private QuestionView earAche;
-	private QuestionView soreThroat;
-	private QuestionView runnyNose;
-	private QuestionView stommacAche;
-	private QuestionView dryCough;
-	private QuestionView wetCough;
-	private QuestionView morningCough;
-
-	private List<QuestionView> questions;
+	private SparseArray<QuestionView> questions;
 
 	private WeekAnswers model;
 
@@ -51,31 +37,13 @@ public class QuestionnaireView extends RelativeLayout {
 	private void setupWidgets() {
 		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
 
-		generallyWell = (QuestionView) findViewById(R.id.generallyWell);
-		malaise = (QuestionView) findViewById(R.id.malaise);
-		fever = (QuestionView) findViewById(R.id.fever);
-		earAche = (QuestionView) findViewById(R.id.earAche);
-		soreThroat = (QuestionView) findViewById(R.id.soreThroat);
-		runnyNose = (QuestionView) findViewById(R.id.runnyNose);
-		stommacAche = (QuestionView) findViewById(R.id.stommacAche);
-		dryCough = (QuestionView) findViewById(R.id.dryCough);
-		wetCough = (QuestionView) findViewById(R.id.wetCough);
-		morningCough = (QuestionView) findViewById(R.id.morningCough);
+		questions = new SparseArray<QuestionView>();
+		for (int i = 0; i < getChildCount(); i++) {
+			View view = getChildAt(i);
+			if (!(view instanceof QuestionView)) continue;
+			questions.put(Integer.valueOf(view.getId()), (QuestionView) view);
 
-		questions = new ArrayList<QuestionView>();
-		questions.add(generallyWell);
-		questions.add(malaise);
-		questions.add(fever);
-		questions.add(earAche);
-		questions.add(soreThroat);
-		questions.add(runnyNose);
-		questions.add(stommacAche);
-		questions.add(dryCough);
-		questions.add(wetCough);
-		questions.add(morningCough);
-
-		for (QuestionView qv : questions) {
-			qv.setOnClickListener(new View.OnClickListener() {
+			view.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -88,26 +56,19 @@ public class QuestionnaireView extends RelativeLayout {
 	private void bindUIToModel() {
 		weekDisplay.setText(model.week.toString());
 
-		bindAnswer(R.id.generallyWell);
-		bindAnswer(R.id.malaise);
-		bindAnswer(R.id.fever);
-		bindAnswer(R.id.earAche);
-		bindAnswer(R.id.soreThroat);
-		bindAnswer(R.id.runnyNose);
-		bindAnswer(R.id.stommacAche);
-		bindAnswer(R.id.dryCough);
-		bindAnswer(R.id.wetCough);
-		bindAnswer(R.id.morningCough);
-
-		// TODO: bör loopas genom collection av QuestionView istället. Då behöver dock den vara accessbar via id
+		for (int i = 0; i < this.getChildCount(); i++) {
+			View view = this.getChildAt(i);
+			if (!(view instanceof QuestionView)) {
+				continue;
+			}
+			QuestionView qv = (QuestionView) view;
+			bindAnswer(qv);
+		}
 	}
 
-	private void bindAnswer(int id) {
-		QuestionView view = (QuestionView) findViewById(id);
-		view.setChecked(model.getAnswer(id));
+	private void bindAnswer(QuestionView qv) {
+		qv.setChecked(model.getAnswer(qv.getId()));
 	}
-
-
 
 	private void questionClicked(QuestionView qv) {
 		boolean checked = qv.isChecked();
@@ -121,7 +82,7 @@ public class QuestionnaireView extends RelativeLayout {
 	}
 
 	private void handleEnabledQuestions() {
-		if (! generallyWell.isChecked()) {
+		if (! questions.get(R.id.generallyWell).isChecked()) {
 			enableAllQuestions();
 		} else {
 			disableAllButGenerallyWell();
@@ -129,15 +90,16 @@ public class QuestionnaireView extends RelativeLayout {
 	}
 
 	private void disableAllButGenerallyWell() {
-		for (Iterator<QuestionView> iter = questions.iterator(); iter.hasNext(); ) {
-			QuestionView question = iter.next();
-			question.setEnabled(question == this.generallyWell);
+		QuestionView generallyWell = questions.get(R.id.generallyWell);
+		for (int i = 0; i < questions.size(); i++) {
+			QuestionView question = questions.valueAt(i);
+			question.setEnabled(question == generallyWell);
 		}
 	}
 
 	private void enableAllQuestions() {
-		for (Iterator<QuestionView> iter = questions.iterator(); iter.hasNext(); ) {
-			QuestionView question = iter.next();
+		for (int i = 0; i < questions.size(); i++) {
+			QuestionView question = questions.valueAt(i);
 			question.setEnabled(true);
 		}
 	}
