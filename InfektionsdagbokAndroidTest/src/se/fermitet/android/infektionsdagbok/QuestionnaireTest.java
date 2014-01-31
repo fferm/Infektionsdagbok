@@ -6,6 +6,7 @@ import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -139,6 +140,27 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 		assertEquals("same week again after going back and forward", beforeModel.week, nextModel.week);
 		assertEquals("week answers equality when going back and forward", beforeModel, nextModel);
+	}
+
+	public void testClickingAllQuestionPartsChangesAnswer() throws Exception {
+		int questionId = R.id.generallyWell;
+		QuestionView questionView = (QuestionView) solo.getView(questionId);
+		View selector = questionView.findViewById(R.id.answerSelector);
+		View text = questionView.findViewById(R.id.questionText);
+
+		assertClickingQuestionPart(questionId, selector, "selector");
+		assertClickingQuestionPart(questionId, text, "text view");
+		assertClickingQuestionPart(questionId, questionView, "full question");
+
+		// TODO, should not work when question is disabled
+	}
+
+	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView) {
+		boolean before = getActivity().model.getAnswer(questionId);
+		solo.clickOnView(viewToClick);
+		boolean after = getActivity().model.getAnswer(questionId);
+
+		assertFalse("Should have changed after clicking " + nameOfView, before == after);
 	}
 
 

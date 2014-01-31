@@ -15,7 +15,7 @@ public class QuestionView extends LinearLayout {
 	private static final String TEXT_ATTRIBUTE_NAME = "text";
 	private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
 
-	private final String questionText;
+	private String questionText;
 
 	public QuestionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -51,8 +51,15 @@ public class QuestionView extends LinearLayout {
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
+		questionTV.setOnClickListener(new View.OnClickListener() {
 
-		getAnswerSelector().setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getAnswerSelector().performClick();
+			}
+		});
+
+		getAnswerSelector().setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {

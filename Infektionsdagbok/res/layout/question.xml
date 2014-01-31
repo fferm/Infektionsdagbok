@@ -14,12 +14,6 @@
         android:textOn="Ja" />
 
     <TextView
-        android:id="@+id/padding"
-        android:layout_width="10dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
         android:id="@+id/questionText"
         android:layout_width="220dp"
         android:layout_height="wrap_content"

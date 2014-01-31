@@ -74,7 +74,7 @@ public class QuestionnaireView extends RelativeLayout {
 
 				@Override
 				public void onClick(View v) {
-					questionClicked((QuestionView) v);
+					onQuestionClicked((QuestionView) v);
 				}
 			});
 		}
@@ -97,7 +97,7 @@ public class QuestionnaireView extends RelativeLayout {
 		qv.setChecked(model.getAnswer(qv.getId()));
 	}
 
-	private void questionClicked(QuestionView qv) {
+	public void onQuestionClicked(QuestionView qv) {
 		boolean checked = qv.isChecked();
 
 		int id = qv.getId();
