@@ -40,4 +40,29 @@ public class WeekTest {
 		assertTrue("hashCode of other week of same time", mon1.hashCode() == mon2.hashCode());
 		assertTrue("hashCode of other week of time in same week", mon1.hashCode() == sun.hashCode());
 	}
+
+	@Test
+	public void previousWeek() throws Exception {
+		DateTime initialDt = new DateTime();
+		DateTime previousDt = initialDt.minusWeeks(1);
+
+		Week initialWeek = new Week(initialDt);
+		Week previousWeekFromMethod = initialWeek.previous();
+		Week previousWeekFromConstructor = new Week(previousDt);
+
+		assertEquals(previousWeekFromConstructor, previousWeekFromMethod);
+	}
+
+	@Test
+	public void nextWeek() throws Exception {
+		DateTime initialDt = new DateTime();
+		DateTime nextDt = initialDt.plusWeeks(1);
+
+		Week initialWeek = new Week(initialDt);
+		Week nextWeekFromMethod = initialWeek.next();
+		Week nextWeekFromConstructor = new Week(nextDt);
+
+		assertEquals(nextWeekFromConstructor, nextWeekFromMethod);
+
+	}
 }

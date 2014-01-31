@@ -119,14 +119,20 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	public void testClickingArrowNavigation() throws Exception {
 		WeekAnswers beforeModel = getActivity().model;
 
-		solo.clickOnView(solo.getView(R.id.previousWeekIcon));
+//		solo.clickOnView(solo.getView(R.id.generallyWell)); // Change someting so that later check does not compare with default
+		solo.clickOnView(solo.getView(R.id.previousWeek));
 
 		WeekAnswers afterModel = getActivity().model;
 
 		assertFalse("not same model", beforeModel == afterModel);
 		assertFalse("not equal models", beforeModel.equals(afterModel));
+		assertTrue("week before model", beforeModel.week.previous().equals(afterModel.week));
 
-		// TODO: Check that it is one week before
+		solo.clickOnView(solo.getView(R.id.nextWeek));
+
+		WeekAnswers nextModel = getActivity().model;
+
+		assertEquals("same week again after going back and forward", beforeModel.week, nextModel.week);
 
 	}
 

@@ -10,6 +10,15 @@ public class Week {
 		this.dateTime = dateTime;
 	}
 
+	public Week previous() {
+		return new Week(this.dateTime.minusWeeks(1));
+	}
+
+	public Week next() {
+		return new Week(this.dateTime.plusWeeks(1));
+	}
+
+
 	@Override
 	public String toString() {
 		return "" + dateTime.getYear() + ":" + dateTime.getWeekOfWeekyear();

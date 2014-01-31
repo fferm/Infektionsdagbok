@@ -1,14 +1,17 @@
 package se.fermitet.android.infektionsdagbok;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
-import android.util.SparseArray;
+import android.annotation.SuppressLint;
 
+@SuppressLint("UseSparseArrays")
 public class NameFromIdHelper {
-	private static SparseArray<String> fieldNamesById;
+	private static Map<Integer, String> fieldNamesById;
 
 	static {
-		fieldNamesById = new SparseArray<String>();
+		fieldNamesById = new HashMap<Integer, String>();
 
 		try {
 			Class<?>[] rClasses = R.class.getClasses();

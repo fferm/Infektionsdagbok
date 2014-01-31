@@ -12,10 +12,10 @@ import android.widget.TextView;
 public class QuestionnaireView extends RelativeLayout {
 
 	private TextView weekDisplay;
-
 	private SparseArray<QuestionView> questions;
 
 	private WeekAnswers model;
+	private OnWeekChangeListener weekChangeListener;
 
 	public QuestionnaireView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -34,9 +34,36 @@ public class QuestionnaireView extends RelativeLayout {
 		handleEnabledQuestions();
 	}
 
+	public void setOnWeekChangeListener(OnWeekChangeListener listener) {
+		this.weekChangeListener = listener;
+	}
+
 	private void setupWidgets() {
 		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
 
+		setupWeekNavigationButtons();
+		setupQuestions();
+	}
+
+	private void setupWeekNavigationButtons() {
+		findViewById(R.id.previousWeek).setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				QuestionnaireView.this.weekChangeListener.onWeekDecrement();
+			}
+		});
+
+		findViewById(R.id.nextWeek).setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				QuestionnaireView.this.weekChangeListener.onWeekIncrement();
+			}
+		});
+	}
+
+	private void setupQuestions() {
 		questions = new SparseArray<QuestionView>();
 		for (int i = 0; i < getChildCount(); i++) {
 			View view = getChildAt(i);
@@ -102,6 +129,11 @@ public class QuestionnaireView extends RelativeLayout {
 			QuestionView question = questions.valueAt(i);
 			question.setEnabled(true);
 		}
+	}
+
+	public interface OnWeekChangeListener {
+		public void onWeekIncrement();
+		public void onWeekDecrement();
 	}
 
 

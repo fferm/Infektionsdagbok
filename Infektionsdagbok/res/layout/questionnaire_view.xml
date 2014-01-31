@@ -18,7 +18,7 @@
         />
 
     <ImageView 
-        android:id="@+id/previousWeekIcon"
+        android:id="@+id/previousWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="center"
@@ -28,7 +28,7 @@
         android:contentDescription="Föregående"/>
     
     <ImageView 
-        android:id="@+id/nextWeekIcon"
+        android:id="@+id/nextWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="center"

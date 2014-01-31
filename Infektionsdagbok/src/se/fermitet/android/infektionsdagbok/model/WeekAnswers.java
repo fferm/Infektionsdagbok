@@ -6,7 +6,7 @@ import se.fermitet.android.infektionsdagbok.R;
 
 public class WeekAnswers {
 
-	public Week week = new Week(new DateTime());
+	public Week week;
 
 	private boolean generallyWell = true;
 	private boolean malaise;
@@ -18,6 +18,15 @@ public class WeekAnswers {
 	private boolean dryCough;
 	private boolean wetCough;
 	private boolean morningCough;
+
+	public WeekAnswers() {
+		this(new Week(new DateTime()));
+	}
+
+	public WeekAnswers(Week myWeek) {
+		super();
+		this.week = myWeek;
+	}
 
 	public boolean getAnswer(int id) {
 		if (id == R.id.generallyWell) {

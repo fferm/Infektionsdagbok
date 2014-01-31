@@ -14,9 +14,17 @@ import se.fermitet.android.infektionsdagbok.R;
 public class WeekAnswersTest {
 
 	@Test
-	public void classExists() throws Exception {
+	public void defaultConstructor() throws Exception {
 		WeekAnswers wa = new WeekAnswers();
 		assertNotNull("not null", wa);
+	}
+
+	@Test
+	public void weekConstructor() throws Exception {
+		Week myWeek = new Week(new DateTime().plusWeeks(2));
+		WeekAnswers wa = new WeekAnswers(myWeek);
+
+		assertEquals(myWeek, wa.week);
 	}
 
 	@Test
