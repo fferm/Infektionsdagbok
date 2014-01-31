@@ -77,7 +77,24 @@ public class WeekAnswers {
 		}
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("WeekAnswers{week:").append(this.week.toString());
+		buf.append(", generallyWell:").append(this.generallyWell);
+		buf.append(", malaise:").append(this.malaise);
+		buf.append(", fever:").append(this.fever);
+		buf.append(", earAche:").append(this.earAche);
+		buf.append(", soreThroat:").append(this.soreThroat);
+		buf.append(", runnyNose:").append(this.runnyNose);
+		buf.append(", stommacAche:").append(this.stommacAche);
+		buf.append(", dryCough:").append(this.dryCough);
+		buf.append(", wetCough:").append(this.wetCough);
+		buf.append(", morningCough:").append(this.morningCough);
+		buf.append("}");
 
+		return buf.toString();
+	}
 
 
 	@Override

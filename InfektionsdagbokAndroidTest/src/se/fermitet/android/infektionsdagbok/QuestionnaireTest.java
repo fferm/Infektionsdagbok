@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok;
 
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.test.ActivityInstrumentationTestCase2;
@@ -26,6 +27,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 	@Override
 	protected void tearDown() throws Exception {
+		ModelManager.instance().reset();
 		solo.finishOpenedActivities();
 		super.tearDown();
 	}
@@ -44,7 +46,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 		TextView weekView = (TextView) solo.getView(R.id.weekDisplay);
 		DateTime now = new DateTime();
-		assertEquals("week text", "" + now.getYear() + ":" + now.getWeekOfWeekyear(), weekView.getText());
+		assertEquals("week text", "" + now.getYear() + "-" + now.getWeekOfWeekyear(), weekView.getText());
 	}
 
 	private void assertInitialsOnQuestions() {
@@ -110,16 +112,19 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	}
 
 
-	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) throws InterruptedException {
+	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) {
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " before", before == wa.getAnswer(id));
 		clickOnCompoundButtonOfQuestionWithId(id);
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != wa.getAnswer(id));
 	}
 
 	public void testClickingArrowNavigation() throws Exception {
+		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell); // Change someting so that later check does not compare with default
+
 		WeekAnswers beforeModel = getActivity().model;
 
-//		solo.clickOnView(solo.getView(R.id.generallyWell)); // Change someting so that later check does not compare with default
+		assertFalse("beforeModel generallyWell should have changed", beforeModel.getAnswer(R.id.generallyWell));
+
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 
 		WeekAnswers afterModel = getActivity().model;
@@ -133,7 +138,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		WeekAnswers nextModel = getActivity().model;
 
 		assertEquals("same week again after going back and forward", beforeModel.week, nextModel.week);
-
+		assertEquals("week answers equality when going back and forward", beforeModel, nextModel);
 	}
 
 

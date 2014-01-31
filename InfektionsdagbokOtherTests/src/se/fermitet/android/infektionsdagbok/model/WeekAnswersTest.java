@@ -77,6 +77,7 @@ public class WeekAnswersTest {
 		modWeek.week = otherWeek;
 
 		WeekAnswers modAnswer = new WeekAnswers();
+		modAnswer.setAnswer(R.id.generallyWell, false);
 		modAnswer.setAnswer(R.id.malaise, true);
 
 		assertTrue("Equal to itself", orig.equals(orig));
@@ -87,5 +88,26 @@ public class WeekAnswersTest {
 		assertFalse("Not equal to object of other class", orig.equals("STRING"));
 
 		assertTrue("non modified hash code", orig.hashCode() == nonModified.hashCode());
+	}
+
+	@Test
+	public void testToString() throws Exception {
+		WeekAnswers wa = new WeekAnswers();
+
+		StringBuffer buf = new StringBuffer();
+		buf.append("WeekAnswers{week:").append(wa.week.toString());
+		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));
+		buf.append(", malaise:").append(wa.getAnswer(R.id.malaise));
+		buf.append(", fever:").append(wa.getAnswer(R.id.fever));
+		buf.append(", earAche:").append(wa.getAnswer(R.id.earAche));
+		buf.append(", soreThroat:").append(wa.getAnswer(R.id.soreThroat));
+		buf.append(", runnyNose:").append(wa.getAnswer(R.id.runnyNose));
+		buf.append(", stommacAche:").append(wa.getAnswer(R.id.stommacAche));
+		buf.append(", dryCough:").append(wa.getAnswer(R.id.dryCough));
+		buf.append(", wetCough:").append(wa.getAnswer(R.id.wetCough));
+		buf.append(", morningCough:").append(wa.getAnswer(R.id.morningCough));
+		buf.append("}");
+
+		assertEquals(buf.toString(), wa.toString());
 	}
 }

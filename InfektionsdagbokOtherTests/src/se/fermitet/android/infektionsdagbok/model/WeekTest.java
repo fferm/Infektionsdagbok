@@ -15,7 +15,7 @@ public class WeekTest {
 
 		Week w = new Week(dt);
 
-		assertEquals("" + dt.getYear() + ":" + dt.getWeekOfWeekyear(), w.toString());
+		assertEquals("" + dt.getYear() + "-" + dt.getWeekOfWeekyear(), w.toString());
 	}
 
 

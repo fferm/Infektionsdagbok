@@ -21,7 +21,7 @@ public class Week {
 
 	@Override
 	public String toString() {
-		return "" + dateTime.getYear() + ":" + dateTime.getWeekOfWeekyear();
+		return "" + dateTime.getYear() + "-" + dateTime.getWeekOfWeekyear();
 	}
 
 	private int year() {
