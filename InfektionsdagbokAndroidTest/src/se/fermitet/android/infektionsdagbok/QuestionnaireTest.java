@@ -33,15 +33,6 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		super.tearDown();
 	}
 
-	/*
-	 * There seems to be some timing and threading issues for the first test that runs.
-	 * Therefore this will wait one second to give time for everything to be set up properly
-	 * This test should be the first one run
-	 */
-	public void test0001FirstTest() throws Exception {
-		Thread.sleep(1000);
-	}
-
 	public void testInitials() throws Exception {
 		assertInitialsOnQuestions();
 
@@ -148,19 +139,36 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		View selector = questionView.findViewById(R.id.answerSelector);
 		View text = questionView.findViewById(R.id.questionText);
 
-		assertClickingQuestionPart(questionId, selector, "selector");
-		assertClickingQuestionPart(questionId, text, "text view");
-		assertClickingQuestionPart(questionId, questionView, "full question");
+		assertClickingQuestionPart(questionId, selector, "selector", true);
+		assertClickingQuestionPart(questionId, text, "text view", true);
+		assertClickingQuestionPart(questionId, questionView, "full question", true);
 
-		// TODO, should not work when question is disabled
 	}
 
-	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView) {
+	public void testClickingDisabledQuestionsDoesNotChangeAnswer() throws Exception {
+		int questionId = R.id.malaise;
+		QuestionView questionView = (QuestionView) solo.getView(questionId);
+		View selector = questionView.findViewById(R.id.answerSelector);
+		View text = questionView.findViewById(R.id.questionText);
+
+		assertFalse("Should be disabled for this test", questionView.isEnabled());
+
+		assertClickingQuestionPart(questionId, selector, "selector", false);
+		assertClickingQuestionPart(questionId, text, "text view", false);
+		assertClickingQuestionPart(questionId, questionView, "full question", false);
+	}
+
+	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {
 		boolean before = getActivity().model.getAnswer(questionId);
 		solo.clickOnView(viewToClick);
 		boolean after = getActivity().model.getAnswer(questionId);
 
-		assertFalse("Should have changed after clicking " + nameOfView, before == after);
+
+		if (shouldChange) {
+			assertFalse("Should have changed after clicking " + nameOfView, before == after);
+		} else {
+			assertTrue("Should not have changed after clicking the disabled version of " + nameOfView, before == after);
+		}
 	}
 
 

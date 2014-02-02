@@ -48,6 +48,11 @@ public class QuestionView extends LinearLayout {
 		getAnswerSelector().setEnabled(enabled);
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return getAnswerSelector().isEnabled();
+	}
+
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
@@ -55,7 +60,9 @@ public class QuestionView extends LinearLayout {
 
 			@Override
 			public void onClick(View v) {
-				getAnswerSelector().performClick();
+				if (QuestionView.this.isEnabled()) {
+					getAnswerSelector().performClick();
+				}
 			}
 		});
 
