@@ -10,7 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class QuestionView extends LinearLayout {
+public class QuestionView extends LinearLayout implements View.OnClickListener {
 
 	private static final String TEXT_ATTRIBUTE_NAME = "text";
 	private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
@@ -37,6 +37,7 @@ public class QuestionView extends LinearLayout {
 
 	public void setChecked(boolean checked) {
 		getAnswerSelector().setChecked(checked);
+		setBackgroundBasedOnCheckedStatus();
 	}
 
 	public boolean isChecked() {
@@ -56,23 +57,31 @@ public class QuestionView extends LinearLayout {
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
-		questionTV.setOnClickListener(new View.OnClickListener() {
+		questionTV.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				if (QuestionView.this.isEnabled()) {
-					getAnswerSelector().performClick();
-				}
+		getAnswerSelector().setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if (v == getAnswerSelector()) {
+			this.performClick();
+			setBackgroundBasedOnCheckedStatus();
+		} else {
+			if (this.isEnabled()) {
+				getAnswerSelector().performClick();
 			}
-		});
+		}
+	}
 
-		getAnswerSelector().setOnClickListener(new View.OnClickListener() {
+	private void setBackgroundBasedOnCheckedStatus() {
+		boolean checked = this.isChecked();
 
-			@Override
-			public void onClick(View v) {
-				QuestionView.this.performClick();
-			}
-		});
+		if (checked) {
+			this.setBackgroundColor(getContext().getResources().getColor(R.color.selectedQuestionBackground));
+		} else {
+			this.setBackground(null);
+		}
 	}
 
 	private CompoundButton getAnswerSelector() {

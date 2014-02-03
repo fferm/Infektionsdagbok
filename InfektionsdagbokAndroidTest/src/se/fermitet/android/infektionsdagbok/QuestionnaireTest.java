@@ -1,10 +1,15 @@
 package se.fermitet.android.infektionsdagbok;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -14,11 +19,29 @@ import com.robotium.solo.Solo;
 
 public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Questionnaire> {
 
+	private List<Integer> questionIds;
+	private Solo solo;
+
 	public QuestionnaireTest() {
 		super(Questionnaire.class);
+		initQuestionIds();
 	}
 
-	private Solo solo;
+	private void initQuestionIds() {
+		questionIds = new ArrayList<Integer>();
+
+		questionIds.add(R.id.generallyWell);
+		questionIds.add(R.id.malaise);
+		questionIds.add(R.id.fever);
+		questionIds.add(R.id.earAche);
+		questionIds.add(R.id.soreThroat);
+		questionIds.add(R.id.runnyNose);
+		questionIds.add(R.id.stommacAche);
+		questionIds.add(R.id.dryCough);
+		questionIds.add(R.id.wetCough);
+		questionIds.add(R.id.morningCough);
+	}
+
 
 	@Override
 	protected void setUp() throws Exception {
@@ -55,34 +78,22 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	}
 
 	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
-		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
+		clickOnQuestionWithId(R.id.generallyWell);
 
-		assertEnabled(R.id.malaise, true);
-		assertEnabled(R.id.fever, true);
-		assertEnabled(R.id.earAche, true);
-		assertEnabled(R.id.soreThroat, true);
-		assertEnabled(R.id.runnyNose, true);
-		assertEnabled(R.id.stommacAche, true);
-		assertEnabled(R.id.dryCough, true);
-		assertEnabled(R.id.wetCough, true);
-		assertEnabled(R.id.morningCough, true);
-		assertEnabled(R.id.generallyWell, true);
+		for (Integer idObj : questionIds) {
+			int id = idObj.intValue();
+			assertEnabled(id, true);
+		}
 		assertChecked(R.id.generallyWell, false);
 
-		clickOnCompoundButtonOfQuestionWithId(R.id.dryCough); // Change some state
-		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell);
+		clickOnQuestionWithId(R.id.dryCough); // Change some state
+		clickOnQuestionWithId(R.id.generallyWell);
 
+		for (Integer idObj : questionIds) {
+			int id = idObj.intValue();
 
-		assertEnabled(R.id.malaise, false);
-		assertEnabled(R.id.fever, false);
-		assertEnabled(R.id.earAche, false);
-		assertEnabled(R.id.soreThroat, false);
-		assertEnabled(R.id.runnyNose, false);
-		assertEnabled(R.id.stommacAche, false);
-		assertEnabled(R.id.dryCough, false);
-		assertEnabled(R.id.wetCough, false);
-		assertEnabled(R.id.morningCough, false);
-		assertEnabled(R.id.generallyWell, true);
+			assertEnabled(id,  id == R.id.generallyWell);
+		}
 
 		assertChecked(R.id.dryCough, true);
 		assertChecked(R.id.generallyWell, true);
@@ -91,27 +102,22 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
 
-		assertClickingOnOneAnswer(model, R.id.generallyWell, true);
-		assertClickingOnOneAnswer(model, R.id.malaise, false);
-		assertClickingOnOneAnswer(model, R.id.fever, false);
-		assertClickingOnOneAnswer(model, R.id.earAche, false);
-		assertClickingOnOneAnswer(model, R.id.soreThroat, false);
-		assertClickingOnOneAnswer(model, R.id.runnyNose, false);
-		assertClickingOnOneAnswer(model, R.id.stommacAche, false);
-		assertClickingOnOneAnswer(model, R.id.dryCough, false);
-		assertClickingOnOneAnswer(model, R.id.wetCough, false);
-		assertClickingOnOneAnswer(model, R.id.morningCough, false);
+		for (Integer idObj : questionIds) {
+			int id = idObj.intValue();
+			assertClickingOnOneAnswer(model,  id);
+		}
 	}
 
 
-	private void assertClickingOnOneAnswer(WeekAnswers wa, int id, boolean before) {
-		assertTrue(NameFromIdHelper.getNameFromId(id) + " before", before == wa.getAnswer(id));
-		clickOnCompoundButtonOfQuestionWithId(id);
+	private void assertClickingOnOneAnswer(WeekAnswers wa, int id) {
+		boolean before = wa.getAnswer(id);
+
+		clickOnQuestionWithId(id);
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != wa.getAnswer(id));
 	}
 
 	public void testClickingArrowNavigation() throws Exception {
-		clickOnCompoundButtonOfQuestionWithId(R.id.generallyWell); // Change someting so that later check does not compare with default
+		clickOnQuestionWithId(R.id.generallyWell); // Change someting so that later check does not compare with default
 
 		WeekAnswers beforeModel = getActivity().model;
 
@@ -188,11 +194,20 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertEquals(NameFromIdHelper.getNameFromId(id) + " question text", text, tv.getText());
 	}
 
-	private void assertChecked(int id, boolean checked) {
+	private void assertChecked(int id, boolean shouldBeChecked) {
 		QuestionView view = (QuestionView) solo.getView(id);
 
 		CompoundButton selector =  (CompoundButton) view.findViewById(R.id.answerSelector);
-		assertEquals(NameFromIdHelper.getNameFromId(id) + " selector has wrong state", checked, selector.isChecked());
+		assertEquals(NameFromIdHelper.getNameFromId(id) + " selector has wrong state", shouldBeChecked, selector.isChecked());
+
+		if (shouldBeChecked) {
+			Drawable background = view.getBackground();
+			assertTrue(NameFromIdHelper.getNameFromId(id) + " should have a ColorDrawable background", background instanceof ColorDrawable);
+			ColorDrawable colorBackground = (ColorDrawable) background;
+			assertTrue(NameFromIdHelper.getNameFromId(id) +  "should have a non alpha-null background", colorBackground.getAlpha() > 0);
+		} else {
+			assertNull(NameFromIdHelper.getNameFromId(id) + " should not have a background", view.getBackground());
+		}
 	}
 
 	private void assertEnabled(int id, boolean enabled) {
@@ -205,11 +220,9 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertEquals(NameFromIdHelper.getNameFromId(id) + " selector enabled value", enabled, selector.isEnabled());
 	}
 
-	private void clickOnCompoundButtonOfQuestionWithId(int id) {
+	private void clickOnQuestionWithId(int id) {
 		QuestionView questionView = (QuestionView) solo.getView(id);
-
-		CompoundButton answer = (CompoundButton) questionView.findViewById(R.id.answerSelector);
-		solo.clickOnView(answer);
+		solo.clickOnView(questionView);
 	}
 }
 
