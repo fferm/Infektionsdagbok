@@ -1,8 +1,5 @@
 package se.fermitet.android.infektionsdagbok;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
@@ -20,29 +17,11 @@ import com.robotium.solo.Solo;
 
 public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Questionnaire> {
 
-	private List<Integer> questionIds;
 	private Solo solo;
 
 	public QuestionnaireTest() {
 		super(Questionnaire.class);
-		initQuestionIds();
 	}
-
-	private void initQuestionIds() {
-		questionIds = new ArrayList<Integer>();
-
-		questionIds.add(R.id.generallyWell);
-		questionIds.add(R.id.malaise);
-		questionIds.add(R.id.fever);
-		questionIds.add(R.id.earAche);
-		questionIds.add(R.id.soreThroat);
-		questionIds.add(R.id.runnyNose);
-		questionIds.add(R.id.stommacAche);
-		questionIds.add(R.id.dryCough);
-		questionIds.add(R.id.wetCough);
-		questionIds.add(R.id.morningCough);
-	}
-
 
 	@Override
 	protected void setUp() throws Exception {
@@ -81,7 +60,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
 		clickOnQuestionWithId(R.id.generallyWell);
 
-		for (Integer idObj : questionIds) {
+		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
 			assertEnabled(id, true);
 		}
@@ -90,7 +69,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		clickOnQuestionWithId(R.id.dryCough); // Change some state
 		clickOnQuestionWithId(R.id.generallyWell);
 
-		for (Integer idObj : questionIds) {
+		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
 
 			assertEnabled(id,  id == R.id.generallyWell);
@@ -103,7 +82,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
 
-		for (Integer idObj : questionIds) {
+		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
 			assertClickingOnOneAnswer(model,  id);
 		}

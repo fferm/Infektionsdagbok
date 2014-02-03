@@ -29,31 +29,17 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testDefaultValues() throws Exception {
-		assertTrue("generally well", wa.getAnswer(R.id.generallyWell));
-		assertFalse("malaise", wa.getAnswer(R.id.malaise));
-		assertFalse("fever", wa.getAnswer(R.id.fever));
-		assertFalse("earAche", wa.getAnswer(R.id.earAche));
-		assertFalse("soreThroat", wa.getAnswer(R.id.soreThroat));
-		assertFalse("runnyNose", wa.getAnswer(R.id.runnyNose));
-		assertFalse("stommacAche", wa.getAnswer(R.id.stommacAche));
-		assertFalse("dryCough", wa.getAnswer(R.id.dryCough));
-		assertFalse("wetCough", wa.getAnswer(R.id.wetCough));
-		assertFalse("morningCough", wa.getAnswer(R.id.morningCough));
+		for (int id : WeekAnswers.questionIds) {
+			assertTrue(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id) == (id == R.id.generallyWell));
+		}
 
 		assertEquals("week", new Week(new DateTime()), wa.week);
 	}
 
 	public void testGettersAndSetters() throws Exception {
-		assertGetterAndSetterForOneAnswer(R.id.generallyWell);
-		assertGetterAndSetterForOneAnswer(R.id.malaise);
-		assertGetterAndSetterForOneAnswer(R.id.fever);
-		assertGetterAndSetterForOneAnswer(R.id.earAche);
-		assertGetterAndSetterForOneAnswer(R.id.soreThroat);
-		assertGetterAndSetterForOneAnswer(R.id.runnyNose);
-		assertGetterAndSetterForOneAnswer(R.id.stommacAche);
-		assertGetterAndSetterForOneAnswer(R.id.dryCough);
-		assertGetterAndSetterForOneAnswer(R.id.wetCough);
-		assertGetterAndSetterForOneAnswer(R.id.morningCough);
+		for (int id : WeekAnswers.questionIds) {
+			assertGetterAndSetterForOneAnswer(id);
+		}
 	}
 
 	private void assertGetterAndSetterForOneAnswer(int id) {
