@@ -111,7 +111,7 @@ public class WeekAnswersTest extends TestCase {
 
 		String json = wa.toJSON();
 
-		WeekAnswers fromJSON = new WeekAnswers(json);
+		WeekAnswers fromJSON = WeekAnswers.fromJSON(json);
 
 		assertEquals(wa, fromJSON);
 	}
