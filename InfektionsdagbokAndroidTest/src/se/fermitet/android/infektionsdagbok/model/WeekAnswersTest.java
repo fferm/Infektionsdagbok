@@ -9,8 +9,15 @@ import se.fermitet.android.infektionsdagbok.R;
 
 public class WeekAnswersTest extends TestCase {
 
+	private WeekAnswers wa;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		wa = new WeekAnswers(new Week(new DateTime()));
+	}
+
 	public void testDefaultConstructor() throws Exception {
-		WeekAnswers wa = new WeekAnswers();
 		assertNotNull("not null", wa);
 	}
 
@@ -22,7 +29,6 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testDefaultValues() throws Exception {
-		WeekAnswers wa = new WeekAnswers();
 		assertTrue("generally well", wa.getAnswer(R.id.generallyWell));
 		assertFalse("malaise", wa.getAnswer(R.id.malaise));
 		assertFalse("fever", wa.getAnswer(R.id.fever));
@@ -51,8 +57,6 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	private void assertGetterAndSetterForOneAnswer(int id) {
-		WeekAnswers wa = new WeekAnswers();
-
 		boolean before = wa.getAnswer(id);
 		wa.setAnswer(id, !before);
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " setter", wa.getAnswer(id) != before);
@@ -61,13 +65,13 @@ public class WeekAnswersTest extends TestCase {
 	public void testValueObject() throws Exception {
 		Week otherWeek = new Week(new DateTime().plusMonths(1));
 
-		WeekAnswers orig = new WeekAnswers();
-		WeekAnswers nonModified = new WeekAnswers();
+		WeekAnswers orig = new WeekAnswers(new Week(new DateTime()));
+		WeekAnswers nonModified = new WeekAnswers(new Week(new DateTime()));
 
-		WeekAnswers modWeek = new WeekAnswers();
+		WeekAnswers modWeek = new WeekAnswers(new Week(new DateTime()));
 		modWeek.week = otherWeek;
 
-		WeekAnswers modAnswer = new WeekAnswers();
+		WeekAnswers modAnswer = new WeekAnswers(new Week(new DateTime()));
 		modAnswer.setAnswer(R.id.generallyWell, false);
 		modAnswer.setAnswer(R.id.malaise, true);
 
@@ -82,8 +86,6 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testToString() throws Exception {
-		WeekAnswers wa = new WeekAnswers();
-
 		StringBuffer buf = new StringBuffer();
 		buf.append("WeekAnswers{week:").append(wa.week.toString());
 		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));

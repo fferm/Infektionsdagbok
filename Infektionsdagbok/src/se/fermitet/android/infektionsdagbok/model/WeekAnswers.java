@@ -1,7 +1,5 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import org.joda.time.DateTime;
-
 import se.fermitet.android.infektionsdagbok.R;
 
 public class WeekAnswers {
@@ -18,10 +16,6 @@ public class WeekAnswers {
 	private boolean dryCough;
 	private boolean wetCough;
 	private boolean morningCough;
-
-	public WeekAnswers() {
-		this(new Week(new DateTime()));
-	}
 
 	public WeekAnswers(Week myWeek) {
 		super();
