@@ -1,8 +1,14 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 
 public class WeekAnswers {
+
+	private static final String JSON_WEEK_STRING = "week";
 
 	public Week week;
 
@@ -20,6 +26,26 @@ public class WeekAnswers {
 	public WeekAnswers(Week myWeek) {
 		super();
 		this.week = myWeek;
+	}
+
+	public WeekAnswers(String jsonString) throws JSONException {
+		super();
+
+		JSONObject json = new JSONObject(jsonString);
+
+		String weekString = json.getString(JSON_WEEK_STRING);
+		this.week = new Week(weekString);
+
+		this.generallyWell = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.generallyWell));
+		this.malaise = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.malaise));
+		this.fever = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.fever));
+		this.earAche = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.earAche));
+		this.soreThroat = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.soreThroat));
+		this.runnyNose = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.runnyNose));
+		this.stommacAche = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.stommacAche));
+		this.dryCough = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.dryCough));
+		this.wetCough = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.wetCough));
+		this.morningCough = json.getBoolean(NameFromIdHelper.getNameFromId(R.id.morningCough));
 	}
 
 	public boolean getAnswer(int id) {
@@ -145,6 +171,29 @@ public class WeekAnswers {
 				+ ((this.week == null) ? 0 : this.week.hashCode());
 		result = prime * result + (this.wetCough ? 1231 : 1237);
 		return result;
+	}
+
+	public String toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+
+		json.put(JSON_WEEK_STRING, week.toString());
+
+		putJSONAnswer(json, R.id.generallyWell);
+		putJSONAnswer(json, R.id.malaise);
+		putJSONAnswer(json, R.id.fever);
+		putJSONAnswer(json, R.id.earAche);
+		putJSONAnswer(json, R.id.soreThroat);
+		putJSONAnswer(json, R.id.runnyNose);
+		putJSONAnswer(json, R.id.stommacAche);
+		putJSONAnswer(json, R.id.dryCough);
+		putJSONAnswer(json, R.id.wetCough);
+		putJSONAnswer(json, R.id.morningCough);
+
+		return json.toString();
+	}
+
+	private void putJSONAnswer(JSONObject json, int id) throws JSONException {
+		json.put(NameFromIdHelper.getNameFromId(id), this.getAnswer(id));
 	}
 
 

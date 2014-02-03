@@ -1,9 +1,10 @@
-package se.fermitet.android.infektionsdagbok;
+package se.fermitet.android.infektionsdagbok.helper;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import se.fermitet.android.infektionsdagbok.R;
 import android.annotation.SuppressLint;
 
 @SuppressLint("UseSparseArrays")

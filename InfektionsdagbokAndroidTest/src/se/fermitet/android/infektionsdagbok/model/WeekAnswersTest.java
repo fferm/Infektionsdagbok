@@ -4,8 +4,8 @@ import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
 
-import se.fermitet.android.infektionsdagbok.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 
 public class WeekAnswersTest extends TestCase {
 
@@ -101,5 +101,18 @@ public class WeekAnswersTest extends TestCase {
 		buf.append("}");
 
 		assertEquals(buf.toString(), wa.toString());
+	}
+
+	public void testJSONWriteAndRead() throws Exception {
+		// Change some answers to get away from default
+		wa.setAnswer(R.id.generallyWell, false);
+		wa.setAnswer(R.id.malaise, true);
+		wa.setAnswer(R.id.morningCough, true);
+
+		String json = wa.toJSON();
+
+		WeekAnswers fromJSON = new WeekAnswers(json);
+
+		assertEquals(wa, fromJSON);
 	}
 }

@@ -14,6 +14,14 @@ public class WeekTest extends TestCase {
 		assertEquals("" + dt.getYear() + "-" + dt.getWeekOfWeekyear(), w.toString());
 	}
 
+	public void testConstructorFromToString() {
+		DateTime dt = new DateTime(2012,2,4,12,3,1); // Not std time
+		Week original = new Week(dt);
+
+		Week retrieved = new Week(original.toString());
+
+		assertEquals(original, retrieved);
+	}
 
 	public void testValueObject() throws Exception {
 		DateTime mondayMorning = new DateTime(2014, 1, 20, 0, 0, 1);

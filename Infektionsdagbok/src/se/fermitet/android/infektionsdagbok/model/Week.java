@@ -1,13 +1,29 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.util.StringTokenizer;
+
 import org.joda.time.DateTime;
 
 public class Week {
 
+	private static final String DELIMITER = "-";
+
 	private DateTime dateTime;
 
 	public Week(DateTime dateTime) {
+		super();
 		this.dateTime = dateTime;
+	}
+
+	public Week(String stringFromToStringOfWeek) {
+		super();
+
+		StringTokenizer tokenizer = new StringTokenizer(stringFromToStringOfWeek, DELIMITER);
+
+		int year = Integer.valueOf(tokenizer.nextToken());
+		int week = Integer.valueOf(tokenizer.nextToken());
+
+		this.dateTime = new DateTime().withYear(year).withWeekOfWeekyear(week);
 	}
 
 	public Week previous() {
@@ -21,7 +37,10 @@ public class Week {
 
 	@Override
 	public String toString() {
-		return "" + dateTime.getYear() + "-" + dateTime.getWeekOfWeekyear();
+		StringBuffer buf = new StringBuffer();
+		buf.append(dateTime.getYear()).append(DELIMITER).append(dateTime.getWeekOfWeekyear());
+
+		return buf.toString();
 	}
 
 	private int year() {
