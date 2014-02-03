@@ -1,32 +1,26 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
+import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
-import org.junit.Test;
 
 import se.fermitet.android.infektionsdagbok.R;
 
-public class ModelManagerTest {
+public class ModelManagerTest extends TestCase {
 
-	@Test
-	public void singleton() throws Exception {
+	public void testSingleton() throws Exception {
 		ModelManager firstTry = ModelManager.instance();
 		ModelManager secondTry = ModelManager.instance();
 
 		assertSame(firstTry, secondTry);
 	}
 
-	@Test
 	public void testInitialWeekAnswers() throws Exception {
 		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
 
 		assertEquals("Week in initial WeekAnswers should be current week", new Week(new DateTime()), initial.week);
 	}
 
-	@Test
 	public void testPreviousWeekWeekAnswers() throws Exception {
 		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
 		WeekAnswers previous = ModelManager.instance().getPreviousWeekAnswers(initial);
@@ -36,7 +30,6 @@ public class ModelManagerTest {
 		assertEquals(previousWeek, previous.week);
 	}
 
-	@Test
 	public void testNextWeekWeekAnswers() throws Exception {
 		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
 		WeekAnswers next = ModelManager.instance().getNextWeekAnswers(initial);
@@ -46,7 +39,6 @@ public class ModelManagerTest {
 		assertEquals(nextWeek, next.week);
 	}
 
-	@Test
 	public void testWeekAnswersAreStored() throws Exception {
 		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
 
@@ -65,8 +57,7 @@ public class ModelManagerTest {
 		assertEquals("equals after going forward and back", initial, backAgain);
 	}
 
-	@Test
-	public void reset() throws Exception {
+	public void testReset() throws Exception {
 		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
 
 		// Change some data
@@ -77,7 +68,7 @@ public class ModelManagerTest {
 
 		WeekAnswers afterReset = ModelManager.instance().getInitialWeekAnswers();
 
-		assertNotEquals(initial, afterReset);
+		assertFalse(initial.equals(afterReset));
 
 	}
 

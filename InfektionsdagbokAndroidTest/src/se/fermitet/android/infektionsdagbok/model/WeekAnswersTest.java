@@ -1,34 +1,27 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
-import org.junit.Test;
 
 import se.fermitet.android.infektionsdagbok.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.R;
 
-public class WeekAnswersTest {
+public class WeekAnswersTest extends TestCase {
 
-	@Test
-	public void defaultConstructor() throws Exception {
+	public void testDefaultConstructor() throws Exception {
 		WeekAnswers wa = new WeekAnswers();
 		assertNotNull("not null", wa);
 	}
 
-	@Test
-	public void weekConstructor() throws Exception {
+	public void testWeekConstructor() throws Exception {
 		Week myWeek = new Week(new DateTime().plusWeeks(2));
 		WeekAnswers wa = new WeekAnswers(myWeek);
 
 		assertEquals(myWeek, wa.week);
 	}
 
-	@Test
-	public void defaultValues() throws Exception {
+	public void testDefaultValues() throws Exception {
 		WeekAnswers wa = new WeekAnswers();
 		assertTrue("generally well", wa.getAnswer(R.id.generallyWell));
 		assertFalse("malaise", wa.getAnswer(R.id.malaise));
@@ -44,21 +37,20 @@ public class WeekAnswersTest {
 		assertEquals("week", new Week(new DateTime()), wa.week);
 	}
 
-	@Test
-	public void gettersAndSetters() throws Exception {
-		testGetterAndSetterForOneAnswer(R.id.generallyWell);
-		testGetterAndSetterForOneAnswer(R.id.malaise);
-		testGetterAndSetterForOneAnswer(R.id.fever);
-		testGetterAndSetterForOneAnswer(R.id.earAche);
-		testGetterAndSetterForOneAnswer(R.id.soreThroat);
-		testGetterAndSetterForOneAnswer(R.id.runnyNose);
-		testGetterAndSetterForOneAnswer(R.id.stommacAche);
-		testGetterAndSetterForOneAnswer(R.id.dryCough);
-		testGetterAndSetterForOneAnswer(R.id.wetCough);
-		testGetterAndSetterForOneAnswer(R.id.morningCough);
+	public void testGettersAndSetters() throws Exception {
+		assertGetterAndSetterForOneAnswer(R.id.generallyWell);
+		assertGetterAndSetterForOneAnswer(R.id.malaise);
+		assertGetterAndSetterForOneAnswer(R.id.fever);
+		assertGetterAndSetterForOneAnswer(R.id.earAche);
+		assertGetterAndSetterForOneAnswer(R.id.soreThroat);
+		assertGetterAndSetterForOneAnswer(R.id.runnyNose);
+		assertGetterAndSetterForOneAnswer(R.id.stommacAche);
+		assertGetterAndSetterForOneAnswer(R.id.dryCough);
+		assertGetterAndSetterForOneAnswer(R.id.wetCough);
+		assertGetterAndSetterForOneAnswer(R.id.morningCough);
 	}
 
-	private void testGetterAndSetterForOneAnswer(int id) {
+	private void assertGetterAndSetterForOneAnswer(int id) {
 		WeekAnswers wa = new WeekAnswers();
 
 		boolean before = wa.getAnswer(id);
@@ -66,8 +58,7 @@ public class WeekAnswersTest {
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " setter", wa.getAnswer(id) != before);
 	}
 
-	@Test
-	public void valueObject() throws Exception {
+	public void testValueObject() throws Exception {
 		Week otherWeek = new Week(new DateTime().plusMonths(1));
 
 		WeekAnswers orig = new WeekAnswers();
@@ -90,7 +81,6 @@ public class WeekAnswersTest {
 		assertTrue("non modified hash code", orig.hashCode() == nonModified.hashCode());
 	}
 
-	@Test
 	public void testToString() throws Exception {
 		WeekAnswers wa = new WeekAnswers();
 

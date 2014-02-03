@@ -1,16 +1,12 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import junit.framework.TestCase;
 
 import org.joda.time.DateTime;
-import org.junit.Test;
 
-public class WeekTest {
+public class WeekTest extends TestCase {
 
-	@Test
-	public void textualRepresentation() {
+	public void testTextualRepresentation() {
 		DateTime dt = new DateTime();
 
 		Week w = new Week(dt);
@@ -19,8 +15,7 @@ public class WeekTest {
 	}
 
 
-	@Test
-	public void valueObject() throws Exception {
+	public void testValueObject() throws Exception {
 		DateTime mondayMorning = new DateTime(2014, 1, 20, 0, 0, 1);
 		DateTime sundayEvening = new DateTime(2014, 1, 26, 23, 59, 59);
 		DateTime nextMonday = new DateTime(2014, 1, 27, 0, 0, 1);
@@ -41,8 +36,7 @@ public class WeekTest {
 		assertTrue("hashCode of other week of time in same week", mon1.hashCode() == sun.hashCode());
 	}
 
-	@Test
-	public void previousWeek() throws Exception {
+	public void testPreviousWeek() throws Exception {
 		DateTime initialDt = new DateTime();
 		DateTime previousDt = initialDt.minusWeeks(1);
 
@@ -53,8 +47,7 @@ public class WeekTest {
 		assertEquals(previousWeekFromConstructor, previousWeekFromMethod);
 	}
 
-	@Test
-	public void nextWeek() throws Exception {
+	public void testNextWeek() throws Exception {
 		DateTime initialDt = new DateTime();
 		DateTime nextDt = initialDt.plusWeeks(1);
 
