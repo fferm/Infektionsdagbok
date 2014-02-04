@@ -8,31 +8,48 @@ import android.test.AndroidTestCase;
 
 public class StorageTest extends AndroidTestCase {
 
-	public void testSingleton() throws Exception {
-		Storage s1 = Storage.instance();
-		Storage s2 = Storage.instance();
+	private Storage storage;
 
-		assertNotNull("s1 not null", s1);
-		assertNotNull("s2 not null", s2);
-		assertSame("same objects from 2 instance() calls", s1, s2);
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		this.storage = new Storage(this.getContext());
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		this.storage.clear();
+
+		super.tearDown();
 	}
 
 	public void testNoExistingAnswerShouldGiveNullAnswer() throws Exception {
 		Week week = new Week(new DateTime());
 
-		assertNull(Storage.instance().getAnswersForWeek(week));
+		assertNull(storage.getAnswersForWeek(week));
 	}
 
 	public void testSaveAndRetrieveGivesEqualResponse() throws Exception {
 		Week week = new Week(new DateTime());
-
 		WeekAnswers original = new WeekAnswers(week);
 
-		Storage.instance().saveAnswers(original);
+		storage.saveAnswers(original);
 
-		WeekAnswers retrieved = Storage.instance().getAnswersForWeek(week);
+		WeekAnswers retrieved = storage.getAnswersForWeek(week);
 
 		assertEquals(original, retrieved);
+	}
+
+	public void testClearOutFiles() throws Exception {
+		Week week = new Week(new DateTime());
+		WeekAnswers original = new WeekAnswers(week);
+
+		storage.saveAnswers(original);
+
+		storage.clear();
+
+		assertNull(storage.getAnswersForWeek(week));
 
 	}
 }
