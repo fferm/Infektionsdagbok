@@ -90,15 +90,10 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testJSONWriteAndRead() throws Exception {
-		// Change some answers to get away from default
-		wa.setAnswer(R.id.generallyWell, false);
-		wa.setAnswer(R.id.malaise, true);
-		wa.setAnswer(R.id.morningCough, true);
+		for (int id : WeekAnswers.questionIds) {
+			wa.setAnswer(id, ! wa.getAnswer(id));
 
-		String json = wa.toJSON();
-
-		WeekAnswers fromJSON = WeekAnswers.fromJSON(json);
-
-		assertEquals(wa, fromJSON);
+			assertEquals("after changing " + NameFromIdHelper.getNameFromId(id), wa, WeekAnswers.fromJSON(wa.toJSON()));
+		}
 	}
 }

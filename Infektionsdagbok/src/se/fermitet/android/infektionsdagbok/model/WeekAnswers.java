@@ -57,6 +57,18 @@ public class WeekAnswers {
 		return ret;
 	}
 
+	public String toJSON() throws JSONException {
+		JSONObject json = new JSONObject();
+
+		json.put(JSON_WEEK_STRING, week.toString());
+
+		for (int id : questionIds) {
+			putJSONAnswer(json, id);
+		}
+
+		return json.toString();
+	}
+
 	public boolean getAnswer(int id) {
 		return answers.get(id);
 	}
@@ -114,18 +126,6 @@ public class WeekAnswers {
 				+ ((this.week == null) ? 0 : this.week.hashCode());
 
 		return result;
-	}
-
-	public String toJSON() throws JSONException {
-		JSONObject json = new JSONObject();
-
-		json.put(JSON_WEEK_STRING, week.toString());
-
-		for (int id : questionIds) {
-			putJSONAnswer(json, id);
-		}
-
-		return json.toString();
 	}
 
 	private void putJSONAnswer(JSONObject json, int id) throws JSONException {
