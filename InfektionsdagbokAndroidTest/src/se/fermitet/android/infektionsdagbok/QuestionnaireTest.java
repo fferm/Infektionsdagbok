@@ -18,6 +18,7 @@ import com.robotium.solo.Solo;
 public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Questionnaire> {
 
 	private Solo solo;
+	private ModelManager modelManager;
 
 	public QuestionnaireTest() {
 		super(Questionnaire.class);
@@ -27,11 +28,12 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
+		modelManager = new ModelManager(getActivity().getApplication());
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		ModelManager.instance().reset();
+		modelManager.reset();
 		solo.finishOpenedActivities();
 		super.tearDown();
 	}

@@ -12,6 +12,7 @@ import android.view.View;
 public class Questionnaire extends Activity implements OnWeekChangeListener {
 
 	private QuestionnaireView view;
+	private ModelManager modelManager;
 
 	WeekAnswers model;
 
@@ -19,10 +20,12 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        modelManager = new ModelManager(getApplicationContext());
+
         view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
         view.setOnWeekChangeListener(this);
 
-        setNewWeek(ModelManager.instance().getInitialWeekAnswers());
+        setNewWeek(modelManager.getInitialWeekAnswers());
 
         setContentView(view);
     }
@@ -38,13 +41,13 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 
 	@Override
 	public void onWeekIncrement() {
-		setNewWeek(ModelManager.instance().getNextWeekAnswers(this.model));
+		setNewWeek(modelManager.getNextWeekAnswers(this.model));
 	}
 
 
 	@Override
 	public void onWeekDecrement() {
-		setNewWeek(ModelManager.instance().getPreviousWeekAnswers(this.model));
+		setNewWeek(modelManager.getPreviousWeekAnswers(this.model));
 	}
 
 	private void setNewWeek(WeekAnswers newWeekAnswers) {

@@ -1,29 +1,29 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import junit.framework.TestCase;
-
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
+import android.test.AndroidTestCase;
 
-public class ModelManagerTest extends TestCase {
+public class ModelManagerTest extends AndroidTestCase {
 
-	public void testSingleton() throws Exception {
-		ModelManager firstTry = ModelManager.instance();
-		ModelManager secondTry = ModelManager.instance();
+	private ModelManager modelManager;
 
-		assertSame(firstTry, secondTry);
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		modelManager = new ModelManager(getContext());
 	}
 
 	public void testInitialWeekAnswers() throws Exception {
-		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
+		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		assertEquals("Week in initial WeekAnswers should be current week", new Week(new DateTime()), initial.week);
 	}
 
 	public void testPreviousWeekWeekAnswers() throws Exception {
-		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
-		WeekAnswers previous = ModelManager.instance().getPreviousWeekAnswers(initial);
+		WeekAnswers initial = modelManager.getInitialWeekAnswers();
+		WeekAnswers previous = modelManager.getPreviousWeekAnswers(initial);
 
 		Week previousWeek = initial.week.previous();
 
@@ -31,8 +31,8 @@ public class ModelManagerTest extends TestCase {
 	}
 
 	public void testNextWeekWeekAnswers() throws Exception {
-		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
-		WeekAnswers next = ModelManager.instance().getNextWeekAnswers(initial);
+		WeekAnswers initial = modelManager.getInitialWeekAnswers();
+		WeekAnswers next = modelManager.getNextWeekAnswers(initial);
 
 		Week nextWeek = initial.week.next();
 
@@ -40,33 +40,33 @@ public class ModelManagerTest extends TestCase {
 	}
 
 	public void testWeekAnswersAreStored() throws Exception {
-		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
+		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		// Change some data
 		initial.setAnswer(R.id.generallyWell, !initial.getAnswer(R.id.generallyWell));
 		initial.setAnswer(R.id.malaise, !initial.getAnswer(R.id.malaise));
 
-		WeekAnswers previous = ModelManager.instance().getPreviousWeekAnswers(initial);
-		WeekAnswers backAgain = ModelManager.instance().getNextWeekAnswers(previous);
+		WeekAnswers previous = modelManager.getPreviousWeekAnswers(initial);
+		WeekAnswers backAgain = modelManager.getNextWeekAnswers(previous);
 
 		assertEquals("equals after going back and forward", initial, backAgain);
 
-		WeekAnswers forward = ModelManager.instance().getNextWeekAnswers(backAgain);
-		backAgain = ModelManager.instance().getPreviousWeekAnswers(forward);
+		WeekAnswers forward = modelManager.getNextWeekAnswers(backAgain);
+		backAgain = modelManager.getPreviousWeekAnswers(forward);
 
 		assertEquals("equals after going forward and back", initial, backAgain);
 	}
 
 	public void testReset() throws Exception {
-		WeekAnswers initial = ModelManager.instance().getInitialWeekAnswers();
+		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		// Change some data
 		initial.setAnswer(R.id.generallyWell, !initial.getAnswer(R.id.generallyWell));
 		initial.setAnswer(R.id.malaise, !initial.getAnswer(R.id.malaise));
 
-		ModelManager.instance().reset();
+		modelManager.reset();
 
-		WeekAnswers afterReset = ModelManager.instance().getInitialWeekAnswers();
+		WeekAnswers afterReset = modelManager.getInitialWeekAnswers();
 
 		assertFalse(initial.equals(afterReset));
 

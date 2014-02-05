@@ -5,20 +5,16 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import android.content.Context;
+
 public class ModelManager {
 
 	private Map<Week, WeekAnswers> weekAnswers;
+	private Context context;
 
-	private static ModelManager singletonInstance;
-	public static ModelManager instance() {
-		if (singletonInstance == null) {
-			singletonInstance = new ModelManager();
-		}
-		return singletonInstance;
-	}
-
-	private ModelManager() {
+	public ModelManager(Context context) {
 		super();
+		this.context = context;
 		this.weekAnswers = new HashMap<Week, WeekAnswers>();
 	}
 
