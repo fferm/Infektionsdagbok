@@ -1,11 +1,19 @@
 package se.fermitet.android.infektionsdagbok;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
+import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.app.Instrumentation;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
@@ -19,6 +27,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 	private Solo solo;
 	private ModelManager modelManager;
+	private Context context;
 
 	public QuestionnaireTest() {
 		super(Questionnaire.class);
@@ -28,7 +37,8 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
-		modelManager = new ModelManager(getActivity().getApplication());
+		context = getActivity().getApplicationContext();
+		modelManager = new ModelManager(context);
 	}
 
 	@Override
@@ -144,6 +154,46 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertClickingQuestionPart(questionId, selector, "selector", false);
 		assertClickingQuestionPart(questionId, text, "text view", false);
 		assertClickingQuestionPart(questionId, questionView, "full question", false);
+	}
+
+	public void testSaveToStorage() throws Exception {
+		Questionnaire questionnaire = getActivity();
+		WeekAnswers model = questionnaire.model;
+
+		Storage storage = mock(Storage.class);
+
+		questionnaire.getModelManager().setStorage(storage);
+
+		solo.clickOnView(solo.getView(R.id.nextWeek));
+		verify(storage).saveAnswers(model);
+		reset(storage);
+
+		model = questionnaire.model;
+		solo.clickOnView(solo.getView(R.id.previousWeek));
+		verify(storage).saveAnswers(model);
+		reset(storage);
+
+		model = questionnaire.model;
+		Instrumentation ins = getInstrumentation();
+		ins.callActivityOnPause(questionnaire);
+		solo.clickOnView(solo.getView(R.id.previousWeek));
+		verify(storage).saveAnswers(model);
+		reset(storage);
+
+		questionnaire.getModelManager().reset();
+		verify(storage).clear();
+	}
+
+	public void testReadFromStorage() throws Exception {
+		Questionnaire questionnaire = getActivity();
+		Storage storage = mock(Storage.class);
+		questionnaire.getModelManager().setStorage(storage);
+
+		// Back and forward to get back to original week
+		solo.clickOnView(solo.getView(R.id.nextWeek));
+		solo.clickOnView(solo.getView(R.id.previousWeek));
+
+		verify(storage).getAnswersForWeek(new Week(new DateTime()));
 	}
 
 	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {

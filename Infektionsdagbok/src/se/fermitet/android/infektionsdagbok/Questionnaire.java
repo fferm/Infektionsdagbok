@@ -38,6 +38,10 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
         return true;
     }
 
+	ModelManager getModelManager() {
+		return modelManager;
+	}
+
 
 	@Override
 	public void onWeekIncrement() {
@@ -54,6 +58,8 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 		model = newWeekAnswers;
         view.setModel(newWeekAnswers);
 	}
+
+
 
 
 }
