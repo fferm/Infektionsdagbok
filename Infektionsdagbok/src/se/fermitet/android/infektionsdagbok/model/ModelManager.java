@@ -24,22 +24,14 @@ public class ModelManager {
 		return getWeekAnswersForWeek(weekToUse);
 	}
 
-	public WeekAnswers getPreviousWeekAnswers(WeekAnswers initial) {
-		try {
-			storage.saveAnswers(initial);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public WeekAnswers getPreviousWeekAnswers(WeekAnswers initial) throws Exception {
+		storage.saveAnswers(initial);
 
 		return getWeekAnswersForWeek(initial.week.previous());
 	}
 
-	public WeekAnswers getNextWeekAnswers(WeekAnswers initial) {
-		try {
-			storage.saveAnswers(initial);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public WeekAnswers getNextWeekAnswers(WeekAnswers initial) throws Exception {
+		storage.saveAnswers(initial);
 
 		return getWeekAnswersForWeek(initial.week.next());
 	}

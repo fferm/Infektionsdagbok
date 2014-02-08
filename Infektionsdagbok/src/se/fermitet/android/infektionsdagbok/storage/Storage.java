@@ -2,11 +2,8 @@ package se.fermitet.android.infektionsdagbok.storage;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
-import org.json.JSONException;
 
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -21,8 +18,7 @@ public class Storage {
 		this.context = context;
 	}
 
-	// TODO: Who handles exceptions?
-	public WeekAnswers getAnswersForWeek(Week week) throws IOException, JSONException {
+	public WeekAnswers getAnswersForWeek(Week week) throws Exception {
 		WeekAnswers ret = null;
 		BufferedReader br = null;
 		try {
@@ -41,8 +37,7 @@ public class Storage {
 		}
 	}
 
-	// TODO: Who handles exceptions?
-	public void saveAnswers(WeekAnswers toSave) throws IOException, JSONException {
+	public void saveAnswers(WeekAnswers toSave) throws Exception {
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(this.context.openFileOutput(getFilename(toSave.week), Context.MODE_PRIVATE));

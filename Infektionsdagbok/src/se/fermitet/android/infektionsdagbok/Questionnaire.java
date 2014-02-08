@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 public class Questionnaire extends Activity implements OnWeekChangeListener {
 
@@ -42,22 +43,45 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 		return modelManager;
 	}
 
+	void setModelManager(ModelManager mgr) {
+		this.modelManager = mgr;
+	}
+
+
 
 	@Override
 	public void onWeekIncrement() {
-		setNewWeek(modelManager.getNextWeekAnswers(this.model));
+		try {
+			setNewWeek(modelManager.getNextWeekAnswers(this.model));
+		} catch (Exception e) {
+			e.printStackTrace();
+			notifyUserOfException(e);
+		}
 	}
 
 
 	@Override
 	public void onWeekDecrement() {
-		setNewWeek(modelManager.getPreviousWeekAnswers(this.model));
+		try {
+			setNewWeek(modelManager.getPreviousWeekAnswers(this.model));
+		} catch (Exception e) {
+			e.printStackTrace();
+			notifyUserOfException(e);
+		}
 	}
+
+	private void notifyUserOfException(Exception e) {
+		Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
 
 	private void setNewWeek(WeekAnswers newWeekAnswers) {
 		model = newWeekAnswers;
         view.setModel(newWeekAnswers);
 	}
+
+
 
 
 

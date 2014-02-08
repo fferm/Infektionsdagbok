@@ -1,8 +1,10 @@
 package se.fermitet.android.infektionsdagbok;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.joda.time.DateTime;
 
@@ -194,6 +196,24 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 
 		verify(storage).getAnswersForWeek(new Week(new DateTime()));
+	}
+
+	public void testExceptionInStorageGivesNotification() throws Exception {
+		String nextMsg = "PROBLEM: nextWeek";
+		String prevMsg = "PROBLEM: prevWeek";
+
+		Questionnaire questionnaire = getActivity();
+		ModelManager mgr = mock(ModelManager.class);
+		when(mgr.getNextWeekAnswers(any(WeekAnswers.class))).thenThrow(new Exception(nextMsg));
+		when(mgr.getPreviousWeekAnswers(any(WeekAnswers.class))).thenThrow(new Exception(prevMsg));
+
+		questionnaire.setModelManager(mgr);
+
+		solo.clickOnView(solo.getView(R.id.nextWeek));
+		assertTrue("Next week: Should give error message", solo.searchText(nextMsg));
+
+		solo.clickOnView(solo.getView(R.id.previousWeek));
+		assertTrue("Prev week: Should give error message", solo.searchText(prevMsg));
 	}
 
 	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {
