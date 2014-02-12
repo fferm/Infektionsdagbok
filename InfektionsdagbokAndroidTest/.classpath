@@ -18,5 +18,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/dexmaker-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/dexmaker-mockito-1.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -3,20 +3,19 @@ package se.fermitet.android.infektionsdagbok.model;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.storage.Storage;
-import android.content.Context;
 
 public class ModelManager {
 
 	private Storage storage;
 
-	public ModelManager(Context context) {
+	public ModelManager(Storage storage) {
 		super();
-		this.storage = new Storage(context);
-	}
-
-	public void setStorage(Storage storage) {
 		this.storage = storage;
 	}
+
+/*	public void setStorage(Storage storage) {
+		this.storage = storage;
+	}*/
 
 
 	public WeekAnswers getInitialWeekAnswers() {

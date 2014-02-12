@@ -3,6 +3,7 @@ package se.fermitet.android.infektionsdagbok.model;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.test.AndroidTestCase;
 
 public class ModelManagerTest extends AndroidTestCase {
@@ -12,7 +13,9 @@ public class ModelManagerTest extends AndroidTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		modelManager = new ModelManager(getContext());
+
+		// TODO: maybe this should be done through some factory instead
+		modelManager = new ModelManager(new Storage(getContext()));
 	}
 
 	public void testInitialWeekAnswers() throws Exception {
@@ -69,7 +72,6 @@ public class ModelManagerTest extends AndroidTestCase {
 		WeekAnswers afterReset = modelManager.getInitialWeekAnswers();
 
 		assertFalse(initial.equals(afterReset));
-
 	}
 
 }
