@@ -18,6 +18,14 @@ public class ModelManagerTest extends AndroidTestCase {
 		modelManager = new ModelManager(new Storage(getContext()));
 	}
 
+	@Override
+	protected void tearDown() throws Exception {
+		if (this.modelManager != null) {
+			this.modelManager.reset();
+		}
+		super.tearDown();
+	}
+
 	public void testInitialWeekAnswers() throws Exception {
 		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 

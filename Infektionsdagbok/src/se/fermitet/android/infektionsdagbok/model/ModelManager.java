@@ -13,11 +13,6 @@ public class ModelManager {
 		this.storage = storage;
 	}
 
-/*	public void setStorage(Storage storage) {
-		this.storage = storage;
-	}*/
-
-
 	public WeekAnswers getInitialWeekAnswers() {
 		Week weekToUse = new Week(new DateTime());
 		return getWeekAnswersForWeek(weekToUse);

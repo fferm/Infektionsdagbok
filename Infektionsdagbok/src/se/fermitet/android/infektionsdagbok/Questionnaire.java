@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok;
 
+import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 public class Questionnaire extends Activity implements OnWeekChangeListener {
 
+	public static final String FACTORY_KEY = "FACTORY_OBJECT";
+
 	private QuestionnaireView view;
 
 	WeekAnswers model;
@@ -25,6 +28,8 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setApplicationFactory();
+
         view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
         view.setOnWeekChangeListener(this);
 
@@ -32,6 +37,21 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 
         setContentView(view);
     }
+
+    // TODO: Move to superclass
+	private void setApplicationFactory() {
+		Intent intent = getIntent();
+		if (intent == null) return;
+
+        Bundle extras = intent.getExtras();
+        if (extras == null) return;
+
+        Object obj = extras.get(FACTORY_KEY);
+        if (obj != null && obj instanceof Factory) {
+        	InfektionsdagbokApplication app = (InfektionsdagbokApplication) getApplication();
+        	app.setFactory((Factory) obj);
+        }
+	}
 
 
 	private void printBundle() {

@@ -1,13 +1,22 @@
 package se.fermitet.android.infektionsdagbok;
 
+import static org.mockito.Mockito.*;
+
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.app.Instrumentation;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -26,7 +35,17 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		super.setActivityIntent(createIntent());
 		solo = new Solo(getInstrumentation(), getActivity());
+	}
+
+	private Intent createIntent() {
+		Intent i = new Intent();
+		Bundle b = new Bundle();
+		b.putParcelable(Questionnaire.FACTORY_KEY, new MockedStorageFactory());
+
+		i.putExtras(b);
+		return i;
 	}
 
 	@Override
@@ -146,16 +165,48 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 		assertClickingQuestionPart(questionId, questionView, "full question", false);
 	}
 
-	// TODO: Fix with injection
-	/*public void testSaveToStorage() throws Exception {
+	public static class MockedStorageFactory implements Factory, Parcelable {
+		@Override
+		public Storage createStorage() {
+			return mock(Storage.class);
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+		}
+
+	     public static final Parcelable.Creator<MockedStorageFactory> CREATOR = new Parcelable.Creator<MockedStorageFactory>() {
+			@Override
+			public MockedStorageFactory createFromParcel(Parcel source) {
+				return new MockedStorageFactory();
+			}
+
+			@Override
+			public MockedStorageFactory[] newArray(int size) {
+				return new MockedStorageFactory[size];
+			}
+	     };
+
+
+	}
+
+	public void testFactoryInjection() throws Exception {
+		InfektionsdagbokApplication app = (InfektionsdagbokApplication) getActivity().getApplication();
+		Factory factory = app.getFactory();
+		assertEquals("factory class", MockedStorageFactory.class, factory.getClass());
+	}
+
+	public void testSaveToStorage() throws Exception {
 		Questionnaire questionnaire = getActivity();
 		WeekAnswers model = questionnaire.model;
 
-		Storage storage = mock(Storage.class);
-
 		InfektionsdagbokApplication app =  (InfektionsdagbokApplication) questionnaire.getApplication();
-
-		app.getModelManager().setStorage(storage);
+		Storage storage = app.getStorage();
 
 		solo.clickOnView(solo.getView(R.id.nextWeek));
 		verify(storage).saveAnswers(model);
@@ -175,7 +226,7 @@ public class QuestionnaireTest extends ActivityInstrumentationTestCase2<Question
 
 		app.getModelManager().reset();
 		verify(storage).clear();
-	}*/
+	}
 
 	// TODO: Fix with injection
 	/*
