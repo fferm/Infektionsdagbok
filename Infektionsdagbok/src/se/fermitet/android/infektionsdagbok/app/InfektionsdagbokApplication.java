@@ -30,6 +30,13 @@ public class InfektionsdagbokApplication extends Application {
 		return this.factory;
 	}
 
+	// TODO: Does this correspond to some lifecycle method on Application
+	public void clear() {
+		this.modelManager = null;
+		this.storage = null;
+		this.factory = null;
+	}
+
 	public void setFactory(Factory factory) {
 		this.factory = factory;
 	}

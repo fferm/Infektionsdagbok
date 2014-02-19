@@ -38,7 +38,6 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
         setContentView(view);
     }
 
-    // TODO: Move to superclass
 	private void setApplicationFactory() {
 		Intent intent = getIntent();
 		if (intent == null) return;
@@ -53,36 +52,12 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
         }
 	}
 
-
-	private void printBundle() {
-		Intent intent = getIntent();
-		System.out.println("!!!! intent class: " + intent.getClass().getName());
-
-		Bundle b = intent.getExtras();
-
-		for (String key : b.keySet()) {
-			String value = b.getString(key);
-
-			System.out.println("!!!! key: " + key + "    value : " + value);
-		}
-	}
-
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.quesionnaire, menu);
         return true;
     }
-
-/*	ModelManager getModelManager() {
-		return modelManager;
-	}
-
-	void setModelManager(ModelManager mgr) {
-		this.modelManager = mgr;
-	}*/
-
-
 
 	@Override
 	public void onWeekIncrement() {
@@ -121,10 +96,4 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 		model = newWeekAnswers;
         view.setModel(newWeekAnswers);
 	}
-
-
-
-
-
-
 }
