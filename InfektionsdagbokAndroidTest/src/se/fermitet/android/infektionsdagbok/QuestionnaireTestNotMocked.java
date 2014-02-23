@@ -3,6 +3,8 @@ package se.fermitet.android.infektionsdagbok;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.view.View;
 import android.widget.TextView;
 
 public class QuestionnaireTestNotMocked extends QuestionnaireTest {
@@ -54,6 +56,19 @@ public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 
 		assertEquals("same week again after going back and forward", beforeModel.week, nextModel.week);
 		assertEquals("week answers equality when going back and forward", beforeModel, nextModel);
+	}
+
+	public void testClickingDisabledQuestionsDoesNotChangeAnswer() throws Exception {
+		int questionId = R.id.malaise;
+		QuestionView questionView = (QuestionView) solo.getView(questionId);
+		View selector = questionView.findViewById(R.id.answerSelector);
+		View text = questionView.findViewById(R.id.questionText);
+
+		assertFalse("Should be disabled for this test", questionView.isEnabled());
+
+		assertClickingQuestionPart(questionId, selector, "selector", false);
+		assertClickingQuestionPart(questionId, text, "text view", false);
+		assertClickingQuestionPart(questionId, questionView, "full question", false);
 	}
 
 }

@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import org.joda.time.DateTime;
@@ -7,14 +8,14 @@ import org.joda.time.DateTime;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
+import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import se.fermitet.android.infektionsdagbok.test.MockedStorageFactory;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.app.Instrumentation;
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.View;
 
 public class QuestionnaireTestMocked extends QuestionnaireTest {
@@ -94,18 +95,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	}
 
-	public void testClickingDisabledQuestionsDoesNotChangeAnswer() throws Exception {
-		int questionId = R.id.malaise;
-		QuestionView questionView = (QuestionView) solo.getView(questionId);
-		View selector = questionView.findViewById(R.id.answerSelector);
-		View text = questionView.findViewById(R.id.questionText);
 
-		assertFalse("Should be disabled for this test", questionView.isEnabled());
-
-		assertClickingQuestionPart(questionId, selector, "selector", false);
-		assertClickingQuestionPart(questionId, text, "text view", false);
-		assertClickingQuestionPart(questionId, questionView, "full question", false);
-	}
 
 	public void testSaveToStorage() throws Exception {
 		Questionnaire questionnaire = getActivity();
@@ -147,66 +137,24 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		verify(storage).getAnswersForWeek(new Week(new DateTime()));
 	}
 
-	// TODO, fix this with some injection
-	/*	public void testExceptionInStorageGivesNotification() throws Exception {
-		String nextMsg = "PROBLEM: nextWeek";
-		String prevMsg = "PROBLEM: prevWeek";
+	public void testExceptionInStorageGivesNotification() throws Exception {
+		String msg = "PROBLEM";
 
 		Questionnaire questionnaire = getActivity();
-		ModelManager mgr = mock(ModelManager.class);
-		when(mgr.getNextWeekAnswers(any(WeekAnswers.class))).thenThrow(new Exception(nextMsg));
-		when(mgr.getPreviousWeekAnswers(any(WeekAnswers.class))).thenThrow(new Exception(prevMsg));
+		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
+		ModelManager mgr = app.getModelManager();
+		Storage storage = mgr.getStorage();
 
-		questionnaire.setModelManager(mgr);
+		doThrow(new Exception(msg)).when(storage).saveAnswers(any(WeekAnswers.class));
 
 		solo.clickOnView(solo.getView(R.id.nextWeek));
-		assertTrue("Next week: Should give error message", solo.searchText(nextMsg));
+		assertTrue("Next week: Should give error message", solo.searchText(msg));
 
 		solo.clickOnView(solo.getView(R.id.previousWeek));
-		assertTrue("Prev week: Should give error message", solo.searchText(prevMsg));
-	}*/
-
-	public static class MockedStorageFactory implements Factory, Parcelable {
-		@Override
-		public Storage createStorage() {
-			return mock(Storage.class);
-		}
-
-		@Override
-		public int describeContents() {
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {}
-
-		public static final Parcelable.Creator<MockedStorageFactory> CREATOR = new Parcelable.Creator<MockedStorageFactory>() {
-			@Override
-			public MockedStorageFactory createFromParcel(Parcel source) {
-				return new MockedStorageFactory();
-			}
-
-			@Override
-			public MockedStorageFactory[] newArray(int size) {
-				return new MockedStorageFactory[size];
-			}
-		};
+		assertTrue("Prev week: Should give error message", solo.searchText(msg));
 	}
 
 
-
-	private void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {
-		boolean before = getActivity().model.getAnswer(questionId);
-		solo.clickOnView(viewToClick);
-		boolean after = getActivity().model.getAnswer(questionId);
-
-
-		if (shouldChange) {
-			assertFalse("Should have changed after clicking " + nameOfView, before == after);
-		} else {
-			assertTrue("Should not have changed after clicking the disabled version of " + nameOfView, before == after);
-		}
-	}
 
 
 

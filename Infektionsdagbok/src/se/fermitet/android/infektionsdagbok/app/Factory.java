@@ -5,4 +5,5 @@ import se.fermitet.android.infektionsdagbok.storage.Storage;
 public interface Factory {
 
 	public Storage createStorage();
+
 }

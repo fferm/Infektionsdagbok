@@ -6,6 +6,7 @@ import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -88,6 +89,19 @@ public abstract class QuestionnaireTest extends ActivityInstrumentationTestCase2
 
 		assertTrue(NameFromIdHelper.getNameFromId(id) + " text should be enabled", tv.isEnabled());
 		assertEquals(NameFromIdHelper.getNameFromId(id) + " selector enabled value", enabled, selector.isEnabled());
+	}
+
+	protected void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {
+		boolean before = getActivity().model.getAnswer(questionId);
+		solo.clickOnView(viewToClick);
+		boolean after = getActivity().model.getAnswer(questionId);
+
+
+		if (shouldChange) {
+			assertFalse("Should have changed after clicking " + nameOfView, before == after);
+		} else {
+			assertTrue("Should not have changed after clicking the disabled version of " + nameOfView, before == after);
+		}
 	}
 
 }

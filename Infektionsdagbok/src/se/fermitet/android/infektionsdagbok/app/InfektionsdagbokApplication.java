@@ -46,7 +46,6 @@ public class InfektionsdagbokApplication extends Application {
 		public Storage createStorage() {
 			return new Storage(InfektionsdagbokApplication.this);
 		}
-
 	}
 
 
