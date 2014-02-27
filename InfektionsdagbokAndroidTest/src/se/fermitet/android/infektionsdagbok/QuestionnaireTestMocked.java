@@ -153,11 +153,5 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 		assertTrue("Prev week: Should give error message", solo.searchText(msg));
 	}
-
-
-
-
-
-
 }
 
