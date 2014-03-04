@@ -30,7 +30,7 @@ public class WeekAnswersTest extends TestCase {
 
 	public void testDefaultValues() throws Exception {
 		for (int id : WeekAnswers.questionIds) {
-			assertTrue(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id) == (id == R.id.generallyWell));
+			assertTrue(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id) == false);
 		}
 
 		assertEquals("week", new Week(new DateTime()), wa.week);
@@ -58,7 +58,7 @@ public class WeekAnswersTest extends TestCase {
 		modWeek.week = otherWeek;
 
 		WeekAnswers modAnswer = new WeekAnswers(new Week(new DateTime()));
-		modAnswer.setAnswer(R.id.generallyWell, false);
+		modAnswer.setAnswer(R.id.fever, true);
 		modAnswer.setAnswer(R.id.malaise, true);
 
 		assertTrue("Equal to itself", orig.equals(orig));
@@ -74,7 +74,6 @@ public class WeekAnswersTest extends TestCase {
 	public void testToString() throws Exception {
 		StringBuffer buf = new StringBuffer();
 		buf.append("WeekAnswers{week:").append(wa.week.toString());
-		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));
 		buf.append(", malaise:").append(wa.getAnswer(R.id.malaise));
 		buf.append(", fever:").append(wa.getAnswer(R.id.fever));
 		buf.append(", earAche:").append(wa.getAnswer(R.id.earAche));

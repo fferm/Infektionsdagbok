@@ -101,11 +101,6 @@ public class QuestionnaireView extends RelativeLayout {
 
 		int id = qv.getId();
 		model.setAnswer(id, checked);
-
-		if (qv.getId() != R.id.generallyWell && model.getAnswer(R.id.generallyWell)) {
-			model.setAnswer(R.id.generallyWell, false);
-			bindUIToModel();
-		}
 	}
 
 	public interface OnWeekChangeListener {

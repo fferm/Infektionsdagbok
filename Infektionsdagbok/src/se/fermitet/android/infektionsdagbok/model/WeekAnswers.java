@@ -23,7 +23,6 @@ public class WeekAnswers {
 	static {
 		questionIds = new ArrayList<Integer>();
 
-		questionIds.add(R.id.generallyWell);
 		questionIds.add(R.id.malaise);
 		questionIds.add(R.id.fever);
 		questionIds.add(R.id.earAche);
@@ -40,7 +39,6 @@ public class WeekAnswers {
 		this.week = myWeek;
 
 		answers = new SparseBooleanArray(questionIds.size());
-		answers.put(R.id.generallyWell, true);
 	}
 
 	public static WeekAnswers fromJSON(String jsonString) throws JSONException {

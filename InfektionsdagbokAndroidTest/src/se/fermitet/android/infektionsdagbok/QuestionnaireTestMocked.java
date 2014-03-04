@@ -62,7 +62,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 
 	public void testClickingAllQuestionPartsChangesAnswer() throws Exception {
-		int questionId = R.id.generallyWell;
+		int questionId = R.id.malaise;
 		QuestionView questionView = (QuestionView) solo.getView(questionId);
 		View selector = questionView.findViewById(R.id.answerSelector);
 		View text = questionView.findViewById(R.id.questionText);
@@ -72,25 +72,6 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		assertClickingQuestionPart(questionId, questionView, "full question", true);
 
 	}
-
-	public void testClickingOtherQuestionSetsGenerallyWellToNo() throws Exception {
-		WeekAnswers model = getActivity().model;
-
-		for (Integer idObj : WeekAnswers.questionIds) {
-			int id = idObj.intValue();
-
-			if (id == R.id.generallyWell) continue;
-
-			while (! model.getAnswer(R.id.generallyWell)) {
-				clickOnQuestionWithId(R.id.generallyWell);
-			}
-
-			clickOnQuestionWithId(id);
-			assertFalse(NameFromIdHelper.getNameFromId(id) + " does not set generallywell to no", model.getAnswer(R.id.generallyWell));
-		}
-	}
-
-
 
 	public void testSaveToStorage() throws Exception {
 		Questionnaire questionnaire = getActivity();

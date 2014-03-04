@@ -37,19 +37,11 @@
         android:layout_margin="10dp"
         android:contentDescription="Nästa"/>
     
-    
-    <se.fermitet.android.infektionsdagbok.views.QuestionView
-        android:id="@+id/generallyWell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/weekDisplay"
-        android:text="Väsentligen frisk" />
-
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/malaise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/generallyWell"
+        android:layout_below="@id/weekDisplay"
         android:text="Sjukdomskänsla" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView

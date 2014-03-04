@@ -54,7 +54,7 @@ public class ModelManagerTest extends AndroidTestCase {
 		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		// Change some data
-		initial.setAnswer(R.id.generallyWell, !initial.getAnswer(R.id.generallyWell));
+		initial.setAnswer(R.id.fever, !initial.getAnswer(R.id.fever));
 		initial.setAnswer(R.id.malaise, !initial.getAnswer(R.id.malaise));
 
 		WeekAnswers previous = modelManager.getPreviousWeekAnswers(initial);
@@ -72,7 +72,7 @@ public class ModelManagerTest extends AndroidTestCase {
 		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		// Change some data
-		initial.setAnswer(R.id.generallyWell, !initial.getAnswer(R.id.generallyWell));
+		initial.setAnswer(R.id.fever, !initial.getAnswer(R.id.fever));
 		initial.setAnswer(R.id.malaise, !initial.getAnswer(R.id.malaise));
 
 		modelManager.reset();

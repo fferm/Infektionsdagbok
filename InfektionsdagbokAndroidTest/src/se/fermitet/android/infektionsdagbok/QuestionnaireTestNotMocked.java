@@ -20,7 +20,6 @@ public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 	}
 
 	private void assertInitialsOnQuestions() {
-		assertQuestionFullState(R.id.generallyWell, "Väsentligen frisk", true);
 		assertQuestionFullState(R.id.malaise, "Sjukdomskänsla", false);
 		assertQuestionFullState(R.id.fever, "Feber > 38", false);
 		assertQuestionFullState(R.id.earAche, "Öronvärk", false);
@@ -34,11 +33,11 @@ public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 
 
 	public void testClickingArrowNavigation() throws Exception {
-		clickOnQuestionWithId(R.id.generallyWell); // Change someting so that later check does not compare with default
+		clickOnQuestionWithId(R.id.fever); // Change someting so that later check does not compare with default
 
 		WeekAnswers beforeModel = getActivity().model;
 
-		assertFalse("beforeModel generallyWell should have changed", beforeModel.getAnswer(R.id.generallyWell));
+		assertTrue("beforeModel fever should have changed", beforeModel.getAnswer(R.id.fever));
 
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 
