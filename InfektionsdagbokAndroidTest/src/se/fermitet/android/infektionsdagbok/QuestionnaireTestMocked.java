@@ -48,28 +48,6 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		assertEquals("factory class", MockedStorageFactory.class, factory.getClass());
 	}
 
-	public void testStatusOfGenerallyWellChangesEnabledStateOfOthers() throws Exception {
-		clickOnQuestionWithId(R.id.generallyWell);
-
-		for (Integer idObj : WeekAnswers.questionIds) {
-			int id = idObj.intValue();
-			assertEnabled(id, true);
-		}
-		assertChecked(R.id.generallyWell, false);
-
-		clickOnQuestionWithId(R.id.dryCough); // Change some state
-		clickOnQuestionWithId(R.id.generallyWell);
-
-		for (Integer idObj : WeekAnswers.questionIds) {
-			int id = idObj.intValue();
-
-			assertEnabled(id,  id == R.id.generallyWell);
-		}
-
-		assertChecked(R.id.dryCough, true);
-		assertChecked(R.id.generallyWell, true);
-	}
-
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
 
@@ -93,6 +71,23 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		assertClickingQuestionPart(questionId, text, "text view", true);
 		assertClickingQuestionPart(questionId, questionView, "full question", true);
 
+	}
+
+	public void testClickingOtherQuestionSetsGenerallyWellToNo() throws Exception {
+		WeekAnswers model = getActivity().model;
+
+		for (Integer idObj : WeekAnswers.questionIds) {
+			int id = idObj.intValue();
+
+			if (id == R.id.generallyWell) continue;
+
+			while (! model.getAnswer(R.id.generallyWell)) {
+				clickOnQuestionWithId(R.id.generallyWell);
+			}
+
+			clickOnQuestionWithId(id);
+			assertFalse(NameFromIdHelper.getNameFromId(id) + " does not set generallywell to no", model.getAnswer(R.id.generallyWell));
+		}
 	}
 
 

@@ -44,16 +44,6 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 		return getAnswerSelector().isChecked();
 	}
 
-	@Override
-	public void setEnabled(boolean enabled) {
-		getAnswerSelector().setEnabled(enabled);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return getAnswerSelector().isEnabled();
-	}
-
 	private void setupQuestionItems() {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
@@ -68,9 +58,7 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 			this.performClick();
 			setBackgroundBasedOnCheckedStatus();
 		} else {
-			if (this.isEnabled()) {
-				getAnswerSelector().performClick();
-			}
+			getAnswerSelector().performClick();
 		}
 	}
 
@@ -87,4 +75,5 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 	private CompoundButton getAnswerSelector() {
 		return (CompoundButton) findViewById(R.id.answerSelector);
 	}
+
 }

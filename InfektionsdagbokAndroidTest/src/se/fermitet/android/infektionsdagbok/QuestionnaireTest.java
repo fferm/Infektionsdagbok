@@ -49,13 +49,12 @@ public abstract class QuestionnaireTest extends ActivityInstrumentationTestCase2
 		solo.clickOnView(questionView);
 	}
 
-	protected void assertQuestionFullState(int id, String questionText, boolean checked, boolean enabled) {
+	protected void assertQuestionFullState(int id, String questionText, boolean checked) {
 		QuestionView view = (QuestionView) solo.getView(id);
 		assertNotNull(view);
 
 		assertText(id, questionText);
 		assertChecked(id, checked);
-		assertEnabled(id, enabled);
 	}
 
 	protected void assertText(int id, String text) {
@@ -79,16 +78,6 @@ public abstract class QuestionnaireTest extends ActivityInstrumentationTestCase2
 		} else {
 			assertNull(NameFromIdHelper.getNameFromId(id) + " should not have a background", view.getBackground());
 		}
-	}
-
-	protected void assertEnabled(int id, boolean enabled) {
-		QuestionView view = (QuestionView) solo.getView(id);
-
-		CompoundButton selector =  (CompoundButton) view.findViewById(R.id.answerSelector);
-		TextView tv = (TextView) view.findViewById(R.id.questionText);
-
-		assertTrue(NameFromIdHelper.getNameFromId(id) + " text should be enabled", tv.isEnabled());
-		assertEquals(NameFromIdHelper.getNameFromId(id) + " selector enabled value", enabled, selector.isEnabled());
 	}
 
 	protected void assertClickingQuestionPart(int questionId, View viewToClick, String nameOfView, boolean shouldChange) {

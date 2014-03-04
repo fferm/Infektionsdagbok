@@ -31,7 +31,6 @@ public class QuestionnaireView extends RelativeLayout {
 		this.model = model;
 
 		bindUIToModel();
-		handleEnabledQuestions();
 	}
 
 	public void setOnWeekChangeListener(OnWeekChangeListener listener) {
@@ -103,31 +102,9 @@ public class QuestionnaireView extends RelativeLayout {
 		int id = qv.getId();
 		model.setAnswer(id, checked);
 
-		if (id == R.id.generallyWell) {
-			handleEnabledQuestions();
-		}
-	}
-
-	private void handleEnabledQuestions() {
-		if (! questions.get(R.id.generallyWell).isChecked()) {
-			enableAllQuestions();
-		} else {
-			disableAllButGenerallyWell();
-		}
-	}
-
-	private void disableAllButGenerallyWell() {
-		QuestionView generallyWell = questions.get(R.id.generallyWell);
-		for (int i = 0; i < questions.size(); i++) {
-			QuestionView question = questions.valueAt(i);
-			question.setEnabled(question == generallyWell);
-		}
-	}
-
-	private void enableAllQuestions() {
-		for (int i = 0; i < questions.size(); i++) {
-			QuestionView question = questions.valueAt(i);
-			question.setEnabled(true);
+		if (qv.getId() != R.id.generallyWell && model.getAnswer(R.id.generallyWell)) {
+			model.setAnswer(R.id.generallyWell, false);
+			bindUIToModel();
 		}
 	}
 
