@@ -16,13 +16,13 @@
         <activity
             android:name="se.fermitet.android.infektionsdagbok.Questionnaire"
             android:label="@string/app_name" android:screenOrientation="userPortrait">
+        </activity>
+        <activity android:name="se.fermitet.android.infektionsdagbok.activity.NotificationStarter" android:label="NotificationStarter" android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="se.fermitet.android.infektionsdagbok.activity.NotificationStarter" android:label="NotificationStarter" android:screenOrientation="userPortrait">
         </activity>
         
 	</application>
