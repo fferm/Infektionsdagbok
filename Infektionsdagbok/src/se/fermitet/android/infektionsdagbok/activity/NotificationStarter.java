@@ -20,23 +20,23 @@ public class NotificationStarter extends Activity {
 
 		setContentView(R.layout.notification_starter);
 	}
-	
+
 	public void buttonPressed(View v) {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-		builder.setSmallIcon(R.drawable.ic_action_next_item); // TODO: Better notification icon
+		builder.setSmallIcon(R.drawable.ic_notification);
 		builder.setContentTitle("Infektionsdagbok");
 		builder.setContentText("Fyll i veckans infektionsdagbok");
-		
+
 		Intent resultIntent = new Intent(this, Questionnaire.class);
-		
+
 		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		stackBuilder.addParentStack(Questionnaire.class);
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(resultPendingIntent);
-		
+
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		
+
 		int myId = 231231;
 		notificationManager.notify(myId, builder.build());
 	}
