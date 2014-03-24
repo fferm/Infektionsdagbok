@@ -14,6 +14,8 @@ import android.view.View;
 
 public class NotificationStarter extends Activity {
 
+	private int notificationId = 12345;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,7 +39,11 @@ public class NotificationStarter extends Activity {
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-		int myId = 231231;
-		notificationManager.notify(myId, builder.build());
+		notificationManager.notify(notificationId, builder.build());
+	}
+
+	public void removePressed(View v) {
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancel(notificationId);
 	}
 }
