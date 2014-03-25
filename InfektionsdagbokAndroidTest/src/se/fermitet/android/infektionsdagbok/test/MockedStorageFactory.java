@@ -3,6 +3,7 @@ package se.fermitet.android.infektionsdagbok.test;
 import static org.mockito.Mockito.mock;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import android.app.AlarmManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,6 +12,11 @@ public class MockedStorageFactory implements Factory, Parcelable {
 	@Override
 	public Storage createStorage() {
 		return mock(Storage.class);
+	}
+
+	@Override
+	public AlarmManager getAlarmManager() {
+		return mock(AlarmManager.class);
 	}
 
 	@Override
@@ -32,4 +38,5 @@ public class MockedStorageFactory implements Factory, Parcelable {
 			return new MockedStorageFactory[size];
 		}
 	};
+
 }

@@ -1,6 +1,6 @@
 package se.fermitet.android.infektionsdagbok;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import org.joda.time.DateTime;
@@ -14,7 +14,9 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.test.MockedStorageFactory;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.app.AlarmManager;
 import android.app.Instrumentation;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.view.View;
 
@@ -128,6 +130,16 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 		assertTrue("Prev week: Should give error message", solo.searchText(msg));
+	}
+
+	public void testAlarmForNotificationIsSet() throws Exception {
+		Questionnaire questionnaire = getActivity();
+		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
+
+		AlarmManager mgr = app.getAlarmManager();
+
+		// TODO: Check relevant arguments so that it is a sunday at 7pm.
+		verify(mgr).setRepeating(anyInt(), anyLong(), anyLong(), any(PendingIntent.class));
 	}
 }
 

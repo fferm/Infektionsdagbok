@@ -3,6 +3,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 import se.fermitet.android.infektionsdagbok.Questionnaire;
 import se.fermitet.android.infektionsdagbok.R;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -24,6 +25,22 @@ public class NotificationStarter extends Activity {
 	}
 
 	public void buttonPressed(View v) {
+		NotificationManager notificationManager = getNotificationManager();
+
+		notificationManager.notify(notificationId, createNotification());
+	}
+
+	public void removePressed(View v) {
+		NotificationManager notificationManager = getNotificationManager();
+		notificationManager.cancel(notificationId);
+	}
+
+	private NotificationManager getNotificationManager() {
+		return (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	}
+
+
+	private Notification createNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setSmallIcon(R.drawable.ic_notification);
 		builder.setContentTitle("Infektionsdagbok");
@@ -36,14 +53,6 @@ public class NotificationStarter extends Activity {
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(resultPendingIntent);
-
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-		notificationManager.notify(notificationId, builder.build());
-	}
-
-	public void removePressed(View v) {
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(notificationId);
+		return builder.build();
 	}
 }

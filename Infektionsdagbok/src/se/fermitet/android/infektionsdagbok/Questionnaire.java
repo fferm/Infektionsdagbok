@@ -6,6 +6,7 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView.OnWeekChangeListener;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +31,8 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 
         setApplicationFactory();
 
+        issueNotificationAlarm();
+
         view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
         view.setOnWeekChangeListener(this);
 
@@ -51,6 +54,14 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
         	app.setFactory((Factory) obj);
         }
 	}
+
+	private void issueNotificationAlarm() {
+		AlarmManager am = ((InfektionsdagbokApplication) getApplication()).getAlarmManager();
+
+		am.setRepeating(AlarmManager.RTC_WAKEUP, 0, 1000 * 60* 60 * 24, null);
+	}
+
+
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
