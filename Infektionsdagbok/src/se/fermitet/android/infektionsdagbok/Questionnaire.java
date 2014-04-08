@@ -1,5 +1,8 @@
 package se.fermitet.android.infektionsdagbok;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -58,7 +61,13 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 	private void issueNotificationAlarm() {
 		AlarmManager am = ((InfektionsdagbokApplication) getApplication()).getAlarmManager();
 
-		am.setRepeating(AlarmManager.RTC_WAKEUP, 0, 1000 * 60* 60 * 24, null);
+		long sundayAtSevenPM = new DateTime()
+			.dayOfWeek().setCopy(DateTimeConstants.SUNDAY)
+			.millisOfDay().setCopy(19 * 60 * 60 * 1000).getMillis();
+
+		long week = 7 * 24 * 60 * 60 * 1000;
+
+		am.setRepeating(AlarmManager.RTC_WAKEUP, sundayAtSevenPM, week, null);
 	}
 
 

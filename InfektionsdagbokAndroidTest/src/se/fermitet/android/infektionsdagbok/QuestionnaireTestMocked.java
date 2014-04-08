@@ -4,6 +4,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
@@ -138,8 +139,14 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		AlarmManager mgr = app.getAlarmManager();
 
-		// TODO: Check relevant arguments so that it is a sunday at 7pm.
-		verify(mgr).setRepeating(anyInt(), anyLong(), anyLong(), any(PendingIntent.class));
+		DateTime startInstant = new DateTime();
+		startInstant = startInstant.dayOfWeek().setCopy(DateTimeConstants.SUNDAY);
+		startInstant = startInstant.millisOfDay().setCopy(19 * 60 * 60 * 1000);
+
+		long week = 7 * 24 * 60 * 60 * 1000;
+
+		// TODO: Check relevant arguments so that it has proper intent
+		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), any(PendingIntent.class));
 	}
 }
 
