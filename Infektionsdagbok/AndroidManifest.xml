@@ -5,8 +5,8 @@
     android:versionName="1.0.1" >
 
     <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="17"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -21,8 +21,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="se.fermitet.android.infektionsdagbok.activity.NotificationStarter" android:label="NotificationStarter" android:screenOrientation="userPortrait">
         </activity>
         <receiver android:name=".receiver.NotificationAlarmReceiver"></receiver>
         

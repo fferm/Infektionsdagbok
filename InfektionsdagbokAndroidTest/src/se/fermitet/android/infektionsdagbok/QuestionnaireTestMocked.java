@@ -145,8 +145,8 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		long week = 7 * 24 * 60 * 60 * 1000;
 
-		// TODO: Check relevant arguments so that it has proper intent
-		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), any(PendingIntent.class));
+		// I was unable to check the intent...
+		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
 	}
 }
 
