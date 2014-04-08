@@ -6,10 +6,12 @@ import org.joda.time.DateTimeConstants;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.receiver.NotificationAlarmReceiver;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView.OnWeekChangeListener;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -66,11 +68,12 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 			.millisOfDay().setCopy(19 * 60 * 60 * 1000).getMillis();
 
 		long week = 7 * 24 * 60 * 60 * 1000;
+		
+		Intent intent = new Intent(this, NotificationAlarmReceiver.class);
+		PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		am.setRepeating(AlarmManager.RTC_WAKEUP, sundayAtSevenPM, week, null);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, sundayAtSevenPM, week, pIntent);
 	}
-
-
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
