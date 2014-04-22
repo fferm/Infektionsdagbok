@@ -68,7 +68,7 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 			.millisOfDay().setCopy(19 * 60 * 60 * 1000).getMillis();
 
 		long week = 7 * 24 * 60 * 60 * 1000;
-		
+
 		Intent intent = new Intent(this, NotificationAlarmReceiver.class);
 		PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -78,8 +78,8 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.quesionnaire, menu);
-        return true;
+ 	   	getMenuInflater().inflate(R.menu.questionnaire_actionbar_actions, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 	@Override

@@ -15,6 +15,7 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.test.MockedStorageFactory;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.Instrumentation;
 import android.app.PendingIntent;
@@ -147,6 +148,18 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		// I was unable to check the intent...
 		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
+	}
+
+	public void testHasActionBar() throws Exception {
+		Questionnaire questionnaire = getActivity();
+
+		ActionBar actionBar = questionnaire.getActionBar();
+
+		assertNotNull("not null", actionBar);
+		assertTrue("showing", actionBar.isShowing());
+		assertEquals("navigation mode", ActionBar.NAVIGATION_MODE_STANDARD, actionBar.getNavigationMode());
+
+		solo.searchText("Export");
 	}
 }
 
