@@ -1,4 +1,4 @@
 
     <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:id="@+id/actionExport" android:title="Export" android:showAsAction="ifRoom"></item>
+        <item android:id="@+id/actionExport" android:title="Export" android:showAsAction="ifRoom" android:icon="@drawable/ic_action_email"></item>
     </menu>
