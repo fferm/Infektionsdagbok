@@ -150,7 +150,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
 	}
 
-	public void testHasActionBar() throws Exception {
+	public void testActionBar() throws Exception {
 		Questionnaire questionnaire = getActivity();
 
 		ActionBar actionBar = questionnaire.getActionBar();
@@ -160,6 +160,9 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		assertEquals("navigation mode", ActionBar.NAVIGATION_MODE_STANDARD, actionBar.getNavigationMode());
 
 		solo.searchText("Export");
+
+		solo.clickOnActionBarItem(R.id.actionExport);
+		assertTrue("Export activity started", solo.waitForActivity("Export"));
 	}
 }
 

@@ -3,6 +3,7 @@ package se.fermitet.android.infektionsdagbok;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
+import se.fermitet.android.infektionsdagbok.activity.ExportActivity;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -15,6 +16,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -81,6 +83,21 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
  	   	getMenuInflater().inflate(R.menu.questionnaire_actionbar_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.actionExport:
+			handleActionExport();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void handleActionExport() {
+		startActivity(new Intent(this, ExportActivity.class));
+	}
 
 	@Override
 	public void onWeekIncrement() {
