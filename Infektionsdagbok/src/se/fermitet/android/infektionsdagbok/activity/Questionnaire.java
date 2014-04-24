@@ -4,9 +4,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import se.fermitet.android.infektionsdagbok.R;
-import se.fermitet.android.infektionsdagbok.R.id;
-import se.fermitet.android.infektionsdagbok.R.layout;
-import se.fermitet.android.infektionsdagbok.R.menu;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
