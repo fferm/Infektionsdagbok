@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
+import se.fermitet.android.infektionsdagbok.activity.Export;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
@@ -162,7 +163,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		solo.searchText("Export");
 
 		solo.clickOnActionBarItem(R.id.actionExport);
-		assertTrue("Export activity started", solo.waitForActivity("Export"));
+		assertTrue("Export activity started", solo.waitForActivity(Export.class));
 	}
 }
 

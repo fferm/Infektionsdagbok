@@ -9,21 +9,30 @@
         android:targetSdkVersion="19" />
 
     <application
+        android:name="se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" android:name=".app.InfektionsdagbokApplication">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="se.fermitet.android.infektionsdagbok.Questionnaire"
-            android:label="@string/app_name" android:screenOrientation="userPortrait">
+            android:label="@string/app_name"
+            android:screenOrientation="userPortrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".receiver.NotificationAlarmReceiver"></receiver>
-        
-	</application>
+
+        <receiver android:name="se.fermitet.android.infektionsdagbok.receiver.NotificationAlarmReceiver" >
+        </receiver>
+
+        <activity
+            android:name="se.fermitet.android.infektionsdagbok.activity.Export"
+            android:label="Export"
+            android:screenOrientation="userPortrait" >
+        </activity>
+    </application>
 
 </manifest>

@@ -3,7 +3,7 @@ package se.fermitet.android.infektionsdagbok;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
-import se.fermitet.android.infektionsdagbok.activity.ExportActivity;
+import se.fermitet.android.infektionsdagbok.activity.Export;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -96,7 +96,7 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 	}
 
 	private void handleActionExport() {
-		startActivity(new Intent(this, ExportActivity.class));
+		startActivity(new Intent(this, Export.class));
 	}
 
 	@Override
