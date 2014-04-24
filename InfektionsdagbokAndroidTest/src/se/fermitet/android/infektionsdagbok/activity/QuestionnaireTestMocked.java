@@ -1,4 +1,4 @@
-package se.fermitet.android.infektionsdagbok;
+package se.fermitet.android.infektionsdagbok.activity;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
-import se.fermitet.android.infektionsdagbok.activity.Export;
+import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;

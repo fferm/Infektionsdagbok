@@ -1,5 +1,6 @@
-package se.fermitet.android.infektionsdagbok;
+package se.fermitet.android.infektionsdagbok.activity;
 
+import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
