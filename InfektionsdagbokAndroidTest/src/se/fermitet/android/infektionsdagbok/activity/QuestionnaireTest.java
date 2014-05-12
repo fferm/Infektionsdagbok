@@ -1,48 +1,19 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
 import se.fermitet.android.infektionsdagbok.R;
-import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.robotium.solo.Solo;
+public abstract class QuestionnaireTest extends ActivityTestWithSolo<Questionnaire>{
 
-public abstract class QuestionnaireTest extends ActivityInstrumentationTestCase2<Questionnaire>{
-
-
-	protected Solo solo;
 
 	public QuestionnaireTest() {
 		super(Questionnaire.class);
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		onSetupBeforeActivityCreation();
-		solo = new Solo(getInstrumentation(), getActivity());
-	}
-
-	protected void onSetupBeforeActivityCreation() {}
-
-	@Override
-	protected void tearDown() throws Exception {
-		InfektionsdagbokApplication app = (InfektionsdagbokApplication) getActivity().getApplication();
-
-		app.getModelManager().reset();
-
-		solo.finishOpenedActivities();
-		getActivity().finish();
-		app.clear();
-
-		super.tearDown();
 	}
 
 	protected void clickOnQuestionWithId(int id) {

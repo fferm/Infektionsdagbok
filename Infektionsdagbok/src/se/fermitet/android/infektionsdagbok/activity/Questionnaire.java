@@ -4,13 +4,11 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import se.fermitet.android.infektionsdagbok.R;
-import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.receiver.NotificationAlarmReceiver;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView.OnWeekChangeListener;
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -20,9 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class Questionnaire extends Activity implements OnWeekChangeListener {
-
-	public static final String FACTORY_KEY = "FACTORY_OBJECT";
+public class Questionnaire extends InfektionsdagbokActivity implements OnWeekChangeListener {
 
 	private QuestionnaireView view;
 
@@ -36,8 +32,6 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setApplicationFactory();
-
         issueNotificationAlarm();
 
         view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
@@ -47,20 +41,6 @@ public class Questionnaire extends Activity implements OnWeekChangeListener {
 
         setContentView(view);
     }
-
-	private void setApplicationFactory() {
-		Intent intent = getIntent();
-		if (intent == null) return;
-
-        Bundle extras = intent.getExtras();
-        if (extras == null) return;
-
-        Object obj = extras.get(FACTORY_KEY);
-        if (obj != null && obj instanceof Factory) {
-        	InfektionsdagbokApplication app = (InfektionsdagbokApplication) getApplication();
-        	app.setFactory((Factory) obj);
-        }
-	}
 
 	private void issueNotificationAlarm() {
 		AlarmManager am = ((InfektionsdagbokApplication) getApplication()).getAlarmManager();
