@@ -1,16 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp" >
+ 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:text="Export"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_margin="10dp"
+         />
+    
+    <TextView
+        android:id="@+id/firstWeekTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="57dp"
-        android:layout_marginTop="87dp"
-        android:text="Starting Week" />
+        android:layout_below="@id/title"
+        android:layout_alignLeft="@id/title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Första vecka" />
 
+    <TextView
+        android:id="@+id/lastWeekTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/firstWeekTV"
+        android:layout_alignLeft="@id/title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Sista vecka" />
+
+    <Spinner
+        android:id="@+id/firstWeekSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_alignTop="@id/firstWeekTV"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/firstWeekTV"
+         />
+
+    <Spinner
+        android:id="@+id/lastWeekSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/firstWeekSpinner"
+        android:layout_alignTop="@id/lastWeekTV"
+        android:layout_below="@id/lastWeekSpinner" />
+
+    <Button
+        android:id="@+id/exportButton"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignLeft="@id/lastWeekTV"
+        android:layout_below="@id/lastWeekSpinner"
+        android:text="Exportera" />
+    
 </RelativeLayout>
