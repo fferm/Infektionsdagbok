@@ -1,7 +1,7 @@
 package se.fermitet.android.infektionsdagbok.receiver;
 
-import se.fermitet.android.infektionsdagbok.Questionnaire;
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.activity.Questionnaire;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

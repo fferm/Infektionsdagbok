@@ -1,7 +1,8 @@
-package se.fermitet.android.infektionsdagbok;
+package se.fermitet.android.infektionsdagbok.activity;
 
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import android.widget.TextView;
 
