@@ -162,7 +162,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		solo.searchText("Export");
 
 		solo.clickOnActionBarItem(R.id.actionExport);
-		assertTrue("Export activity started", solo.waitForActivity("Export"));
+		assertTrue("Export activity started", solo.waitForActivity("ExportActivity"));
 	}
 }
 
