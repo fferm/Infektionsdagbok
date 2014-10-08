@@ -23,27 +23,25 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 	}
 
 	public void testInitials() throws Exception {
-	    assertTrue("First Week", solo.waitForText("Start"));
-	    assertTrue("Last week", solo.waitForText("Slut"));
-	    assertTrue("Export button", solo.waitForView(R.id.exportButton));
+		assertTrue("First Week", solo.waitForText("Start"));
+		assertTrue("Last week", solo.waitForText("Slut"));
+		assertTrue("Export button", solo.waitForView(R.id.exportButton));
 
-	    assertTrue("Start date - first day of current year", solo.waitForText(format.format(DateTime.now().withDayOfYear(1).toDate())));
-	    assertTrue("End date - today", solo.waitForText(format.format(DateTime.now().toDate())));
+		assertTrue("Start date - first day of current year", solo.waitForText(format.format(DateTime.now().withDayOfYear(1).toDate())));
+		assertTrue("End date - today", solo.waitForText(format.format(DateTime.now().toDate())));
 	}
 
 	public void testSettingDatePickerShouldChangeDate() throws Exception {
 		ExportView view = getActivity().view;
 
 		// Change startDate
-		DateTime setDate = DateTime.now().minusDays(20);
-		System.out.println("!!!! setDate: " + setDate);
+		DateTime setDate = DateTime.now().withYear(2012).withMonthOfYear(1).withDayOfMonth(1);
 		DateTime startDateBefore = view.getStartDate();
 		DateTime endDateBefore = view.getEndDate();
 
 		solo.clickOnView(solo.getView(R.id.startDateTV));
 
-		solo.setDatePicker(0, setDate.year().get(), setDate.monthOfYear().get(), setDate.dayOfMonth().get());
-		solo.clickOnText("Ställ in");
+		setDatePickerDate(setDate);
 
 		checkDayIsSameRegardlessOfTime("Start date - value", setDate, view.getStartDate());
 		checkDayIsSameRegardlessOfTime("End date should not have changed", endDateBefore, view.getEndDate());
@@ -56,13 +54,19 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		startDateBefore = view.getStartDate();
 		endDateBefore = view.getEndDate();
 
-		solo.setDatePicker(0, setDate.year().get(), setDate.monthOfYear().get(), setDate.dayOfMonth().get());
-		solo.clickOnText("Ställ in");
+		setDatePickerDate(setDate);
 
 		checkDayIsSameRegardlessOfTime("End date - value", setDate, view.getEndDate());
 		checkDayIsSameRegardlessOfTime("Start date should not have changed", startDateBefore, view.getStartDate());
 		assertTrue("End date - text", solo.waitForText(format.format(setDate.toDate())));
-}
+	}
+
+	private void setDatePickerDate(DateTime setDate) {
+		solo.setDatePicker(0, setDate.year().get(), setDate.monthOfYear().get() - 1, setDate.dayOfMonth().get());
+		solo.clickOnText("Ställ in");
+
+	}
+
 
 	public void testInitialDates() throws Exception {
 		ExportView view = getActivity().view;

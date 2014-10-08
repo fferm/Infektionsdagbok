@@ -49,10 +49,21 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 	public DateTime getStartDate() {
 		return startDate;
 	}
+	
+	private void setStartDate(DateTime date) {
+		this.startDate = date;
+		syncDateTexts();
+	}
 
 	public DateTime getEndDate() {
 		return endDate;
 	}
+	
+	private void setEndDate(DateTime date) {
+		this.endDate = date;
+		syncDateTexts();
+	}
+
 
 	@Override
 	public void onClick(View v) {
@@ -71,9 +82,7 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 				@Override
 				public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-					System.out.println("!!!! " + year + "-" + monthOfYear + "-" + dayOfMonth);
-					ExportView.this.startDate = new DateTime(year, monthOfYear, dayOfMonth, 0, 0);
-					syncDateTexts();
+					ExportView.this.setStartDate(new DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0));
 				}
 			};
 		} else if (v == endDateTV) {
@@ -82,12 +91,10 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 				@Override
 				public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-					ExportView.this.endDate = new DateTime(year, monthOfYear, dayOfMonth, 0, 0);
-					syncDateTexts();
+					ExportView.this.setEndDate(new DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0));
 				}
 			};
 		}
-		System.out.println("!!!! initial: " + initial);
 
 		DatePickerDialog picker = new DatePickerDialog(getContext(), listener, initial.year().get(), initial.monthOfYear().get() - 1, initial.dayOfMonth().get());
 		picker.show();
