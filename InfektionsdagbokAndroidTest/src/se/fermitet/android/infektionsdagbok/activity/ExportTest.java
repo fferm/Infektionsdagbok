@@ -31,6 +31,39 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 	    assertTrue("End date - today", solo.waitForText(format.format(DateTime.now().toDate())));
 	}
 
+	public void testSettingDatePickerShouldChangeDate() throws Exception {
+		ExportView view = getActivity().view;
+
+		// Change startDate
+		DateTime setDate = DateTime.now().minusDays(20);
+		System.out.println("!!!! setDate: " + setDate);
+		DateTime startDateBefore = view.getStartDate();
+		DateTime endDateBefore = view.getEndDate();
+
+		solo.clickOnView(solo.getView(R.id.startDateTV));
+
+		solo.setDatePicker(0, setDate.year().get(), setDate.monthOfYear().get(), setDate.dayOfMonth().get());
+		solo.clickOnText("Ställ in");
+
+		checkDayIsSameRegardlessOfTime("Start date - value", setDate, view.getStartDate());
+		checkDayIsSameRegardlessOfTime("End date should not have changed", endDateBefore, view.getEndDate());
+		assertTrue("Start date - text", solo.waitForText(format.format(setDate.toDate())));
+
+		// Change endDate
+		solo.clickOnView(solo.getView(R.id.endDateTV));
+
+		setDate = DateTime.now().minusDays(10);
+		startDateBefore = view.getStartDate();
+		endDateBefore = view.getEndDate();
+
+		solo.setDatePicker(0, setDate.year().get(), setDate.monthOfYear().get(), setDate.dayOfMonth().get());
+		solo.clickOnText("Ställ in");
+
+		checkDayIsSameRegardlessOfTime("End date - value", setDate, view.getEndDate());
+		checkDayIsSameRegardlessOfTime("Start date should not have changed", startDateBefore, view.getStartDate());
+		assertTrue("End date - text", solo.waitForText(format.format(setDate.toDate())));
+}
+
 	public void testInitialDates() throws Exception {
 		ExportView view = getActivity().view;
 

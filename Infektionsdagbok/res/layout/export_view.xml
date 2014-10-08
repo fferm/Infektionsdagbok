@@ -47,6 +47,7 @@
         android:layout_toRightOf="@id/startTV"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="2014-01-01"
+        android:clickable="true"
          />
 
     <TextView
@@ -59,6 +60,7 @@
         android:layout_below="@id/startDateTV" 
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="2014-10-07"
+        android:clickable="true"
         />
 
     <Button
