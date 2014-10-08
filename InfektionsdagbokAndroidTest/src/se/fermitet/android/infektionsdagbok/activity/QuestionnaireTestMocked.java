@@ -32,7 +32,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	@Override
 	protected void onSetupBeforeActivityCreation() {
 		Intent i = new Intent();
-		i.putExtra(Questionnaire.FACTORY_KEY, new MockedStorageFactory());
+		i.putExtra(InfektionsdagbokActivity.FACTORY_KEY, new MockedStorageFactory());
 
 		super.setActivityIntent(i);
 	}
@@ -106,7 +106,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testReadFromStorage() throws Exception {
-		Questionnaire questionnaire = getActivity();
+		InfektionsdagbokActivity questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 		Storage storage = app.getStorage();
 		reset(storage);
@@ -121,7 +121,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	public void testExceptionInStorageGivesNotification() throws Exception {
 		String msg = "PROBLEM";
 
-		Questionnaire questionnaire = getActivity();
+		InfektionsdagbokActivity questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 		ModelManager mgr = app.getModelManager();
 		Storage storage = mgr.getStorage();
@@ -136,7 +136,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {
-		Questionnaire questionnaire = getActivity();
+		InfektionsdagbokActivity questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 
 		AlarmManager mgr = app.getAlarmManager();
@@ -152,7 +152,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testActionBar() throws Exception {
-		Questionnaire questionnaire = getActivity();
+		InfektionsdagbokActivity questionnaire = getActivity();
 
 		ActionBar actionBar = questionnaire.getActionBar();
 

@@ -64,11 +64,12 @@
         />
 
     <Button
-        android:id="@+id/exportButton"
+        android:id="@+id/exportBTN"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:layout_alignLeft="@id/endTV"
         android:layout_below="@id/endDateTV"
-        android:text="Exportera" />
+        android:text="Exportera"
+        android:clickable="true" />
     
 </se.fermitet.android.infektionsdagbok.views.ExportView>

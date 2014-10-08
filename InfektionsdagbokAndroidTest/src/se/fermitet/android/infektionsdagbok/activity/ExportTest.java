@@ -25,7 +25,7 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 	public void testInitials() throws Exception {
 		assertTrue("First Week", solo.waitForText("Start"));
 		assertTrue("Last week", solo.waitForText("Slut"));
-		assertTrue("Export button", solo.waitForView(R.id.exportButton));
+		assertTrue("Export button", solo.waitForView(R.id.exportBTN));
 
 		assertTrue("Start date - first day of current year", solo.waitForText(format.format(DateTime.now().withDayOfYear(1).toDate())));
 		assertTrue("End date - today", solo.waitForText(format.format(DateTime.now().toDate())));
@@ -47,7 +47,6 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		DateTime endDateBefore = view.getEndDate();
 		
 		solo.clickOnView(solo.getView(R.id.startDateTV));
-		
 		setDatePickerDate(setDate);
 		
 		checkDayIsSameRegardlessOfTime("Start date - value", setDate, view.getStartDate());
@@ -55,17 +54,29 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		assertTrue("Start date - text", solo.waitForText(format.format(setDate.toDate())));
 		
 		// Change endDate
-		solo.clickOnView(solo.getView(R.id.endDateTV));
-		
 		setDate = DateTime.now().minusDays(10);
 		startDateBefore = view.getStartDate();
 		endDateBefore = view.getEndDate();
 		
+		solo.clickOnView(solo.getView(R.id.endDateTV));
 		setDatePickerDate(setDate);
 		
 		checkDayIsSameRegardlessOfTime("End date - value", setDate, view.getEndDate());
 		checkDayIsSameRegardlessOfTime("Start date should not have changed", startDateBefore, view.getStartDate());
 		assertTrue("End date - text", solo.waitForText(format.format(setDate.toDate())));
+	}
+	
+	public void testStartDateAfterEndDateShouldGiveError() {
+		ExportView view = getActivity().view;
+		
+		DateTime oneDayAfterEndDate = view.getEndDate().plusDays(1);
+		
+		solo.clickOnView(solo.getView(R.id.startDateTV));
+		setDatePickerDate(oneDayAfterEndDate);
+		
+		solo.clickOnView(solo.getView(R.id.exportBTN));
+		
+		assertTrue(solo.searchText("Kan inte ha startdatum efter slutdatum"));
 	}
 	
 	private void setDatePickerDate(DateTime setDate) {

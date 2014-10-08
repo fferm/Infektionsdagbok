@@ -9,14 +9,17 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 	private TextView startDateTV;
 	private TextView endDateTV;
+	private Button exportBTN;
 	private DateTime startDate;
 	private DateTime endDate;
 
@@ -37,11 +40,13 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 	private void attachWidgets() {
 		startDateTV = (TextView) findViewById(R.id.startDateTV);
 		endDateTV = (TextView) findViewById(R.id.endDateTV);
+		exportBTN = (Button) findViewById(R.id.exportBTN);
 	}
 
 	private void setupWidgets() {
 		startDateTV.setOnClickListener(this);
 		endDateTV.setOnClickListener(this);
+		exportBTN.setOnClickListener(this);
 		syncDateTexts();
 	}
 
@@ -64,11 +69,12 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 		syncDateTexts();
 	}
 
-
 	@Override
 	public void onClick(View v) {
 		if (v == startDateTV || v == endDateTV) {
 			handleDateClicks(v);
+		} else if (v == exportBTN) {
+			handleExportButtonClick();
 		}
 	}
 
@@ -107,5 +113,12 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 		endDateTV.setText(format.format(endDate.toDate()));
 	}
 
+	private void handleExportButtonClick() {
+		if (getStartDate().isAfter(getEndDate())) {
+			String msg = "Kan inte ha startdatum efter slutdatum";
+			Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+			toast.show();
+		}
+	}
 
 }

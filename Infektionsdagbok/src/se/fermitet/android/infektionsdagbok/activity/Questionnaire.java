@@ -15,17 +15,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-public class Questionnaire extends InfektionsdagbokActivity implements OnWeekChangeListener {
-
-	private QuestionnaireView view;
+public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> implements OnWeekChangeListener {
 
 	WeekAnswers model;
 
 	public Questionnaire() {
-		super();
+		super(R.layout.questionnaire_view);
 	}
 
     @Override
@@ -33,13 +29,10 @@ public class Questionnaire extends InfektionsdagbokActivity implements OnWeekCha
         super.onCreate(savedInstanceState);
 
         issueNotificationAlarm();
-
-        view = (QuestionnaireView) View.inflate(this, R.layout.questionnaire_view, null);
         view.setOnWeekChangeListener(this);
 
         setNewWeek(getLocalApplication().getModelManager().getInitialWeekAnswers());
 
-        setContentView(view);
     }
 
 	private void issueNotificationAlarm() {
@@ -104,12 +97,6 @@ public class Questionnaire extends InfektionsdagbokActivity implements OnWeekCha
 		return (InfektionsdagbokApplication) getApplication();
 	}
 
-
-
-	private void notifyUserOfException(Exception e) {
-		Toast toast = Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT);
-		toast.show();
-	}
 
 
 	private void setNewWeek(WeekAnswers newWeekAnswers) {
