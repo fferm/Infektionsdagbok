@@ -7,7 +7,7 @@ import android.view.View;
 
 public class ExportActivity extends InfektionsdagbokActivity {
 
-	private ExportView view = null;
+	ExportView view = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

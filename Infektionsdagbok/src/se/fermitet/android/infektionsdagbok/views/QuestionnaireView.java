@@ -24,6 +24,7 @@ public class QuestionnaireView extends RelativeLayout {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
+		attachWidgets();
 		setupWidgets();
 	}
 
@@ -37,9 +38,12 @@ public class QuestionnaireView extends RelativeLayout {
 		this.weekChangeListener = listener;
 	}
 
-	private void setupWidgets() {
+	private void attachWidgets() {
 		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
+	}
 
+
+	private void setupWidgets() {
 		setupWeekNavigationButtons();
 		setupQuestions();
 	}

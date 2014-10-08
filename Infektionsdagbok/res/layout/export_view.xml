@@ -19,47 +19,54 @@
          />
     
     <TextView
-        android:id="@+id/firstWeekTV"
+        android:id="@+id/startTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
         android:layout_alignLeft="@id/title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Första veckan" />
+        android:layout_below="@id/title"
+        android:text="Start"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/lastWeekTV"
+        android:id="@+id/endTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/firstWeekTV"
+        android:layout_below="@id/startTV"
         android:layout_alignLeft="@id/title"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Sista veckan" />
+        android:text="Slut" />
 
-    <Spinner
-        android:id="@+id/firstWeekSpinner"
+    <TextView
+        android:id="@+id/startDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:layout_alignTop="@id/firstWeekTV"
+        android:layout_alignTop="@id/startTV"
+        android:layout_alignBottom="@id/startTV"
         android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@id/firstWeekTV"
+        android:layout_toRightOf="@id/startTV"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="2014-01-01"
          />
 
-    <Spinner
-        android:id="@+id/lastWeekSpinner"
+    <TextView
+        android:id="@+id/endDateTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/firstWeekSpinner"
-        android:layout_alignTop="@id/lastWeekTV"
-        android:layout_below="@id/lastWeekSpinner" />
+        android:layout_alignLeft="@id/startDateTV"
+        android:layout_alignTop="@id/endTV"
+        android:layout_alignBottom="@id/endTV"
+        android:layout_below="@id/startDateTV" 
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="2014-10-07"
+        />
 
     <Button
         android:id="@+id/exportButton"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_alignLeft="@id/lastWeekTV"
-        android:layout_below="@id/lastWeekSpinner"
+        android:layout_alignLeft="@id/endTV"
+        android:layout_below="@id/endDateTV"
         android:text="Exportera" />
     
 </se.fermitet.android.infektionsdagbok.views.ExportView>
