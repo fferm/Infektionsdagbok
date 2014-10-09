@@ -5,8 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.joda.time.DateTime;
 
 import android.content.Context;
 
@@ -19,20 +19,31 @@ public class KarolinskaExcelExporter {
 		this.context = context;
 	}
 
-	public Workbook export(DateTime startDate, DateTime endDate) {
-		Workbook ret = createWorkbook(startDate, endDate);
+	public Workbook export(int year) {
+		Workbook ret = createWorkbook(year);
 
 		sendWorkbookToFile(ret);
 
 		return ret;
 	}
 
-	private Workbook createWorkbook(DateTime startDate, DateTime endDate) {
+	private Workbook createWorkbook(int year) {
         Workbook wb = new HSSFWorkbook();
 
-        wb.createSheet("Infektionsdagbok");
+        Sheet diarySheet = wb.createSheet("Infektionsdagbok");
+
+        setColumnWidths(diarySheet);
 
         return wb;
+	}
+
+
+	private void setColumnWidths(Sheet diarySheet) {
+		diarySheet.setColumnWidth(0, 2792);
+
+		for (int colIdx = 1; colIdx <= 54; colIdx++) {
+			diarySheet.setColumnWidth(colIdx, 480);
+		}
 	}
 
 	private void sendWorkbookToFile(Workbook wb) {

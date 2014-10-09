@@ -7,27 +7,42 @@ import org.joda.time.DateTime;
 import android.test.AndroidTestCase;
 
 public class KarolinskaExcelExporterTest extends AndroidTestCase {
+	private KarolinskaExcelExporter kee = null;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		kee = new KarolinskaExcelExporter(getContext());
+	}
 
 	public void testWorkbookHasWorksheet() throws Exception {
-		KarolinskaExcelExporter kee = new KarolinskaExcelExporter(getContext());
+		//Workbook wb = kee.export(model, DateTime.now().withDayOfYear(1), DateTime.now().withDayOfYear(365));
+		assertNotNull("Has to find a worksheet", getSheet());
 
+	}
+
+	public void testCellSizes() throws Exception {
+		Sheet sheet = getSheet();
+
+		assertEquals("Column 0 width", 2792, sheet.getColumnWidth(0));
+
+		for (int colIdx = 1; colIdx <=54; colIdx++) {
+			assertEquals("Column " + colIdx + " width", 480, sheet.getColumnWidth(colIdx));
+		}
+	}
+
+	protected Sheet getSheet() {
+		Workbook wb = kee.export(DateTime.now().year().get());
 		String nameToLookFor = "Infektionsdagbok";
 
-		//Workbook wb = kee.export(model, DateTime.now().withDayOfYear(1), DateTime.now().withDayOfYear(365));
-		Workbook wb = kee.export(DateTime.now().withDayOfYear(1), DateTime.now().withDayOfYear(365));
-
-		assertNotNull("Workbook is null", wb);
-
-		boolean found = false;
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 			Sheet sheet = wb.getSheetAt(i);
 			if (sheet.getSheetName().equals(nameToLookFor)) {
-				found = true;
-				break;
+				return sheet;
 			}
 		}
-
-		assertTrue("Has to find a worksheet with the name " + nameToLookFor, found);
-		assertNotNull(kee);
+		return null;
 	}
+
 }
