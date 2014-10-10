@@ -32,7 +32,7 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		for (int colIdx = 1; colIdx <= 53; colIdx++) {
 			assertEquals("Column " + colIdx + " width", 504, sheet.getColumnWidth(colIdx));
 		}
-		
+
 		checkRowHeight(sheet, 0, 8);
 		checkRowHeight(sheet, 1, 16);
 		checkRowHeight(sheet, 2, 16);
@@ -40,7 +40,7 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 			checkRowHeight(sheet, idx, 13);
 		}
 	}
-	
+
 	private void checkRowHeight(Sheet sheet, int idx, int points) {
 		try {
 			assertEquals("Row " + idx + " height", points * 20, sheet.getRow(idx).getHeight());
@@ -50,40 +50,43 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		}
 	}
 
-	public void testPrintOrientation() throws Exception {
+	public void testPrint() throws Exception {
 		Sheet sheet = getSheet();
-		
+
 		assertTrue("Landscape should be true", sheet.getPrintSetup().getLandscape());
+		assertTrue("Autobreaks", sheet.getAutobreaks());
+		assertEquals("Fit horizontal", 1, sheet.getPrintSetup().getFitWidth());
+		assertEquals("Fit vertical", 1, sheet.getPrintSetup().getFitHeight());
 	}
-	
+
 	public void testRowHeaders() throws Exception {
 		Sheet sheet = getSheet();
-	
-		checkRowHeader(sheet, 5, "Sjukdomskänsla"); 
-		checkRowHeader(sheet, 6, "Feber > 38"); 
-		checkRowHeader(sheet, 7, "Öronvärk"); 
-		checkRowHeader(sheet, 8, "Halsont"); 
-		checkRowHeader(sheet, 9, "Snuva"); 
-		checkRowHeader(sheet, 10, "Magbesvär"); 
-		checkRowHeader(sheet, 11, "Torrhosta"); 
-		checkRowHeader(sheet, 12, "Slemhosta"); 
-		checkRowHeader(sheet, 13, "Morgonupphostning"); 
-		checkRowHeader(sheet, 14, "Väsentligen frisk"); 
+
+		checkRowHeader(sheet, 5, "Sjukdomskänsla");
+		checkRowHeader(sheet, 6, "Feber > 38");
+		checkRowHeader(sheet, 7, "Öronvärk");
+		checkRowHeader(sheet, 8, "Halsont");
+		checkRowHeader(sheet, 9, "Snuva");
+		checkRowHeader(sheet, 10, "Magbesvär");
+		checkRowHeader(sheet, 11, "Torrhosta");
+		checkRowHeader(sheet, 12, "Slemhosta");
+		checkRowHeader(sheet, 13, "Morgonupphostning");
+		checkRowHeader(sheet, 14, "Väsentligen frisk");
 	}
-	
+
 
 	private void checkRowHeader(Sheet sheet, int rowIdx, String text) {
 		try {
 			Row row = sheet.getRow(rowIdx);
 			Cell cell = row.getCell(0);
-			
+
 			assertEquals("Text in row header of row " + rowIdx, text, cell.getStringCellValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Exception on rowIndex " + rowIdx);
 		}
 	}
-	
+
 	public void testWeekNumbers() throws Exception {
 		int i = 0;
 		try {
@@ -103,21 +106,21 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		Sheet sheet = getSheet();
 		Row row1 = sheet.getRow(1);
 		Row row2 = sheet.getRow(2);
-		
+
 		Cell nameCell = row1.getCell(1);
 		assertEquals("Name cell text", "Namn", nameCell.getStringCellValue());
-		
+
 		Cell ssnCell = row2.getCell(1);
 		assertEquals("SSN cell text", "Personnummer", ssnCell.getStringCellValue());
-		
+
 		Cell headerCell = row1.getCell(30);
 		assertEquals("Header cell text", "Infektionsdagbok", headerCell.getStringCellValue());
 	}
-	
+
 	public void testYearNumber() throws Exception {
 		assertEquals("Year text", (double) DateTime.now().year().get(), getSheet().getRow(3).getCell(1).getNumericCellValue());
 	}
-	
+
 	protected Sheet getSheet() {
 		Workbook wb = kee.export(DateTime.now().year().get());
 		String nameToLookFor = "Infektionsdagbok";
