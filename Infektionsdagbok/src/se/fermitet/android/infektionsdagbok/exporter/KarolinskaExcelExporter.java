@@ -13,6 +13,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import se.fermitet.android.infektionsdagbok.model.ModelManager;
+import se.fermitet.android.infektionsdagbok.model.Week;
 import android.content.Context;
 
 public class KarolinskaExcelExporter {
@@ -27,20 +29,36 @@ public class KarolinskaExcelExporter {
 	private Font verdana6Bold;
 	private Font verdana6Normal;
 
+	private int numWeeks;
+
 	public KarolinskaExcelExporter(Context context) {
 		super();
 		this.context = context;
 	}
 
-	public Workbook export(int year) {
-		Workbook ret = createWorkbook(year);
+	public Workbook export(int year, ModelManager mm) {
+		numWeeks = checkNumWeeks(year);
 
-		sendWorkbookToFile(ret);
+		System.out.println("!!!! Year: " + year + "  weeks: " + numWeeks);
+
+		Workbook ret = createWorkbook(year, mm);
+
+		sendWorkbookToFile(ret, year);
 
 		return ret;
 	}
 
-	private Workbook createWorkbook(int year) {
+	private int checkNumWeeks(int year) {
+		Week week = new Week(year, 52);
+		Week next = week.next();
+		if (next.year() == year) {
+			return 53;
+		} else {
+			return 52;
+		}
+	}
+
+	private Workbook createWorkbook(int year, ModelManager mm) {
         Workbook wb = new HSSFWorkbook();
         createFonts(wb);
 
@@ -284,9 +302,9 @@ public class KarolinskaExcelExporter {
 	}
 
 
-	private void sendWorkbookToFile(Workbook wb) {
+	private void sendWorkbookToFile(Workbook wb, int year) {
         // Create a path where we will place our List of objects on external storage
-        File file = new File(context.getExternalFilesDir(null), "Infektionsdagbok.xls");
+        File file = new File(context.getExternalFilesDir(null), "Infektionsdagbok" + year + ".xls");
         FileOutputStream os = null;
 
         try {

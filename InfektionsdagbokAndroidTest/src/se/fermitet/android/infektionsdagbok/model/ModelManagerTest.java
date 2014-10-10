@@ -1,5 +1,10 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
@@ -80,6 +85,42 @@ public class ModelManagerTest extends AndroidTestCase {
 		WeekAnswers afterReset = modelManager.getInitialWeekAnswers();
 
 		assertFalse(initial.equals(afterReset));
+	}
+
+	public void testGetAllWeekAnswersForYear() throws Exception {
+		int year = 2014;
+
+		Collection<WeekAnswers> toSave = prepareTestDataIndexedByWeek(year).values();
+
+		// Save
+		modelManager.saveWeekAnswers(toSave);
+
+		// Retrieve
+		List<WeekAnswers> retrieved = modelManager.getAllWeekAnswersInYear(year);
+
+		// Check result
+		assertEquals("Size of answer", toSave.size(), retrieved.size());
+		assertTrue("Contains all", retrieved.containsAll(toSave));
+	}
+
+	public static Map<Week, WeekAnswers> prepareTestDataIndexedByWeek(int year) {
+		Map<Week, WeekAnswers> toSave = new HashMap<Week, WeekAnswers>();
+
+		// Add one WeekAnswers with each one of the questions marked as true
+		Week week = new Week(year + "-01");
+		for (int i : WeekAnswers.questionIds) {
+			WeekAnswers answ = new WeekAnswers(week);
+			answ.setAnswer(i, true);
+
+			toSave.put(week, answ);
+
+			week = week.next();
+		}
+
+		// Add one WeekAnswers with no questions marked as true
+		toSave.put(week, new WeekAnswers(week));
+
+		return toSave;
 	}
 
 }

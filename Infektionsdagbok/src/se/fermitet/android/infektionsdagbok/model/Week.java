@@ -8,11 +8,14 @@ public class Week {
 
 	private static final String DELIMITER = "-";
 
-	private DateTime dateTime;
+	private int year;
+	private int weeknum;
 
 	public Week(DateTime dateTime) {
 		super();
-		this.dateTime = dateTime;
+
+		this.year = dateTime.weekyear().get();
+		this.weeknum = dateTime.weekOfWeekyear().get();
 	}
 
 	public Week(String stringFromToStringOfWeek) {
@@ -20,35 +23,43 @@ public class Week {
 
 		StringTokenizer tokenizer = new StringTokenizer(stringFromToStringOfWeek, DELIMITER);
 
-		int year = Integer.valueOf(tokenizer.nextToken());
-		int week = Integer.valueOf(tokenizer.nextToken());
+		this.year = Integer.valueOf(tokenizer.nextToken());
+		this.weeknum = Integer.valueOf(tokenizer.nextToken());
+	}
 
-		this.dateTime = new DateTime().withYear(year).withWeekOfWeekyear(week);
+	public Week(int year, int weeknum) {
+		this.year = year;
+		this.weeknum = weeknum;
+	}
+
+
+	private DateTime getDayInWeek(int year, int weeknum) {
+		return new DateTime().withWeekyear(year).withWeekOfWeekyear(weeknum);
 	}
 
 	public Week previous() {
-		return new Week(this.dateTime.minusWeeks(1));
+		return new Week(getDayInWeek(this.year(), this.weeknum()).minusWeeks(1));
 	}
 
 	public Week next() {
-		return new Week(this.dateTime.plusWeeks(1));
+		return new Week(getDayInWeek(this.year(), this.weeknum()).plusWeeks(1));
 	}
 
 
 	@Override
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append(dateTime.getYear()).append(DELIMITER).append(dateTime.getWeekOfWeekyear());
+		buf.append(this.year).append(DELIMITER).append(this.weeknum);
 
 		return buf.toString();
 	}
 
-	private int year() {
-		return dateTime.getYear();
+	public int year() {
+		return year;
 	}
 
-	private int weeknum() {
-		return dateTime.getWeekOfWeekyear();
+	public int weeknum() {
+		return weeknum;
 	}
 
 

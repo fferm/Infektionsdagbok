@@ -23,6 +23,30 @@ public class WeekTest extends TestCase {
 		assertEquals(original, retrieved);
 	}
 
+	public void testConstructorWithYearAndWeeknum() throws Exception {
+		int year = 2013;
+		int weeknum = 4;
+
+		Week original = new Week(new DateTime().withYear(year).withWeekOfWeekyear(weeknum));
+		Week retrieved = new Week(year, weeknum);
+
+		assertEquals(original, retrieved);
+	}
+
+	public void testYearEndSpecials() throws Exception {
+		assertEquals("late in year with number on next", new Week("2013-01"), new Week(new DateTime(2012 ,12, 31, 1, 1)));
+		assertEquals("early in year with number on previous", new Week("2011-52"), new Week(new DateTime(2012, 1, 1, 1, 1)));
+		assertEquals("week 53 - previous year", new Week("2009-53"), new Week(new DateTime(2009, 12, 28, 1, 1)));
+		assertEquals("week 53 - next year", new Week("2009-53"), new Week(new DateTime(2010, 1, 1, 1, 1)));
+	}
+
+	public void testAccessors() throws Exception {
+		Week wk = new Week("2014-02");
+
+		assertEquals("Year", 2014, wk.year());
+		assertEquals("Weeknum", 2, wk.weeknum());
+	}
+
 	public void testValueObject() throws Exception {
 		DateTime mondayMorning = new DateTime(2014, 1, 20, 0, 0, 1);
 		DateTime sundayEvening = new DateTime(2014, 1, 26, 23, 59, 59);
