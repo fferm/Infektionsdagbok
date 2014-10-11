@@ -32,6 +32,16 @@ public class Week {
 		this.weeknum = weeknum;
 	}
 
+	public static int weeksInTheYear(int year) {
+		Week wk52 = new Week(year, 52);
+		Week next = wk52.next();
+
+		if (next.year() == year) {
+			return 53;
+		} else {
+			return 52;
+		}
+	}
 
 	private DateTime getDayInWeek(int year, int weeknum) {
 		return new DateTime().withWeekyear(year).withWeekOfWeekyear(weeknum);
@@ -76,5 +86,6 @@ public class Week {
 	public int hashCode() {
 		return 21 * weeknum() + year();
 	}
+
 
 }

@@ -3,11 +3,13 @@ package se.fermitet.android.infektionsdagbok.exporter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,6 +17,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Week;
+import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import android.content.Context;
 
 public class KarolinskaExcelExporter {
@@ -29,17 +32,15 @@ public class KarolinskaExcelExporter {
 	private Font verdana6Bold;
 	private Font verdana6Normal;
 
-	private int numWeeks;
+	private int weeksInYear;
 
 	public KarolinskaExcelExporter(Context context) {
 		super();
 		this.context = context;
 	}
 
-	public Workbook export(int year, ModelManager mm) {
-		numWeeks = checkNumWeeks(year);
-
-		System.out.println("!!!! Year: " + year + "  weeks: " + numWeeks);
+	public Workbook export(int year, ModelManager mm) throws Exception {
+		weeksInYear = Week.weeksInTheYear(year);
 
 		Workbook ret = createWorkbook(year, mm);
 
@@ -48,30 +49,20 @@ public class KarolinskaExcelExporter {
 		return ret;
 	}
 
-	private int checkNumWeeks(int year) {
-		Week week = new Week(year, 52);
-		Week next = week.next();
-		if (next.year() == year) {
-			return 53;
-		} else {
-			return 52;
-		}
-	}
-
-	private Workbook createWorkbook(int year, ModelManager mm) {
+	private Workbook createWorkbook(int year, ModelManager mm) throws Exception {
         Workbook wb = new HSSFWorkbook();
         createFonts(wb);
 
-        Sheet diarySheet = wb.createSheet("Infektionsdagbok");
-        setSheetGlobalParameters(diarySheet);
-        setColumnWidths(diarySheet);
+        Sheet sheet = wb.createSheet("Infektionsdagbok");
+        setSheetGlobalParameters(sheet);
+        setColumnWidths(sheet);
 
-        addRows(diarySheet);
-        writeHeaders(diarySheet, wb);
-        writeYear(diarySheet, wb, year);
-        writeRowHeaders(diarySheet, wb);
-        writeWeekHeaders(diarySheet, wb);
-        writeAnswers(diarySheet, wb);
+        addRows(sheet);
+        writeHeaders(sheet, wb);
+        writeYear(sheet, wb, year);
+        writeRowHeaders(sheet, wb);
+        writeWeekHeaders(sheet, wb);
+        writeAnswers(sheet, wb, mm, year);
 
         return wb;
 	}
@@ -108,7 +99,7 @@ public class KarolinskaExcelExporter {
 	private void setColumnWidths(Sheet sheet) {
 		sheet.setColumnWidth(0, 3258);
 
-		for (int colIdx = 1; colIdx <= 53; colIdx++) {
+		for (int colIdx = 1; colIdx <= weeksInYear; colIdx++) {
 			sheet.setColumnWidth(colIdx, 504);
 		}
 	}
@@ -206,10 +197,10 @@ public class KarolinskaExcelExporter {
 	}
 
 	private void writeYear(Sheet sheet, Workbook wb, int year) {
-		for (int col = 1; col <= 53; col++) {
+		for (int col = 1; col <= weeksInYear; col++) {
 			createCell(sheet, wb, 3, col, null, this.verdana8Bold,
 					(col == 1 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
-					(col == 53 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
+					(col == weeksInYear ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
 					CellStyle.BORDER_MEDIUM,
 					CellStyle.BORDER_MEDIUM);
 		}
@@ -218,7 +209,7 @@ public class KarolinskaExcelExporter {
 		cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
 		cell.setCellValue(year);
 
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 53));
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, weeksInYear));
 	}
 
 	private void writeRowHeaders(Sheet sheet, Workbook wb) {
@@ -243,11 +234,11 @@ public class KarolinskaExcelExporter {
 	}
 
 	private void writeWeekHeaders(Sheet sheet, Workbook wb) {
-		for (int weeknum = 1; weeknum <= 53; weeknum++) {
+		for (int weeknum = 1; weeknum <= weeksInYear; weeknum++) {
 
 			Cell cell = createCell(sheet, wb, 4, weeknum, null, this.verdana6Normal,
 					(weeknum == 1 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
-					(weeknum == 53 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
+					(weeknum == weeksInYear ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
 					(CellStyle.BORDER_MEDIUM),
 					(CellStyle.BORDER_MEDIUM));
 
@@ -257,17 +248,29 @@ public class KarolinskaExcelExporter {
 		}
 	}
 
-	private void writeAnswers(Sheet sheet, Workbook wb) {
-		for (int rowIdx = 5; rowIdx <= 14; rowIdx++) {
-			for (int weeknum = 1; weeknum <= 53; weeknum++) {
+	private void writeAnswers(Sheet sheet, Workbook wb, ModelManager mm, int year) throws Exception {
+		Map<Week, WeekAnswers> weekAnswers = mm.getAllWeekAnswersInYear(year);
+
+		for (int weeknum = 1; weeknum <= weeksInYear; weeknum++) {
+			Week wk = new Week(year, weeknum);
+		WeekAnswers wa = weekAnswers.get(wk);
+
+			for (int rowIdx = 5; rowIdx <= 14; rowIdx++) {
 
 				Cell cell = createCell(sheet, wb, rowIdx, weeknum, null, this.verdana10Normal,
 						(weeknum == 1 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
-						(weeknum == 53 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
+						(weeknum == weeksInYear ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
 						(rowIdx == 5 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
 						(rowIdx == 14 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN));
 
-				cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
+				CellStyle style = cell.getCellStyle();
+
+				style.setAlignment(CellStyle.ALIGN_CENTER);
+
+				if (wa == null) {
+					style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
+					style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				}
 			}
 		}
 	}

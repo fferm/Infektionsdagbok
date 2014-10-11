@@ -2,7 +2,6 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -96,11 +95,19 @@ public class ModelManagerTest extends AndroidTestCase {
 		modelManager.saveWeekAnswers(toSave);
 
 		// Retrieve
-		List<WeekAnswers> retrieved = modelManager.getAllWeekAnswersInYear(year);
+		Map<Week, WeekAnswers> retrieved = modelManager.getAllWeekAnswersInYear(year);
+
+		for (Week wk : retrieved.keySet()) {
+			WeekAnswers wa = retrieved.get(wk);
+			assertNotNull("WeekAnswers retrieved with a week as key should have non-null value", wa);
+			assertEquals("Week of WeekAnswers retrieved with a Week as key should be equal to the key", wk, wa.week);
+		}
+
+		Collection<WeekAnswers> values = retrieved.values();
 
 		// Check result
-		assertEquals("Size of answer", toSave.size(), retrieved.size());
-		assertTrue("Contains all", retrieved.containsAll(toSave));
+		assertEquals("Size of answer", toSave.size(), values.size());
+		assertTrue("Contains all", values.containsAll(toSave));
 	}
 
 	public static Map<Week, WeekAnswers> prepareTestDataIndexedByWeek(int year) {

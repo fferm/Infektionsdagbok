@@ -130,6 +130,42 @@ public class WeekAnswers {
 		json.put(NameFromIdHelper.getNameFromId(id), this.getAnswer(id));
 	}
 
+	public boolean getMalaise() {
+		return getAnswer(R.id.malaise);
+	}
+
+	public boolean getFever() {
+		return getAnswer(R.id.fever);
+	}
+
+	public boolean getEarAche() {
+		return getAnswer(R.id.earAche);
+	}
+
+	public boolean getSoreThroat() {
+		return getAnswer(R.id.soreThroat);
+	}
+
+	public boolean getRunnyNose() {
+		return getAnswer(R.id.runnyNose);
+	}
+
+	public boolean getDryCough() {
+		return getAnswer(R.id.dryCough);
+	}
+
+	public boolean getWetCough() {
+		return getAnswer(R.id.wetCough);
+	}
+
+	public boolean getMorningCough() {
+		return getAnswer(R.id.morningCough);
+	}
+
+	public boolean getStommacAche() {
+		return getAnswer(R.id.stommacAche);
+	}
+
 
 
 }

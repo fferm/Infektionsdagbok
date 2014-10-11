@@ -2,7 +2,9 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 
@@ -47,15 +49,15 @@ public class ModelManager {
 		storage.clear();
 	}
 
-	public List<WeekAnswers> getAllWeekAnswersInYear(int year) throws Exception {
-		List<WeekAnswers> ret = new ArrayList<WeekAnswers>();
+	public Map<Week, WeekAnswers> getAllWeekAnswersInYear(int year) throws Exception {
+		Map<Week, WeekAnswers> ret = new HashMap<Week, WeekAnswers>();
 
 		Week week = new Week("2014-01");
 		while (week.year() == year) {
 			WeekAnswers retrieved = storage.getAnswersForWeek(week);
 
 			if (retrieved != null) {
-				ret.add(retrieved);
+				ret.put(week, retrieved);
 			}
 			week = week.next();
 		}

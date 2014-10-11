@@ -47,6 +47,11 @@ public class WeekTest extends TestCase {
 		assertEquals("Weeknum", 2, wk.weeknum());
 	}
 
+	public void testWeeksInAYear() throws Exception {
+		assertEquals("52 week year", 52, Week.weeksInTheYear(2014));
+		assertEquals("53 week year", 53, Week.weeksInTheYear(2009));
+	}
+
 	public void testValueObject() throws Exception {
 		DateTime mondayMorning = new DateTime(2014, 1, 20, 0, 0, 1);
 		DateTime sundayEvening = new DateTime(2014, 1, 26, 23, 59, 59);

@@ -95,4 +95,51 @@ public class WeekAnswersTest extends TestCase {
 			assertEquals("after changing " + NameFromIdHelper.getNameFromId(id), wa, WeekAnswers.fromJSON(wa.toJSON()));
 		}
 	}
+
+	public void testQuestionAccessors() throws Exception {
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("Malaise before", wa.getMalaise());
+		wa.setAnswer(R.id.malaise, true);
+		assertTrue("Malaise after", wa.getMalaise());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("Fever before", wa.getFever());
+		wa.setAnswer(R.id.fever, true);
+		assertTrue("Fever after", wa.getFever());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("EarAche before", wa.getEarAche());
+		wa.setAnswer(R.id.earAche, true);
+		assertTrue("EarAche after", wa.getEarAche());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("SoreThroat before", wa.getSoreThroat());
+		wa.setAnswer(R.id.soreThroat, true);
+		assertTrue("SoreThroat after", wa.getSoreThroat());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("RunnyNose before", wa.getRunnyNose());
+		wa.setAnswer(R.id.runnyNose, true);
+		assertTrue("RunnyNose after", wa.getRunnyNose());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("StommacAche before", wa.getStommacAche());
+		wa.setAnswer(R.id.stommacAche, true);
+		assertTrue("StommacAche after", wa.getStommacAche());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("DryCough before", wa.getDryCough());
+		wa.setAnswer(R.id.dryCough, true);
+		assertTrue("DryCough after", wa.getDryCough());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("WetCough before", wa.getWetCough());
+		wa.setAnswer(R.id.wetCough, true);
+		assertTrue("WetCough after", wa.getWetCough());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertFalse("MorningCough before", wa.getMorningCough());
+		wa.setAnswer(R.id.morningCough, true);
+		assertTrue("MorningCough after", wa.getMorningCough());
+	}
 }
