@@ -270,8 +270,36 @@ public class KarolinskaExcelExporter {
 				if (wa == null) {
 					style.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
 					style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+				} else {
+					if (getSingleAnswer(wa, rowIdx) == true) {
+						cell.setCellValue("X");
+					}
 				}
 			}
+		}
+	}
+
+	private boolean getSingleAnswer(WeekAnswers wa, int rowIdx) {
+		if (rowIdx == 5) {
+			return wa.getMalaise();
+		} else if (rowIdx == 6) {
+			return wa.getFever();
+		} else if (rowIdx == 7) {
+			return wa.getEarAche();
+		} else if (rowIdx == 8) {
+			return wa.getSoreThroat();
+		} else if (rowIdx == 9) {
+			return wa.getRunnyNose();
+		} else if (rowIdx == 10) {
+			return wa.getStommacAche();
+		} else if (rowIdx == 11) {
+			return wa.getDryCough();
+		} else if (rowIdx == 12) {
+			return wa.getWetCough();
+		} else if (rowIdx == 13) {
+			return wa.getMorningCough();
+		} else {
+			return false;
 		}
 	}
 

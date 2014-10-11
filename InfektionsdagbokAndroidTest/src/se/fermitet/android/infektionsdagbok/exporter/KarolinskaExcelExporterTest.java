@@ -101,25 +101,28 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		}
 	}
 
-
-
 	private boolean getAnswerFromWeekAnswers(int rowIdx, WeekAnswers wa) {
-/*		if (rowIdx == 5) {
-			return wa.
+		if (rowIdx == 5) {
+			return wa.getMalaise();
 		} else if (rowIdx == 6) {
-
+			return wa.getFever();
 		} else if (rowIdx == 7) {
+			return wa.getEarAche();
 		} else if (rowIdx == 8) {
+			return wa.getSoreThroat();
 		} else if (rowIdx == 9) {
+			return wa.getRunnyNose();
 		} else if (rowIdx == 10) {
+			return wa.getStommacAche();
 		} else if (rowIdx == 11) {
+			return wa.getDryCough();
 		} else if (rowIdx == 12) {
+			return wa.getWetCough();
 		} else if (rowIdx == 13) {
-		} else if (rowIdx == 14) {
+			return wa.getMorningCough();
+		} else {
+			return false;
 		}
-		}*/
-		return true;
-		// TODO: Fix
 	}
 
 	public void testCellSizes() throws Exception {
