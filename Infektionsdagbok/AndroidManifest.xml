@@ -7,13 +7,18 @@
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="19" />
-
+	
+	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name="se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" android:permission="android.permission.WRITE_EXTERNAL_STORAGE">
+        android:theme="@style/AppTheme">
         <activity
             android:name="se.fermitet.android.infektionsdagbok.activity.Questionnaire"
             android:label="@string/app_name"
@@ -26,7 +31,6 @@
         </activity>
         <receiver android:name=".receiver.NotificationAlarmReceiver"></receiver>
         <activity android:name=".activity.ExportActivity" android:screenOrientation="userPortrait"></activity>
-        
 	</application>
 
 </manifest>
