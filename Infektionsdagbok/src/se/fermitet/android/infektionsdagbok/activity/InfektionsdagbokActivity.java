@@ -55,4 +55,8 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
 		toast.show();
 	}
 
+	protected InfektionsdagbokApplication getLocalApplication() {
+		return (InfektionsdagbokApplication) getApplication();
+	}
+
 }

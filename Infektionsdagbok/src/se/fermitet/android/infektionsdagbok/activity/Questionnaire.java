@@ -93,12 +93,6 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		}
 	}
 
-	private InfektionsdagbokApplication getLocalApplication() {
-		return (InfektionsdagbokApplication) getApplication();
-	}
-
-
-
 	private void setNewWeek(WeekAnswers newWeekAnswers) {
 		model = newWeekAnswers;
         view.setModel(newWeekAnswers);

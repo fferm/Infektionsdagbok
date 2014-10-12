@@ -1,8 +1,10 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.io.File;
 import java.text.DateFormat;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.views.ExportView;
@@ -77,6 +79,33 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		solo.clickOnView(solo.getView(R.id.exportBTN));
 
 		assertTrue(solo.searchText("Kan inte ha startdatum efter slutdatum"));
+	}
+	
+	public void testExportCreatesFile() throws Exception {
+		solo.clickOnView(solo.getView(R.id.exportBTN));
+		Thread.sleep(1000); // Sleep to ensure time for the file to get written
+		
+		int currentYear = DateTime.now().weekyear().get();
+		final String expectedFileName = "Infektionsdagbok" + currentYear + ".xls";
+		
+		File externalFilesDir = getActivity().getExternalFilesDir(null);
+		File foundFile = null;
+		File[] files = externalFilesDir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (file.getName().equals(expectedFileName)) {
+				foundFile = file;
+				break;
+			}
+		}
+
+		assertNotNull("Should find file with name " + expectedFileName, foundFile);
+
+		DateTime lastModified = new DateTime(foundFile.lastModified());
+		Duration duration = new Duration(lastModified, DateTime.now());
+		
+		int age = duration.toStandardSeconds().getSeconds();
+		assertTrue("File must be max 5 seconds old.  Was " + age, age <= 5);
 	}
 
 	private void setDatePickerDate(DateTime setDate) {
