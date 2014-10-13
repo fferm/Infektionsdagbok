@@ -21,7 +21,8 @@ public class Week {
 	public Week(String stringFromToStringOfWeek) {
 		super();
 
-		StringTokenizer tokenizer = new StringTokenizer(stringFromToStringOfWeek, DELIMITER);
+		StringTokenizer tokenizer = new StringTokenizer(
+				stringFromToStringOfWeek, DELIMITER);
 
 		this.year = Integer.valueOf(tokenizer.nextToken());
 		this.weeknum = Integer.valueOf(tokenizer.nextToken());
@@ -55,7 +56,6 @@ public class Week {
 		return new Week(getDayInWeek(this.year(), this.weeknum()).plusWeeks(1));
 	}
 
-
 	@Override
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
@@ -72,20 +72,35 @@ public class Week {
 		return weeknum;
 	}
 
+	public boolean isBefore(Week other) {
+		if (this.year == other.year) {
+			return this.weeknum < other.weeknum;
+		} else {
+			return this.year < other.year;
+		}
+	}
+
+	public boolean isAfter(Week other) {
+		if (this.year == other.year) {
+			return this.weeknum > other.weeknum;
+		} else {
+			return this.year > other.year;
+		}
+	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (! (o instanceof Week)) return false;
+		if (!(o instanceof Week))
+			return false;
 
 		Week other = (Week) o;
 
-		return (this.year() == other.year()) && (this.weeknum() == other.weeknum());
+		return (this.year() == other.year())
+				&& (this.weeknum() == other.weeknum());
 	}
 
 	@Override
 	public int hashCode() {
 		return 21 * weeknum() + year();
 	}
-
-
 }

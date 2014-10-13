@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -14,6 +16,7 @@ import android.content.Context;
 
 public class Storage {
 
+	private static final String ANSWER_FILE_EXTENSION = "json";
 	private Context context;
 
 	public Storage(Context context) {
@@ -23,21 +26,10 @@ public class Storage {
 
 	public WeekAnswers getAnswersForWeek(Week week) throws Exception {
 		WeekAnswers ret = null;
-		BufferedReader br = null;
-		try {
-			if (fileExists(week)) {
-				br = new BufferedReader(new InputStreamReader(this.context.openFileInput(getWeekAnswersFilename(week))));
-
-				String json = br.readLine();
-
-				ret = WeekAnswers.fromJSON(json);
-			}
-			return ret;
-		} finally {
-			if (br != null) {
-				br.close();
-			}
+		if (fileExists(week)) {
+			ret = readAnswersFromFile(getWeekAnswersFilename(week));
 		}
+		return ret;
 	}
 
 	public void saveAnswers(WeekAnswers toSave) throws Exception {
@@ -63,6 +55,23 @@ public class Storage {
 		}
 	}
 
+	public Collection<WeekAnswers> getAllAnswers() throws Exception {
+		String[] fileNamesInDir = this.context.getFilesDir().list();
+		Collection<WeekAnswers> ret = new ArrayList<WeekAnswers>();
+
+		for (int i = 0; i < fileNamesInDir.length; i++) {
+			String fileName = fileNamesInDir[i];
+
+			String[] splits = fileName.split("\\.(?=[^\\.]+$)"); // http://stackoverflow.com/questions/4545937/java-splitting-the-filename-into-a-base-and-extension
+			String extension = splits[splits.length - 1];
+
+			if (extension.equals(ANSWER_FILE_EXTENSION)) {
+				ret.add(readAnswersFromFile(fileName));
+			}
+		}
+
+		return ret;
+	}
 
 	private boolean fileExists(Week week) {
 		File[] files = this.context.getFilesDir().listFiles();
@@ -76,8 +85,19 @@ public class Storage {
 		return false;
 	}
 
+	private WeekAnswers readAnswersFromFile(String fileName) throws Exception {
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(fileName)));
+			String json = br.readLine();
+			return WeekAnswers.fromJSON(json);
+		} finally {
+			if (br != null) br.close();
+		}
+	}
+
 	private String getWeekAnswersFilename(Week week) {
-		return week.toString() + ".json";
+		return week.toString() + "." + ANSWER_FILE_EXTENSION;
 	}
 
 	public File sendWorkbookToFile(Workbook wb, int year) throws Exception {
@@ -93,7 +113,4 @@ public class Storage {
             if (os != null) os.close();
         }
 	}
-
-
-
 }

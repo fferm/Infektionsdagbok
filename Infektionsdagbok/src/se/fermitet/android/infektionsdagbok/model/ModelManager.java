@@ -81,6 +81,18 @@ public class ModelManager {
 		}
 	}
 
+	public WeekAnswers getEarliestWeekAnswers() throws Exception {
+		WeekAnswers earliestAnswers = null;
+
+		for (WeekAnswers weekAnswers : storage.getAllAnswers()) {
+			if (earliestAnswers == null || weekAnswers.week.isBefore(earliestAnswers.week)) {
+				earliestAnswers = weekAnswers;
+			}
+		}
+
+		return earliestAnswers;
+	}
+
 	private WeekAnswers getWeekAnswersForWeekCreateIfNeeded(Week weekToUse) {
 		WeekAnswers ret = null;
 		try {

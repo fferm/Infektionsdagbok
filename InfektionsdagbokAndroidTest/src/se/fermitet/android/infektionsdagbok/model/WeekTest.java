@@ -93,6 +93,25 @@ public class WeekTest extends TestCase {
 		Week nextWeekFromConstructor = new Week(nextDt);
 
 		assertEquals(nextWeekFromConstructor, nextWeekFromMethod);
-
 	}
+
+	public void testIsBeforeAndAfter() throws Exception {
+		Week initial = new Week(new DateTime(2014, 1, 1, 1, 1));
+		Week sameWeek1 = new Week(new DateTime(2014, 1, 2, 1, 1));
+		Week sameWeek2 = new Week(new DateTime(2013, 12, 31, 1, 1));
+		Week weekAfter = new Week(new DateTime(2014, 1, 8, 1, 1));
+		Week weekBefore = new Week(new DateTime(2013, 12, 25, 1, 1));
+
+		assertTrue("initial before next week", initial.isBefore(weekAfter));
+		assertFalse("initial after next week", initial.isAfter(weekAfter));
+
+		assertFalse("initial before prev week", initial.isBefore(weekBefore));
+		assertTrue("initial after prev week", initial.isAfter(weekBefore));
+
+		assertFalse("initial before same week 1", initial.isBefore(sameWeek1));
+		assertFalse("initial after same week 1", initial.isAfter(sameWeek1));
+
+		assertFalse("initial before same week 2", initial.isBefore(sameWeek2));
+		assertFalse("initial after same week 2", initial.isAfter(sameWeek2));
+}
 }
