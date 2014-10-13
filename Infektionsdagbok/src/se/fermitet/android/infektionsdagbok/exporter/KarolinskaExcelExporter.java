@@ -293,6 +293,8 @@ public class KarolinskaExcelExporter {
 			return wa.getWetCough();
 		} else if (rowIdx == 13) {
 			return wa.getMorningCough();
+		} else if (rowIdx == 14) {
+			return wa.getGenerallyWell();
 		} else {
 			return false;
 		}

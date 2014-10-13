@@ -23,6 +23,7 @@ public class WeekAnswers {
 	static {
 		questionIds = new ArrayList<Integer>();
 
+		questionIds.add(R.id.generallyWell);
 		questionIds.add(R.id.malaise);
 		questionIds.add(R.id.fever);
 		questionIds.add(R.id.earAche);
@@ -32,7 +33,6 @@ public class WeekAnswers {
 		questionIds.add(R.id.dryCough);
 		questionIds.add(R.id.wetCough);
 		questionIds.add(R.id.morningCough);
-		questionIds.add(R.id.generallyWell);
 	}
 
 	public WeekAnswers(Week myWeek) {

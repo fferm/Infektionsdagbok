@@ -62,8 +62,11 @@ public class WeekAnswersTest extends TestCase {
 		modWeek.week = otherWeek;
 
 		WeekAnswers modAnswer = new WeekAnswers(new Week(new DateTime()));
-		modAnswer.setAnswer(R.id.fever, true);
-		modAnswer.setAnswer(R.id.malaise, true);
+		modAnswer.setAnswer(R.id.fever, !modAnswer.getFever());
+		modAnswer.setAnswer(R.id.malaise, !modAnswer.getMalaise());
+		
+		WeekAnswers modGenerallyWell = new WeekAnswers(new Week(DateTime.now()));
+		modGenerallyWell.setAnswer(R.id.generallyWell, !modGenerallyWell.getGenerallyWell());
 
 		assertTrue("Equal to itself", orig.equals(orig));
 		assertTrue("Equal to non modified", orig.equals(nonModified));
@@ -71,7 +74,7 @@ public class WeekAnswersTest extends TestCase {
 		assertFalse("Not equal to one with modified answer", orig.equals(modAnswer));
 		assertFalse("Not equal to null", orig.equals(null));
 		assertFalse("Not equal to object of other class", orig.equals("STRING"));
-
+		assertFalse("Not equal to object with changed value in Generally well", orig.equals(modGenerallyWell));
 		assertTrue("non modified hash code", orig.hashCode() == nonModified.hashCode());
 	}
 

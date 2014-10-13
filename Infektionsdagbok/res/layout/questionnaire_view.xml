@@ -38,10 +38,17 @@
         android:contentDescription="Nästa"/>
     
     <se.fermitet.android.infektionsdagbok.views.QuestionView
-        android:id="@+id/malaise"
+        android:id="@+id/generallyWell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/weekDisplay"
+        android:text="Väsentligen frisk" />    
+
+    <se.fermitet.android.infektionsdagbok.views.QuestionView
+        android:id="@+id/malaise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/generallyWell"
         android:text="Sjukdomskänsla" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
@@ -99,12 +106,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/wetCough"
         android:text="Morgonupphostning" />
-
-    <se.fermitet.android.infektionsdagbok.views.QuestionView
-        android:id="@+id/generallyWell"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/wetCough"
-        android:text="Väsentligen frisk" />    
 
 </se.fermitet.android.infektionsdagbok.views.QuestionnaireView>
