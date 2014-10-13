@@ -30,7 +30,11 @@ public class WeekAnswersTest extends TestCase {
 
 	public void testDefaultValues() throws Exception {
 		for (int id : WeekAnswers.questionIds) {
-			assertTrue(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id) == false);
+			if (id != R.id.generallyWell) {
+				assertFalse(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id));
+			} else {
+				assertTrue(NameFromIdHelper.getNameFromId(id), wa.getAnswer(id));
+			}
 		}
 
 		assertEquals("week", new Week(new DateTime()), wa.week);
@@ -83,6 +87,7 @@ public class WeekAnswersTest extends TestCase {
 		buf.append(", dryCough:").append(wa.getAnswer(R.id.dryCough));
 		buf.append(", wetCough:").append(wa.getAnswer(R.id.wetCough));
 		buf.append(", morningCough:").append(wa.getAnswer(R.id.morningCough));
+		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));
 		buf.append("}");
 
 		assertEquals(buf.toString(), wa.toString());
@@ -141,5 +146,11 @@ public class WeekAnswersTest extends TestCase {
 		assertFalse("MorningCough before", wa.getMorningCough());
 		wa.setAnswer(R.id.morningCough, true);
 		assertTrue("MorningCough after", wa.getMorningCough());
+
+		wa = new WeekAnswers(new Week(new DateTime()));
+		assertTrue("GenerallyWell before", wa.getGenerallyWell());
+		wa.setAnswer(R.id.generallyWell, false);
+		assertFalse("GenerallyWell after", wa.getGenerallyWell());
+
 	}
 }

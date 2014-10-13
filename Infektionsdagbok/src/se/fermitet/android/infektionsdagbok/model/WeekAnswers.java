@@ -32,6 +32,7 @@ public class WeekAnswers {
 		questionIds.add(R.id.dryCough);
 		questionIds.add(R.id.wetCough);
 		questionIds.add(R.id.morningCough);
+		questionIds.add(R.id.generallyWell);
 	}
 
 	public WeekAnswers(Week myWeek) {
@@ -39,6 +40,7 @@ public class WeekAnswers {
 		this.week = myWeek;
 
 		answers = new SparseBooleanArray(questionIds.size());
+		setAnswer(R.id.generallyWell, true);
 	}
 
 	public static WeekAnswers fromJSON(String jsonString) throws JSONException {
@@ -164,6 +166,10 @@ public class WeekAnswers {
 
 	public boolean getStommacAche() {
 		return getAnswer(R.id.stommacAche);
+	}
+
+	public boolean getGenerallyWell() {
+		return getAnswer(R.id.generallyWell);
 	}
 
 

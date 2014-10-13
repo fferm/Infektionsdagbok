@@ -30,6 +30,7 @@ public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 		assertQuestionFullState(R.id.dryCough, "Torrhosta", false);
 		assertQuestionFullState(R.id.wetCough, "Slemhosta", false);
 		assertQuestionFullState(R.id.morningCough, "Morgonupphostning", false);
+		assertQuestionFullState(R.id.generallyWell, "VŠsentligen frisk", true);
 	}
 
 
