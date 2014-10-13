@@ -1,7 +1,9 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
@@ -108,6 +110,25 @@ public class ModelManagerTest extends AndroidTestCase {
 		// Check result
 		assertEquals("Size of answer", toSave.size(), values.size());
 		assertTrue("Contains all", values.containsAll(toSave));
+	}
+	
+	public void testGetEarliestWeekAnswers() throws Exception {
+		WeekAnswers wa1 = new WeekAnswers(new Week(new DateTime(2013, 1, 1, 1, 1, 1)));
+		WeekAnswers wa2 = new WeekAnswers(new Week(new DateTime(2013, 2, 1, 1, 1, 1)));
+		WeekAnswers wa3 = new WeekAnswers(new Week(new DateTime(2014, 1, 1, 1, 1, 1)));
+		WeekAnswers wa4 = new WeekAnswers(new Week(new DateTime(2013, 1, 8, 1, 1, 1)));
+		
+		List<WeekAnswers> weekAnswers = new ArrayList<WeekAnswers>();
+		weekAnswers.add(wa4);
+		weekAnswers.add(wa3);
+		weekAnswers.add(wa2);
+		weekAnswers.add(wa1);
+		
+		modelManager.saveWeekAnswers(weekAnswers);
+		
+		WeekAnswers retrieved = modelManager.getEarliestWeekAnswers();
+		
+		assertEquals(wa1, retrieved);
 	}
 
 	public static Map<Week, WeekAnswers> prepareTestDataIndexedByWeek(int year) {
