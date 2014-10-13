@@ -2,8 +2,11 @@ package se.fermitet.android.infektionsdagbok.storage;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
+import org.apache.poi.ss.usermodel.Workbook;
 
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -23,7 +26,7 @@ public class Storage {
 		BufferedReader br = null;
 		try {
 			if (fileExists(week)) {
-				br = new BufferedReader(new InputStreamReader(this.context.openFileInput(getFilename(week))));
+				br = new BufferedReader(new InputStreamReader(this.context.openFileInput(getWeekAnswersFilename(week))));
 
 				String json = br.readLine();
 
@@ -40,7 +43,7 @@ public class Storage {
 	public void saveAnswers(WeekAnswers toSave) throws Exception {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(this.context.openFileOutput(getFilename(toSave.week), Context.MODE_PRIVATE));
+			pw = new PrintWriter(this.context.openFileOutput(getWeekAnswersFilename(toSave.week), Context.MODE_PRIVATE));
 
 			pw.println(toSave.toJSON());
 		} finally {
@@ -66,17 +69,31 @@ public class Storage {
 
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			if (file.getName().equals(getFilename(week))) {
+			if (file.getName().equals(getWeekAnswersFilename(week))) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-
-
-	private String getFilename(Week week) {
+	private String getWeekAnswersFilename(Week week) {
 		return week.toString() + ".json";
 	}
+
+	public File sendWorkbookToFile(Workbook wb, int year) throws Exception {
+        FileOutputStream os = null;
+
+        try {
+        	File file = new File(this.context.getExternalFilesDir(null), "Infektionsdagbok" + year + ".xls");
+            os = new FileOutputStream(file);
+            wb.write(os);
+
+            return file;
+        } finally {
+            if (os != null) os.close();
+        }
+	}
+
+
 
 }

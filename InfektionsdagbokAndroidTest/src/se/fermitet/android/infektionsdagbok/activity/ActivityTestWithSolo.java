@@ -1,7 +1,9 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import android.app.Activity;
+import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
@@ -10,18 +12,31 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 	protected Solo solo;
 
-	public ActivityTestWithSolo(Class<T> activityClass) {
+	private Class<? extends Factory> mockedFactoryClassOrNull;
+
+	public ActivityTestWithSolo(Class<T> activityClass, Class<? extends Factory> mockedFactoryClassOrNull) {
 		super(activityClass);
+		this.mockedFactoryClassOrNull = mockedFactoryClassOrNull;
 	}
 
-	protected void onSetupBeforeActivityCreation() {}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		onSetupBeforeActivityCreation();
+		handleFactory();
+
 		solo = new Solo(getInstrumentation(), getActivity());
+	}
+
+	private void handleFactory() {
+		if (mockedFactoryClassOrNull != null) {
+			Intent i = new Intent();
+			i.putExtra(InfektionsdagbokActivity.FACTORY_KEY, mockedFactoryClassOrNull.getName());
+
+			super.setActivityIntent(i);
+
+		}
 	}
 
 	@Override

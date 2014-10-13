@@ -9,7 +9,7 @@ import android.widget.TextView;
 public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 
 	public QuestionnaireTestNotMocked() {
-		super();
+		super(null);
 	}
 
 	public void testInitials() throws Exception {

@@ -1,6 +1,7 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import android.graphics.drawable.ColorDrawable;
@@ -12,8 +13,8 @@ import android.widget.TextView;
 public abstract class QuestionnaireTest extends ActivityTestWithSolo<Questionnaire>{
 
 
-	public QuestionnaireTest() {
-		super(Questionnaire.class);
+	public QuestionnaireTest(Class<? extends Factory> mockedFactoryClassOrNull) {
+		super(Questionnaire.class, mockedFactoryClassOrNull);
 	}
 
 	protected void clickOnQuestionWithId(int id) {

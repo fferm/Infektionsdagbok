@@ -16,27 +16,18 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.test.MockedStorageFactory;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
+import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.Instrumentation;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.view.View;
 
 public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	public QuestionnaireTestMocked() {
-		super();
+		super(MockedStorageFactory.class);
 	}
-
-	@Override
-	protected void onSetupBeforeActivityCreation() {
-		Intent i = new Intent();
-		i.putExtra(InfektionsdagbokActivity.FACTORY_KEY, new MockedStorageFactory());
-
-		super.setActivityIntent(i);
-	}
-
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -106,7 +97,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testReadFromStorage() throws Exception {
-		InfektionsdagbokActivity questionnaire = getActivity();
+		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 		Storage storage = app.getStorage();
 		reset(storage);
@@ -121,7 +112,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	public void testExceptionInStorageGivesNotification() throws Exception {
 		String msg = "PROBLEM";
 
-		InfektionsdagbokActivity questionnaire = getActivity();
+		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 		ModelManager mgr = app.getModelManager();
 		Storage storage = mgr.getStorage();
@@ -136,7 +127,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {
-		InfektionsdagbokActivity questionnaire = getActivity();
+		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
 
 		AlarmManager mgr = app.getAlarmManager();
@@ -152,7 +143,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testActionBar() throws Exception {
-		InfektionsdagbokActivity questionnaire = getActivity();
+		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
 
 		ActionBar actionBar = questionnaire.getActionBar();
 

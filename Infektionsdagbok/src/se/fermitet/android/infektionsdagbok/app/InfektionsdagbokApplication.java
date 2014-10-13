@@ -1,16 +1,17 @@
 package se.fermitet.android.infektionsdagbok.app;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
+import se.fermitet.android.infektionsdagbok.storage.EmailHandler;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.app.AlarmManager;
 import android.app.Application;
-import android.content.Context;
 
 public class InfektionsdagbokApplication extends Application {
 	private ModelManager modelManager = null;
 	private Storage storage = null;
 	private Factory factory = null;
 	private AlarmManager alarmManager = null;
+	private EmailHandler emailHandler = null;
 
 	public Storage getStorage() {
 		if (this.storage == null) {
@@ -28,7 +29,7 @@ public class InfektionsdagbokApplication extends Application {
 
 	public Factory getFactory() {
 		if (this.factory == null) {
-			this.factory = new InfektionsdagbokFactory();
+			this.factory = new InfektionsdagbokFactory(this);
 		}
 		return this.factory;
 	}
@@ -38,6 +39,13 @@ public class InfektionsdagbokApplication extends Application {
 			this.alarmManager = getFactory().getAlarmManager();
 		}
 		return this.alarmManager;
+	}
+
+	public EmailHandler getEmailHandler() {
+		if (this.emailHandler == null) {
+			this.emailHandler = getFactory().createEmailHandler();
+		}
+		return this.emailHandler;
 	}
 
 	// TODO: Does this correspond to some lifecycle method on Application
@@ -51,18 +59,5 @@ public class InfektionsdagbokApplication extends Application {
 	public void setFactory(Factory factory) {
 		this.factory = factory;
 	}
-
-	private class InfektionsdagbokFactory implements Factory {
-		@Override
-		public Storage createStorage() {
-			return new Storage(InfektionsdagbokApplication.this);
-		}
-
-		@Override
-		public AlarmManager getAlarmManager() {
-			return (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		}
-	}
-
 
 }
