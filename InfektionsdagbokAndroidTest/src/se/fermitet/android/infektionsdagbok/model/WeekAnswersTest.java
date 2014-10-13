@@ -81,6 +81,7 @@ public class WeekAnswersTest extends TestCase {
 	public void testToString() throws Exception {
 		StringBuffer buf = new StringBuffer();
 		buf.append("WeekAnswers{week:").append(wa.week.toString());
+		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));
 		buf.append(", malaise:").append(wa.getAnswer(R.id.malaise));
 		buf.append(", fever:").append(wa.getAnswer(R.id.fever));
 		buf.append(", earAche:").append(wa.getAnswer(R.id.earAche));
@@ -90,7 +91,6 @@ public class WeekAnswersTest extends TestCase {
 		buf.append(", dryCough:").append(wa.getAnswer(R.id.dryCough));
 		buf.append(", wetCough:").append(wa.getAnswer(R.id.wetCough));
 		buf.append(", morningCough:").append(wa.getAnswer(R.id.morningCough));
-		buf.append(", generallyWell:").append(wa.getAnswer(R.id.generallyWell));
 		buf.append("}");
 
 		assertEquals(buf.toString(), wa.toString());

@@ -32,7 +32,6 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
         view.setOnWeekChangeListener(this);
 
         setNewWeek(getLocalApplication().getModelManager().getInitialWeekAnswers());
-
     }
 
 	private void issueNotificationAlarm() {
