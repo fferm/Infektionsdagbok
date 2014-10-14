@@ -34,8 +34,7 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
 	        setContentView(view);
 
 		} catch (Exception e) {
-			e.printStackTrace();
-			notifyUserOfException(e);
+			handleException(e);
 		}
 
 	}
@@ -47,11 +46,6 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
         Bundle extras = intent.getExtras();
         if (extras == null) return;
 
-/*        Object obj = extras.get(FACTORY_KEY);
-        if (obj != null && obj instanceof Factory) {
-        	InfektionsdagbokApplication app = (InfektionsdagbokApplication) getApplication();
-        	app.setFactory((Factory) obj);
-        }*/
         String factoryClassName = extras.getString(FACTORY_KEY);
         if (factoryClassName != null) {
         	Class<?> clz = Class.forName(factoryClassName);
@@ -62,7 +56,8 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
         }
 	}
 
-	protected void notifyUserOfException(Exception e) {
+	protected void handleException(Exception e) {
+		e.printStackTrace();
 		notifyUserWithMessage(e.getMessage());
 	}
 

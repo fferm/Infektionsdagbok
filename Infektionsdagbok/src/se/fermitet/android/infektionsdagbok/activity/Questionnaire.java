@@ -76,8 +76,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		try {
 			setNewWeek(getLocalApplication().getModelManager().getNextWeekAnswers(this.model));
 		} catch (Exception e) {
-			e.printStackTrace();
-			notifyUserOfException(e);
+			handleException(e);
 		}
 	}
 
@@ -87,8 +86,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		try {
 			setNewWeek(getLocalApplication().getModelManager().getPreviousWeekAnswers(this.model));
 		} catch (Exception e) {
-			e.printStackTrace();
-			notifyUserOfException(e);
+			handleException(e);
 		}
 	}
 
