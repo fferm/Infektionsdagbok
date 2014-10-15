@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Workbook;
@@ -55,18 +56,17 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 				years.add(year);
 			}
 		}
+		Collections.sort(years, Collections.reverseOrder());
+
 		view.setYearsToShow(years);
 	}
 
 	@Override
-	public void onExportCommand(DateTime startDate, DateTime endDate) {
+	public void onExportCommand(int year) {
 		KarolinskaExcelExporter kee = new KarolinskaExcelExporter(this);
 		ModelManager mm = getLocalApplication().getModelManager();
 		Storage storage = getLocalApplication().getStorage();
 		EmailHandler email = getLocalApplication().getEmailHandler();
-
-		// TODO: Hantera att det skall vara rätt år
-		int year = 2014;
 
 		try {
 			Workbook wb = kee.export(year, mm);

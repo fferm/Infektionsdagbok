@@ -2,24 +2,25 @@ package se.fermitet.android.infektionsdagbok.views;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
-
 import se.fermitet.android.infektionsdagbok.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-public class ExportView extends RelativeLayout implements View.OnClickListener {
+public class ExportView extends RelativeLayout implements View.OnClickListener, OnItemSelectedListener {
 
 	private Button exportBTN;
 	private Spinner yearSpinner;
 
 	private OnExportCommandListener listener = null;
 	private List<Integer> yearsToShow;
+	private int selectedYear;
 
 	public ExportView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -44,6 +45,7 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 	private void setupWidgets() {
 		exportBTN.setOnClickListener(this);
+		yearSpinner.setOnItemSelectedListener(this);
 	}
 
 	private void setupSpinner() {
@@ -64,20 +66,37 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 		}
 	}
 
-	private void handleExportButtonClick() {
-/*		if (getStartDate().isAfter(getEndDate())) {
-			String msg = "Kan inte ha startdatum efter slutdatum";
-			Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
-			toast.show();
-			return;
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		if (parent == yearSpinner) {
+			int selectedYear = (Integer) yearSpinner.getSelectedItem();
+			this.setSelectedYear(selectedYear);
 		}
+	}
 
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// Do nothing
+	}
+
+	private void handleExportButtonClick() {
 		if (listener != null) {
-			listener.onExportCommand(getStartDate(), getEndDate());
-		}*/
+			listener.onExportCommand(getSelectedYear());
+		}
 	}
 
 	public interface OnExportCommandListener {
-		public void onExportCommand(DateTime startDate, DateTime endDate);
+		public void onExportCommand(int year);
 	}
+
+	public int getSelectedYear() {
+		return selectedYear;
+	}
+
+	private void setSelectedYear(int selectedYear) {
+		this.selectedYear = selectedYear;
+	}
+
+
 }

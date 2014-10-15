@@ -70,4 +70,8 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
 		return (InfektionsdagbokApplication) getApplication();
 	}
 
+	V getView() {
+		return view;
+	}
+
 }
