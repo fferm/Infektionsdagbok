@@ -22,7 +22,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 
 	public ExportTest_WithOldTestData() {
-		super(ExportActivity.class, null);
+		super(ExportActivity.class);
 	}
 
 	@Override
@@ -41,10 +41,11 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		int currentYear = DateTime.now().year().get();
 		this.desiredYears = new int[currentYear - firstYear + 1];
 		for (int i = 0; i < desiredYears.length; i++) {
-			desiredYears[i] = firstYear + i;
+			int yearToWrite = firstYear + i;
+			desiredYears[i] = yearToWrite;
 		}
 
-		WeekAnswers waFirst = new WeekAnswers(new Week(new DateTime(firstYear, 1, 1, 1, 1)));
+		WeekAnswers waFirst = new WeekAnswers(new Week(new DateTime(firstYear, 2, 1, 1, 1))); // February to avoid 2011-52 
 
 		Collection<WeekAnswers> collection = new ArrayList<WeekAnswers>();
 		collection.add(waFirst);

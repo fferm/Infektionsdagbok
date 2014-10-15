@@ -14,11 +14,14 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 	private Class<? extends Factory> mockedFactoryClassOrNull;
 
+	public ActivityTestWithSolo(Class<T> activityClass) {
+		this(activityClass, null);
+	}
+
 	public ActivityTestWithSolo(Class<T> activityClass, Class<? extends Factory> mockedFactoryClassOrNull) {
 		super(activityClass);
 		this.mockedFactoryClassOrNull = mockedFactoryClassOrNull;
 	}
-
 
 	@Override
 	protected void setUp() throws Exception {
