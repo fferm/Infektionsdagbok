@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 public abstract class QuestionnaireTest extends ActivityTestWithSolo<Questionnaire>{
 
+	public QuestionnaireTest() {
+		this(null);
+	}
 
 	public QuestionnaireTest(Class<? extends Factory> mockedFactoryClassOrNull) {
 		super(Questionnaire.class, mockedFactoryClassOrNull);
