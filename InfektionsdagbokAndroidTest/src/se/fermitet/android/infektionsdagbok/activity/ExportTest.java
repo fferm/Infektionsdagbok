@@ -21,7 +21,6 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 
 	@Override
 	protected void setUp() throws Exception {
-		System.out.println("!!!! before super.setup()");
 		super.setUp();
 	}
 
@@ -30,8 +29,8 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		assertTrue("Year spinner", solo.waitForView(R.id.yearSpinner));
 		assertTrue("Export button", solo.waitForView(R.id.exportBTN));
 	}
-	
-	
+
+
 	public void testYearSpinnerWithNoData() throws Exception {
 		// TODO
 	}

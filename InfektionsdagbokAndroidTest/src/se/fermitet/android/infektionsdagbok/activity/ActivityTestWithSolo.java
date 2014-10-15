@@ -24,10 +24,15 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 	protected void setUp() throws Exception {
 		super.setUp();
 
+		onBeforeActivityCreation();
+
 		handleFactory();
 
 		solo = new Solo(getInstrumentation(), getActivity());
 	}
+
+	protected void onBeforeActivityCreation() throws Exception {}
+
 
 	private void handleFactory() {
 		if (mockedFactoryClassOrNull != null) {

@@ -26,15 +26,13 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		System.out.println("!!!! activity.onCreate() start");
 
 		try {
 			super.onCreate(savedInstanceState);
 
 			view.setOnExportCommandListener(this);
-System.out.println("!!!! before setViewYearsToShow()");
+
 			setViewYearsToShow();
-			System.out.println("!!!! activity.onCreate() end");
 		} catch (Exception e) {
 			this.handleException(e);
 		}
@@ -49,7 +47,7 @@ System.out.println("!!!! before setViewYearsToShow()");
 			this.handleException(e);
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -62,9 +60,9 @@ System.out.println("!!!! before setViewYearsToShow()");
 
 	public void setViewYearsToShow() throws Exception {
 		List<Integer> years = new ArrayList<Integer>();
-		
+
 		ModelManager mm = getLocalApplication().getModelManager();
-		
+
 		WeekAnswers firstWeekAnswers = mm.getEarliestWeekAnswers();
 		if (firstWeekAnswers == null) {
 			// TODO
@@ -73,14 +71,12 @@ System.out.println("!!!! before setViewYearsToShow()");
 			Week firstWeekOfAnswers = firstWeekAnswers.week;
 			int firstYearToShow = firstWeekOfAnswers.year();
 			int currentYear = DateTime.now().year().get();
-			
+
 			for (int year = firstYearToShow; year <= currentYear; year++) {
 				years.add(year);
 			}
-			
+
 			view.setYearsToShow(years);
-			
-			System.out.println("!!!!! Activity size of array: " + years.size());
 		}
 	}
 

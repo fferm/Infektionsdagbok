@@ -17,7 +17,7 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 	private Button exportBTN;
 	private Spinner yearSpinner;
-	
+
 	private OnExportCommandListener listener = null;
 	private List<Integer> yearsToShow;
 
@@ -27,13 +27,11 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 	@Override
 	protected void onFinishInflate() {
-		System.out.println("!!!! view.onFinishInflate() start");
 		super.onFinishInflate();
 		attachWidgets();
 		setupWidgets();
-		System.out.println("!!!! view.onFinishInflate() end");
 	}
-	
+
 	public void setYearsToShow(List<Integer> yearsToShow) {
 		this.yearsToShow = yearsToShow;
 		setupSpinner();
@@ -46,15 +44,9 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 
 	private void setupWidgets() {
 		exportBTN.setOnClickListener(this);
-		
-//		setupSpinner();
 	}
 
 	private void setupSpinner() {
-		System.out.println("!!!! years size: " + yearsToShow.size());
-		for (int year : this.yearsToShow) {
-			System.out.println("!!!!! year: " + year);
-		}
 		ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, this.yearsToShow);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		yearSpinner.setAdapter(adapter);

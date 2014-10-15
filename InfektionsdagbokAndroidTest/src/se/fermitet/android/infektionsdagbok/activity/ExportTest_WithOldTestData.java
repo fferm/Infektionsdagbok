@@ -6,8 +6,10 @@ import java.util.Collection;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -16,6 +18,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 
 	private int[] desiredYears;
+	private ModelManager mm;
 
 
 	public ExportTest_WithOldTestData() {
@@ -24,8 +27,13 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 	@Override
 	protected void setUp() throws Exception {
-		addOldTestData();
 		super.setUp();
+	}
+
+	@Override
+	protected void onBeforeActivityCreation() throws Exception {
+		super.onBeforeActivityCreation();
+		addOldTestData();
 	}
 
 	private void addOldTestData() throws Exception {
@@ -35,28 +43,27 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		for (int i = 0; i < desiredYears.length; i++) {
 			desiredYears[i] = firstYear + i;
 		}
-		
+
 		WeekAnswers waFirst = new WeekAnswers(new Week(new DateTime(firstYear, 1, 1, 1, 1)));
-		
+
 		Collection<WeekAnswers> collection = new ArrayList<WeekAnswers>();
 		collection.add(waFirst);
-		
-		getActivity().getLocalApplication().getModelManager().saveWeekAnswers(collection);
+
+		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
+		mm.saveWeekAnswers(collection);
 	}
-	
-	
+
+
 	public void testYearSpinnerContentsWithEarlierYears() throws Exception {
 		Spinner yearSpinner = (Spinner) solo.getView(R.id.yearSpinner);
-		
+
 		SpinnerAdapter adapter = yearSpinner.getAdapter();
 		assertNotNull("adapter null", adapter);
-		
+
 		assertEquals("Same amount of years", desiredYears.length, adapter.getCount());
-		
+
 		for (int i = 0; i < adapter.getCount(); i++) {
 			assertEquals("Same year on location " + i, desiredYears[i], ((Integer) adapter.getItem(i)).intValue());
 		}
 	}
-
-
 }
