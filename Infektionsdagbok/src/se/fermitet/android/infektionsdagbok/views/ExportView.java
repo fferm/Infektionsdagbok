@@ -47,7 +47,7 @@ public class ExportView extends RelativeLayout implements View.OnClickListener {
 	}
 
 	private void setupSpinner() {
-		ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, this.yearsToShow);
+		ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getContext(), R.layout.spinner_item, this.yearsToShow);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		yearSpinner.setAdapter(adapter);
 	}

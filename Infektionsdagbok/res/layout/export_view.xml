@@ -24,15 +24,15 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/title"
-        android:text="År"
+        android:text="År:"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Spinner
         android:id="@+id/yearSpinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_toRightOf="@+id/yearTV"
+        android:layout_alignBaseline="@id/yearTV"
+        android:layout_toRightOf="@id/yearTV"
         android:layout_marginLeft="16dp" />
     
     <Button
@@ -41,6 +41,7 @@
         android:layout_width="fill_parent"
         android:layout_alignLeft="@id/yearTV"
         android:layout_below="@id/yearTV"
+        android:layout_marginTop="5dp"
         android:text="Exportera"
         android:clickable="true" />
 
