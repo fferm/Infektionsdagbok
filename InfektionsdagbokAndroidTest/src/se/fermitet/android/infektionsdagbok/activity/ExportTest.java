@@ -10,6 +10,8 @@ import org.joda.time.Duration;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.storage.EmailHandler;
 import se.fermitet.android.infektionsdagbok.test.MockedEmailFactory;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 
 public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
@@ -32,7 +34,18 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 
 
 	public void testYearSpinnerWithNoData() throws Exception {
-		// TODO
+		int[] desiredYears = new int[] {DateTime.now().weekyear().get()};
+		
+		Spinner yearSpinner = (Spinner) solo.getView(R.id.yearSpinner);
+
+		SpinnerAdapter adapter = yearSpinner.getAdapter();
+		assertNotNull("adapter null", adapter);
+
+		assertEquals("Same amount of years", desiredYears.length, adapter.getCount());
+
+		for (int i = 0; i < adapter.getCount(); i++) {
+			assertEquals("Same year on location " + i, desiredYears[i], ((Integer) adapter.getItem(i)).intValue());
+		}
 	}
 
 	public void testExportCreatesFileAndCallsEmailHandler() throws Exception {

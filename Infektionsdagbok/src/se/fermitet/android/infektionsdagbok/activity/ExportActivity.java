@@ -38,35 +38,14 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 		}
 	}
 
-/*	@Override
-	protected void onStart() {
-		super.onStart();
-		try {
-			setViewYearsToShow();
-		} catch (Exception e) {
-			this.handleException(e);
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		try {
-		setViewYearsToShow();
-		} catch (Exception e) {
-			this.handleException(e);
-		}
-	}*/
-
 	public void setViewYearsToShow() throws Exception {
 		List<Integer> years = new ArrayList<Integer>();
 
 		ModelManager mm = getLocalApplication().getModelManager();
-
 		WeekAnswers firstWeekAnswers = mm.getEarliestWeekAnswers();
+
 		if (firstWeekAnswers == null) {
-			// TODO
-			return;
+			years.add(DateTime.now().weekyear().get());
 		} else {
 			Week firstWeekOfAnswers = firstWeekAnswers.week;
 			int firstYearToShow = firstWeekOfAnswers.year();
@@ -75,9 +54,8 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 			for (int year = firstYearToShow; year <= currentYear; year++) {
 				years.add(year);
 			}
-
-			view.setYearsToShow(years);
 		}
+		view.setYearsToShow(years);
 	}
 
 	@Override
