@@ -20,11 +20,14 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 	}
 
 	public void testInitials() throws Exception {
-		assertTrue("Year", solo.waitForText("År"));
+		assertTrue("Year", solo.waitForText("År:"));
 		assertTrue("Year spinner", solo.waitForView(R.id.yearSpinner));
+
+		assertTrue("Name", solo.waitForText("Namn:"));
+		assertTrue("Personnummer", solo.waitForText("Personnummer:"));
+
 		assertTrue("Export button", solo.waitForView(R.id.exportBTN));
 	}
-
 
 	public void testYearSpinnerWithNoData() throws Exception {
 		int[] desiredYears = new int[] {DateTime.now().weekyear().get()};

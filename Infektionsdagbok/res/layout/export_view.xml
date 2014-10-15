@@ -1,49 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<se.fermitet.android.infektionsdagbok.views.ExportView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<se.fermitet.android.infektionsdagbok.views.ExportView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp" >
- 
+
     <TextView
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:text="Export"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_margin="10dp"
-         />
-    
+        android:gravity="center_horizontal"
+        android:text="Export till Excel"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/title"
+        android:layout_below="@id/title"
+        android:text="Namn:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/nameEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/title"
+        android:layout_below="@id/nameTV"
+        android:inputType="textPersonName"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/ssnTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/title"
+        android:layout_below="@id/nameEdit"
+        android:layout_marginTop="10dp"
+        android:text="Personnummer:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/ssnEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/title"
+        android:layout_below="@id/ssnTV"
+        android:inputType="phone"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <TextView
         android:id="@+id/yearTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
-        android:layout_below="@id/title"
+        android:layout_below="@id/ssnEdit"
+        android:layout_marginTop="15dp"
         android:text="År:"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Spinner
         android:id="@+id/yearSpinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@id/yearTV"
-        android:layout_toRightOf="@id/yearTV"
-        android:layout_marginLeft="16dp" />
-    
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@id/yearTV" />
+
     <Button
         android:id="@+id/exportBTN"
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@id/yearTV"
         android:layout_below="@id/yearTV"
-        android:layout_marginTop="5dp"
-        android:text="Exportera"
-        android:clickable="true" />
+        android:layout_marginTop="25dp"
+        android:clickable="true"
+        android:text="Exportera" />
 
-    
 </se.fermitet.android.infektionsdagbok.views.ExportView>
