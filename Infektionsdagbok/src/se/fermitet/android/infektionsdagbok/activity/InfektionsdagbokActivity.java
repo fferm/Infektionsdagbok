@@ -58,7 +58,7 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
 
 	protected void handleException(Exception e) {
 		e.printStackTrace();
-		notifyUserWithMessage(e.getMessage());
+		notifyUserWithMessage(e.getMessage() + "\n" + e.getClass().getName());
 	}
 
 	protected void notifyUserWithMessage(String msg) {

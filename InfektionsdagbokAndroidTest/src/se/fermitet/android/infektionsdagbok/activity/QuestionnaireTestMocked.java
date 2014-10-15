@@ -111,6 +111,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	public void testExceptionInStorageGivesNotification() throws Exception {
 		String msg = "PROBLEM";
+		String expected = msg + "\n" + Exception.class.getName();
 
 		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
 		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
@@ -120,10 +121,10 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		doThrow(new Exception(msg)).when(storage).saveAnswers(any(WeekAnswers.class));
 
 		solo.clickOnView(solo.getView(R.id.nextWeek));
-		assertTrue("Next week: Should give error message", solo.searchText(msg));
+		assertTrue("Next week: Should give error message", solo.searchText(expected));
 
 		solo.clickOnView(solo.getView(R.id.previousWeek));
-		assertTrue("Prev week: Should give error message", solo.searchText(msg));
+		assertTrue("Prev week: Should give error message", solo.searchText(expected));
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {
