@@ -29,11 +29,14 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 	private Sheet sheet;
 	private Sheet sheet53;
 
+	private String TESTNAME = "TESTNAME";
+	private String TESTSSN = "123456-7890";
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		this.kee = new KarolinskaExcelExporter(getContext());
+		this.kee = new KarolinskaExcelExporter();
 
 		this.mm = new ModelManager(new Storage(getContext()));
 
@@ -227,11 +230,17 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		Row row1 = sheet.getRow(1);
 		Row row2 = sheet.getRow(2);
 
-		Cell nameCell = row1.getCell(1);
-		assertEquals("Name cell text", "Namn", nameCell.getStringCellValue());
+		Cell nameHeaderCell = row1.getCell(1);
+		assertEquals("Name header cell text", "Namn", nameHeaderCell.getStringCellValue());
 
-		Cell ssnCell = row2.getCell(1);
-		assertEquals("SSN cell text", "Personnummer", ssnCell.getStringCellValue());
+		Cell nameCell = row1.getCell(10);
+		assertEquals("Name cell text", TESTNAME, nameCell.getStringCellValue());
+
+		Cell ssnHeaderCell = row2.getCell(1);
+		assertEquals("SSN header cell text", "Personnummer", ssnHeaderCell.getStringCellValue());
+
+		Cell ssnCell = row2.getCell(10);
+		assertEquals("SSN cell text", TESTSSN, ssnCell.getStringCellValue());
 
 		Cell headerCell = row1.getCell(30);
 		assertEquals("Header cell text", "Infektionsdagbok", headerCell.getStringCellValue());
@@ -242,7 +251,7 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 	}
 
 	protected Sheet getSheet(int year) throws Exception {
-		Workbook wb = kee.export(year, this.mm);
+		Workbook wb = kee.createWorkbook(year, this.mm, TESTNAME, TESTSSN);
 		String nameToLookFor = "Infektionsdagbok";
 
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {

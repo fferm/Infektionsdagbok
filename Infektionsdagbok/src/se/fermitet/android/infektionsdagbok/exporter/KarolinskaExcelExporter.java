@@ -15,11 +15,8 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
-import android.content.Context;
 
 public class KarolinskaExcelExporter {
-
-	private Context context;
 
 	private Font verdana21Bold;
 	private Font verdana12Bold;
@@ -31,35 +28,29 @@ public class KarolinskaExcelExporter {
 
 	private int weeksInYear;
 
-	public KarolinskaExcelExporter(Context context) {
+	public KarolinskaExcelExporter() {
 		super();
-		this.context = context;
 	}
 
-	public Workbook export(int year, ModelManager mm) throws Exception {
+	public Workbook createWorkbook(int year, ModelManager mm, String name, String ssn) throws Exception {
 		weeksInYear = Week.weeksInTheYear(year);
+		Workbook wb = new HSSFWorkbook();
+		createFonts(wb);
 
-		Workbook ret = createWorkbook(year, mm);
+		Sheet sheet = wb.createSheet("Infektionsdagbok");
+		setSheetGlobalParameters(sheet);
+		setColumnWidths(sheet);
+
+		addRows(sheet);
+		writeHeaders(sheet, wb, name, ssn);
+		writeYear(sheet, wb, year);
+		writeRowHeaders(sheet, wb);
+		writeWeekHeaders(sheet, wb);
+		writeAnswers(sheet, wb, mm, year);
+
+		Workbook ret = wb;
 
 		return ret;
-	}
-
-	private Workbook createWorkbook(int year, ModelManager mm) throws Exception {
-        Workbook wb = new HSSFWorkbook();
-        createFonts(wb);
-
-        Sheet sheet = wb.createSheet("Infektionsdagbok");
-        setSheetGlobalParameters(sheet);
-        setColumnWidths(sheet);
-
-        addRows(sheet);
-        writeHeaders(sheet, wb);
-        writeYear(sheet, wb, year);
-        writeRowHeaders(sheet, wb);
-        writeWeekHeaders(sheet, wb);
-        writeAnswers(sheet, wb, mm, year);
-
-        return wb;
 	}
 
 	private void createFonts(Workbook wb) {
@@ -114,11 +105,11 @@ public class KarolinskaExcelExporter {
 		}
 	}
 
-	private void writeHeaders(Sheet sheet, Workbook wb) {
+	private void writeHeaders(Sheet sheet, Workbook wb, String name, String ssn) {
 		writeNameHeader(sheet, wb);
-		writeNameValue(sheet, wb);
+		writeNameValue(sheet, wb, name);
 		writeSSNHeader(sheet, wb);
-		writeSSNValue(sheet, wb);
+		writeSSNValue(sheet, wb, ssn);
 		writeHeader(sheet, wb);
 	}
 
@@ -135,7 +126,7 @@ public class KarolinskaExcelExporter {
 		sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 9));
 	}
 
-	private void writeNameValue(Sheet sheet, Workbook wb) {
+	private void writeNameValue(Sheet sheet, Workbook wb, String name) {
 		for (int col = 10; col <= 19; col++) {
 			createCell(sheet, wb, 1, col, null, this.verdana12Normal,
 					(col == 10 ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE),
@@ -143,7 +134,7 @@ public class KarolinskaExcelExporter {
 					CellStyle.BORDER_MEDIUM,
 					CellStyle.BORDER_NONE);
 		}
-		sheet.getRow(1).getCell(10).setCellValue("Kalle Persson");
+		sheet.getRow(1).getCell(10).setCellValue(name);
 
 		sheet.addMergedRegion(new CellRangeAddress(1, 1, 10, 19));
 	}
@@ -161,7 +152,7 @@ public class KarolinskaExcelExporter {
 		sheet.addMergedRegion(new CellRangeAddress(2, 2, 1, 9));
 	}
 
-	private void writeSSNValue(Sheet sheet, Workbook wb) {
+	private void writeSSNValue(Sheet sheet, Workbook wb, String ssn) {
 		for (int col = 10; col <= 19; col++) {
 			createCell(sheet, wb, 2, col, null, this.verdana12Normal,
 					(col == 10 ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE),
@@ -169,7 +160,7 @@ public class KarolinskaExcelExporter {
 					CellStyle.BORDER_NONE,
 					CellStyle.BORDER_MEDIUM);
 		}
-		sheet.getRow(2).getCell(10).setCellValue("123456-7890");
+		sheet.getRow(2).getCell(10).setCellValue(ssn);
 
 		sheet.addMergedRegion(new CellRangeAddress(2, 2, 10, 19));
 	}

@@ -21,6 +21,8 @@ import android.os.Bundle;
 
 public class ExportActivity extends InfektionsdagbokActivity<ExportView> implements OnExportCommandListener {
 
+	Workbook wb;
+
 	public ExportActivity() {
 		super(R.layout.export_view);
 	}
@@ -62,14 +64,14 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 	}
 
 	@Override
-	public void onExportCommand(int year) {
-		KarolinskaExcelExporter kee = new KarolinskaExcelExporter(this);
+	public void onExportCommand(int year, String name, String ssn) {
+		KarolinskaExcelExporter kee = new KarolinskaExcelExporter();
 		ModelManager mm = getLocalApplication().getModelManager();
 		Storage storage = getLocalApplication().getStorage();
 		EmailHandler email = getLocalApplication().getEmailHandler();
 
 		try {
-			Workbook wb = kee.export(year, mm);
+			wb = kee.createWorkbook(year, mm, name, ssn);
 			File file = storage.sendWorkbookToFile(wb, year);
 			if (file != null) {
 				email.sendEmail(file, this);

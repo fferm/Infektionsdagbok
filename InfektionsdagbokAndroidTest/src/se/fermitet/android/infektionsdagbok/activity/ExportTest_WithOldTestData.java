@@ -6,6 +6,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -16,6 +19,7 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.EmailHandler;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.test.MockedEmailFactory;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -115,6 +119,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		verify(mockedEmailHandler).sendEmail(foundFile, getActivity());
 	}
 
+
 	public void testGetSelectedYear() throws Exception {
 		assertEquals("Before setting, should be current", DateTime.now().weekyear().get(), getActivity().getView().getSelectedYear());
 
@@ -123,6 +128,29 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 		assertEquals("After setting, should be changed", DateTime.now().weekyear().get(), getActivity().getView().getSelectedYear());
 
+	}
+
+	public void testExportHasNameAndSSN() throws Exception {
+		String testName = "TESTNAME";
+		String testSSN = "123456-7890";
+
+		EditText nameEdit = (EditText) solo.getView(R.id.nameEdit);
+		EditText ssnEdit = (EditText) solo.getView(R.id.ssnEdit);
+
+		solo.enterText(nameEdit, testName);
+		solo.enterText(ssnEdit, testSSN);
+
+		solo.clickOnView(solo.getView(R.id.exportBTN));
+		Thread.sleep(1000);  // Sleep to let file handling happen
+
+		Workbook wb = getActivity().wb;
+		Sheet sheet = wb.getSheet("Infektionsdagbok");
+
+		Cell nameCell = sheet.getRow(1).getCell(10);
+		assertEquals("Name cell text", testName, nameCell.getStringCellValue());
+
+		Cell ssnCell = sheet.getRow(2).getCell(10);
+		assertEquals("SSN cell text", testSSN, ssnCell.getStringCellValue());
 	}
 
 	private void setYearSpinnerToDesiredYear(int desiredYear) throws Exception {

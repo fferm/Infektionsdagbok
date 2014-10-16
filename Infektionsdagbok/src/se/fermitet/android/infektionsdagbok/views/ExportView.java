@@ -110,12 +110,12 @@ public class ExportView extends RelativeLayout {
 
 	private void handleExportButtonClick() {
 		if (listener != null) {
-			listener.onExportCommand(getSelectedYear());
+			listener.onExportCommand(getSelectedYear(), getName(), getSSN());
 		}
 	}
 
 	public interface OnExportCommandListener {
-		public void onExportCommand(int year);
+		public void onExportCommand(int year, String name, String ssn);
 	}
 
 	public int getSelectedYear() {
