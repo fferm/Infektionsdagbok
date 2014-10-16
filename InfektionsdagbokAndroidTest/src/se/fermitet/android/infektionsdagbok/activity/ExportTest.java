@@ -3,6 +3,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -42,5 +43,21 @@ public class ExportTest extends ActivityTestWithSolo<ExportActivity> {
 		for (int i = 0; i < adapter.getCount(); i++) {
 			assertEquals("Same year on location " + i, desiredYears[i], ((Integer) adapter.getItem(i)).intValue());
 		}
+	}
+
+	public void testGetName() throws Exception {
+		String testName = "TESTNAME";
+		EditText nameEdit = (EditText) solo.getView(R.id.nameEdit);
+		solo.enterText(nameEdit, testName);
+
+		assertEquals(testName, getActivity().getView().getName());
+	}
+
+	public void testGetSSN() throws Exception {
+		String testSSN = "123456-7890";
+		EditText ssnEdit = (EditText) solo.getView(R.id.ssnEdit);
+		solo.enterText(ssnEdit, testSSN);
+
+		assertEquals(testSSN, getActivity().getView().getSSN());
 	}
 }

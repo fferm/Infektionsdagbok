@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/title"
+        android:labelFor="@+id/nameEdit"
         android:text="Namn:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -41,6 +42,7 @@
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/nameEdit"
         android:layout_marginTop="10dp"
+        android:labelFor="@+id/ssnEdit"
         android:text="Personnummer:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -59,6 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/ssnEdit"
+        android:labelFor="@+id/yearSpinner"
         android:layout_marginTop="15dp"
         android:text="År:"
         android:textAppearance="?android:attr/textAppearanceMedium" />

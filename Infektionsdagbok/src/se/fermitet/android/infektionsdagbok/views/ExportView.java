@@ -4,23 +4,30 @@ import java.util.List;
 
 import se.fermitet.android.infektionsdagbok.R;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-public class ExportView extends RelativeLayout implements View.OnClickListener, OnItemSelectedListener {
+public class ExportView extends RelativeLayout {
 
 	private Button exportBTN;
 	private Spinner yearSpinner;
+	private EditText nameEdit;
+	private EditText ssnEdit;
 
 	private OnExportCommandListener listener = null;
 	private List<Integer> yearsToShow;
 	private int selectedYear;
+	private String name;
+	private String ssn;
 
 	public ExportView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -41,11 +48,54 @@ public class ExportView extends RelativeLayout implements View.OnClickListener, 
 	private void attachWidgets() {
 		exportBTN = (Button) findViewById(R.id.exportBTN);
 		yearSpinner = (Spinner) findViewById(R.id.yearSpinner);
+		nameEdit = (EditText) findViewById(R.id.nameEdit);
+		ssnEdit = (EditText) findViewById(R.id.ssnEdit);
 	}
 
 	private void setupWidgets() {
-		exportBTN.setOnClickListener(this);
-		yearSpinner.setOnItemSelectedListener(this);
+		exportBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				handleExportButtonClick();
+			}
+		});
+
+		yearSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				int selectedYear = (Integer) yearSpinner.getSelectedItem();
+				ExportView.this.setSelectedYear(selectedYear);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {}
+		});
+
+		nameEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				ExportView.this.setName(s.toString());
+			}
+		});
+
+		ssnEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				ExportView.this.setSSN(s.toString());
+			}
+		});
 	}
 
 	private void setupSpinner() {
@@ -56,28 +106,6 @@ public class ExportView extends RelativeLayout implements View.OnClickListener, 
 
 	public void setOnExportCommandListener(OnExportCommandListener listener) {
 		this.listener = listener;
-	}
-
-
-	@Override
-	public void onClick(View v) {
-		if (v == exportBTN) {
-			handleExportButtonClick();
-		}
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		if (parent == yearSpinner) {
-			int selectedYear = (Integer) yearSpinner.getSelectedItem();
-			this.setSelectedYear(selectedYear);
-		}
-	}
-
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		// Do nothing
 	}
 
 	private void handleExportButtonClick() {
@@ -98,5 +126,19 @@ public class ExportView extends RelativeLayout implements View.OnClickListener, 
 		this.selectedYear = selectedYear;
 	}
 
+	public String getName() {
+		return this.name;
+	}
 
+	private void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSSN() {
+		return this.ssn;
+	}
+
+	private void setSSN(String ssn) {
+		this.ssn = ssn;
+	}
 }
