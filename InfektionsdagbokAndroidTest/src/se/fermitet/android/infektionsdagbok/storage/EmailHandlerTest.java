@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok.storage;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
@@ -16,7 +17,6 @@ public class EmailHandlerTest extends AndroidTestCase {
 	}
 
 	public void testMockedCallsOnIntentToSendMail() throws Exception {
-		String desiredEmail = "fredrik@fermitet.se";
 		String desiredSubject = "Infektionsdagbok";
 		String desiredMessage = "HŠr kommer min senaste infektionsdagbok";
 
@@ -27,7 +27,7 @@ public class EmailHandlerTest extends AndroidTestCase {
     	Intent mockedIntent = emailHandler.prepareIntent(file);
 
     	verify(mockedIntent).setType("application/vnd.ms-excel");
-    	verify(mockedIntent).putExtra(Intent.EXTRA_EMAIL, new String[] { desiredEmail });
+    	verify(mockedIntent, never()).putExtra(eq(Intent.EXTRA_EMAIL), (String[]) any());
     	verify(mockedIntent).putExtra(Intent.EXTRA_SUBJECT, desiredSubject);
     	verify(mockedIntent).putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
     	verify(mockedIntent).putExtra(android.content.Intent.EXTRA_TEXT, desiredMessage);

@@ -18,7 +18,6 @@ public class EmailHandler {
 	}
 
 	Intent prepareIntent(File file) {
-		String email = "fredrik@fermitet.se";
 		String subject = "Infektionsdagbok";
 		String message = "HŠr kommer min senaste infektionsdagbok";
 
@@ -26,7 +25,6 @@ public class EmailHandler {
 
 		intent.setType("application/vnd.ms-excel");
 
-		intent.putExtra(Intent.EXTRA_EMAIL, new String[] { email });
 		intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 
 		intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
@@ -38,6 +36,4 @@ public class EmailHandler {
 	protected Intent createIntent(String action) {
 		return new Intent(action);
 	}
-
-
 }
