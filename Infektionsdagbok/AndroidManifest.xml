@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <receiver android:name=".receiver.NotificationAlarmReceiver"></receiver>
-        <activity android:name=".activity.ExportActivity" android:screenOrientation="userPortrait"></activity>
+        <activity android:name=".activity.ExportActivity" android:screenOrientation="userPortrait" android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.Questionnaire"></activity>
 	</application>
 
 </manifest>

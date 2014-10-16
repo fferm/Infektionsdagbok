@@ -156,6 +156,13 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		solo.clickOnActionBarItem(R.id.actionExport);
 		assertTrue("Export activity started", solo.waitForActivity(ExportActivity.class));
+
+		int options = solo.getCurrentActivity().getActionBar().getDisplayOptions();
+		assertTrue("DISPLAY_HOME_AS_UP option should be set on ExportActivity actionbar", (options & ActionBar.DISPLAY_HOME_AS_UP) != 0);
+
+		solo.clickOnActionBarHomeButton();
+		Thread.sleep(500); // Sleep to let navigation happen
+		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
 	}
 }
 

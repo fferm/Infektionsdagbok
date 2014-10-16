@@ -18,6 +18,8 @@ import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.ExportView;
 import se.fermitet.android.infektionsdagbok.views.ExportView.OnExportCommandListener;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 
 public class ExportActivity extends InfektionsdagbokActivity<ExportView> implements OnExportCommandListener {
 
@@ -29,13 +31,14 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		try {
 			super.onCreate(savedInstanceState);
 
 			view.setOnExportCommandListener(this);
 
 			setViewYearsToShow();
+
+			getActionBar().setDisplayHomeAsUpEnabled(true);
 		} catch (Exception e) {
 			this.handleException(e);
 		}
@@ -79,6 +82,15 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 		} catch (Exception e) {
 			this.handleException(e);
 		}
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
