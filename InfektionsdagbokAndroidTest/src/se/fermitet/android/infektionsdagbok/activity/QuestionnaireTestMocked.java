@@ -17,7 +17,6 @@ import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.test.MockedStorageFactory;
 import se.fermitet.android.infektionsdagbok.views.QuestionView;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
-import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.Instrumentation;
 import android.app.PendingIntent;
@@ -141,30 +140,6 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		// I was unable to check the intent...
 		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
-	}
-
-	public void testActionBar() throws Exception {
-		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
-
-		ActionBar actionBar = questionnaire.getActionBar();
-
-		assertNotNull("not null", actionBar);
-		assertTrue("showing", actionBar.isShowing());
-		assertEquals("navigation mode", ActionBar.NAVIGATION_MODE_STANDARD, actionBar.getNavigationMode());
-	}
-	
-	public void testActionBarForExportActivity() throws Exception {
-		solo.searchText("Export");
-
-		solo.clickOnActionBarItem(R.id.actionExport);
-		assertTrue("Export activity started", solo.waitForActivity(ExportActivity.class));
-
-		int options = solo.getCurrentActivity().getActionBar().getDisplayOptions();
-		assertTrue("DISPLAY_HOME_AS_UP option should be set on ExportActivity actionbar", (options & ActionBar.DISPLAY_HOME_AS_UP) != 0);
-
-		solo.clickOnActionBarHomeButton();
-		Thread.sleep(500); // Sleep to let navigation happen
-		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
 	}
 }
 

@@ -1,4 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:id="@+id/actionExport" android:title="Export" android:showAsAction="ifRoom" android:icon="@drawable/ic_action_email"></item>
-    </menu>
+    <item
+        android:id="@+id/actionTreatment"
+        android:icon="@drawable/pills_icon"
+        android:showAsAction="ifRoom"
+        android:title="Behandling">
+    </item>
+    <item
+        android:id="@+id/actionExport"
+        android:icon="@drawable/ic_action_email"
+        android:showAsAction="ifRoom"
+        android:title="Export">
+    </item>
+
+</menu>
