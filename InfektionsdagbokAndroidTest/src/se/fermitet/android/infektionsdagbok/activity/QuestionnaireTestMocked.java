@@ -151,7 +151,9 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		assertNotNull("not null", actionBar);
 		assertTrue("showing", actionBar.isShowing());
 		assertEquals("navigation mode", ActionBar.NAVIGATION_MODE_STANDARD, actionBar.getNavigationMode());
-
+	}
+	
+	public void testActionBarForExportActivity() throws Exception {
 		solo.searchText("Export");
 
 		solo.clickOnActionBarItem(R.id.actionExport);
