@@ -28,7 +28,7 @@ public class ModelManager {
 		return this.storage;
 	}
 
-	public WeekAnswers getInitialWeekAnswers() {
+	public WeekAnswers getInitialWeekAnswers() throws Exception {
 		Week weekToUse = new Week(new DateTime());
 		return getWeekAnswersForWeekCreateIfNeeded(weekToUse);
 	}
@@ -93,30 +93,24 @@ public class ModelManager {
 		return earliestAnswers;
 	}
 
-	private WeekAnswers getWeekAnswersForWeekCreateIfNeeded(Week weekToUse) {
+	private WeekAnswers getWeekAnswersForWeekCreateIfNeeded(Week weekToUse) throws Exception {
 		WeekAnswers ret = null;
-		try {
-			ret = storage.getAnswersForWeek(weekToUse);
+		ret = storage.getAnswersForWeek(weekToUse);
 
-			if (ret == null) {
-				ret = new WeekAnswers(weekToUse);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (ret == null) {
+			ret = new WeekAnswers(weekToUse);
 		}
 
-		return ret;
-	}
-
-	public Collection<Treatment> getAllTreatments() {
-		Collection<Treatment> ret = new ArrayList<Treatment>();
 
 		return ret;
 	}
 
-	public void saveTreatment(Treatment treatment) {
-		// TODO Auto-generated method stub
-		
+	public Collection<Treatment> getAllTreatments() throws Exception {
+		return storage.getAllTreatments();
 	}
+
+	public void saveTreatments(Collection<Treatment> toSave) throws Exception {
+		storage.saveTreatments(toSave);
+	}
+
 }

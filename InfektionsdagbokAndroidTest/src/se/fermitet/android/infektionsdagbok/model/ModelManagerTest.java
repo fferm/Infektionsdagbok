@@ -111,67 +111,24 @@ public class ModelManagerTest extends AndroidTestCase {
 		assertEquals("Size of answer", toSave.size(), values.size());
 		assertTrue("Contains all", values.containsAll(toSave));
 	}
-	
+
 	public void testGetEarliestWeekAnswers() throws Exception {
 		WeekAnswers wa1 = new WeekAnswers(new Week(new DateTime(2013, 1, 1, 1, 1, 1)));
 		WeekAnswers wa2 = new WeekAnswers(new Week(new DateTime(2013, 2, 1, 1, 1, 1)));
 		WeekAnswers wa3 = new WeekAnswers(new Week(new DateTime(2014, 1, 1, 1, 1, 1)));
 		WeekAnswers wa4 = new WeekAnswers(new Week(new DateTime(2013, 1, 8, 1, 1, 1)));
-		
+
 		List<WeekAnswers> weekAnswers = new ArrayList<WeekAnswers>();
 		weekAnswers.add(wa4);
 		weekAnswers.add(wa3);
 		weekAnswers.add(wa2);
 		weekAnswers.add(wa1);
-		
+
 		modelManager.saveWeekAnswers(weekAnswers);
-		
+
 		WeekAnswers retrieved = modelManager.getEarliestWeekAnswers();
-		
+
 		assertEquals(wa1, retrieved);
-	}
-	
-	public void testSaveAndGetTreatments() throws Exception {
-		Collection<Treatment> received = modelManager.getAllTreatments();
-		
-		assertNotNull("Not null before any work", received);
-		assertEquals("Empty treatments before any work", 0, received.size());
-		
-		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
-		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
-		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
-		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
-		
-		modelManager.saveTreatment(t1);
-		modelManager.saveTreatment(t2);
-		modelManager.saveTreatment(t3);
-		modelManager.saveTreatment(t4);
-		
-		received = modelManager.getAllTreatments();
-		
-		assertEquals("Size after work", 4, received.size());
-		assertTrue("Contains t1", received.contains(t1));
-		assertTrue("Contains t2", received.contains(t2));
-		assertTrue("Contains t3", received.contains(t3));
-		assertTrue("Contains t4", received.contains(t4));
-	}
-	
-	public void testResetTreatment() throws Exception {
-		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
-		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
-		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
-		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
-		
-		modelManager.saveTreatment(t1);
-		modelManager.saveTreatment(t2);
-		modelManager.saveTreatment(t3);
-		modelManager.saveTreatment(t4);
-		
-		modelManager.reset();
-		
-		Collection<Treatment> received = modelManager.getAllTreatments();
-		
-		assertEquals("Empty after reset", 0, received.size());
 	}
 
 	public static Map<Week, WeekAnswers> prepareTestDataIndexedByWeek(int year) {

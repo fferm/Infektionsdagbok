@@ -28,10 +28,14 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        issueNotificationAlarm();
-        view.setOnWeekChangeListener(this);
+        try {
+			issueNotificationAlarm();
+			view.setOnWeekChangeListener(this);
 
-        setNewWeek(getLocalApplication().getModelManager().getInitialWeekAnswers());
+			setNewWeek(getLocalApplication().getModelManager().getInitialWeekAnswers());
+		} catch (Exception e) {
+			handleException(e);
+		}
     }
 
 	private void issueNotificationAlarm() {
@@ -73,7 +77,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 	private void handleActionExport() {
 		startActivity(new Intent(this, ExportActivity.class));
 	}
-	
+
 	private void handleActionTreatment() {
 		startActivity(new Intent(this, TreatmentActivity.class));
 	}
