@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.storage;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,13 +11,15 @@ import java.util.Collection;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
+import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import android.content.Context;
 
 public class Storage {
 
-	private static final String ANSWER_FILE_EXTENSION = "json";
+	private static final String ANSWER_FILE_EXTENSION = "answer";
+	private static final String TREAMENT_FILE_NAME = "treatments.json";
 	private Context context;
 
 	public Storage(Context context) {
@@ -37,7 +40,7 @@ public class Storage {
 		try {
 			pw = new PrintWriter(this.context.openFileOutput(getWeekAnswersFilename(toSave.week), Context.MODE_PRIVATE));
 
-			pw.println(toSave.toJSON());
+			pw.println(Jsonizer.weekAnswersToJSON(toSave));
 		} finally {
 			if (pw != null) {
 				pw.flush();
@@ -90,7 +93,7 @@ public class Storage {
 		try {
 			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(fileName)));
 			String json = br.readLine();
-			return WeekAnswers.fromJSON(json);
+			return Jsonizer.weekAnswersFromJSON(json);
 		} finally {
 			if (br != null) br.close();
 		}
@@ -112,5 +115,40 @@ public class Storage {
         } finally {
             if (os != null) os.close();
         }
+	}
+
+	public Collection<Treatment> getAllTreatments() throws Exception {
+		BufferedReader br = null;
+		Collection<Treatment> ret = new ArrayList<Treatment>();
+		try {
+			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(TREAMENT_FILE_NAME)));
+			
+			String json;
+			while ((json = br.readLine()) != null) {
+				Treatment treatment = Jsonizer.treatmentFromJSON(json);
+				ret.add(treatment);
+			}			
+			
+			return ret;
+		} catch (FileNotFoundException e) {
+			// File does not exist yet, do nothing...
+			return ret;
+		} finally {
+			if (br != null) br.close();
+		}
+	}
+
+	public void insertTreatment(Treatment treatment) throws Exception {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(this.context.openFileOutput(TREAMENT_FILE_NAME, Context.MODE_APPEND));
+
+			pw.println(Jsonizer.treatmentToJSON(treatment));
+		} finally {
+			if (pw != null) {
+				pw.flush();
+				pw.close();
+			}
+		}
 	}
 }

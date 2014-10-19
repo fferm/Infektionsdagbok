@@ -109,4 +109,14 @@ public class ModelManager {
 		return ret;
 	}
 
+	public Collection<Treatment> getAllTreatments() {
+		Collection<Treatment> ret = new ArrayList<Treatment>();
+
+		return ret;
+	}
+
+	public void saveTreatment(Treatment treatment) {
+		// TODO Auto-generated method stub
+		
+	}
 }

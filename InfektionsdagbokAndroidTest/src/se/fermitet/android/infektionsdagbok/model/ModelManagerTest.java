@@ -74,7 +74,7 @@ public class ModelManagerTest extends AndroidTestCase {
 		assertEquals("equals after going forward and back", initial, backAgain);
 	}
 
-	public void testReset() throws Exception {
+	public void testResetWeekAnswers() throws Exception {
 		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
 		// Change some data
@@ -130,6 +130,49 @@ public class ModelManagerTest extends AndroidTestCase {
 		
 		assertEquals(wa1, retrieved);
 	}
+	
+	public void testSaveAndGetTreatments() throws Exception {
+		Collection<Treatment> received = modelManager.getAllTreatments();
+		
+		assertNotNull("Not null before any work", received);
+		assertEquals("Empty treatments before any work", 0, received.size());
+		
+		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
+		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
+		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
+		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
+		
+		modelManager.saveTreatment(t1);
+		modelManager.saveTreatment(t2);
+		modelManager.saveTreatment(t3);
+		modelManager.saveTreatment(t4);
+		
+		received = modelManager.getAllTreatments();
+		
+		assertEquals("Size after work", 4, received.size());
+		assertTrue("Contains t1", received.contains(t1));
+		assertTrue("Contains t2", received.contains(t2));
+		assertTrue("Contains t3", received.contains(t3));
+		assertTrue("Contains t4", received.contains(t4));
+	}
+	
+	public void testResetTreatment() throws Exception {
+		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
+		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
+		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
+		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
+		
+		modelManager.saveTreatment(t1);
+		modelManager.saveTreatment(t2);
+		modelManager.saveTreatment(t3);
+		modelManager.saveTreatment(t4);
+		
+		modelManager.reset();
+		
+		Collection<Treatment> received = modelManager.getAllTreatments();
+		
+		assertEquals("Empty after reset", 0, received.size());
+	}
 
 	public static Map<Week, WeekAnswers> prepareTestDataIndexedByWeek(int year) {
 		Map<Week, WeekAnswers> toSave = new HashMap<Week, WeekAnswers>();
@@ -150,5 +193,5 @@ public class ModelManagerTest extends AndroidTestCase {
 
 		return toSave;
 	}
-
 }
+

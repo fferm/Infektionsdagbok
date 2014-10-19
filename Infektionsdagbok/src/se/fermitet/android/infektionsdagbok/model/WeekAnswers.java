@@ -3,16 +3,11 @@ package se.fermitet.android.infektionsdagbok.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import android.util.SparseBooleanArray;
 
 public class WeekAnswers {
-
-	private static final String JSON_WEEK_STRING = "week";
 
 	public static List<Integer> questionIds;
 
@@ -41,32 +36,6 @@ public class WeekAnswers {
 
 		answers = new SparseBooleanArray(questionIds.size());
 		setAnswer(R.id.generallyWell, true);
-	}
-
-	public static WeekAnswers fromJSON(String jsonString) throws JSONException {
-		JSONObject json = new JSONObject(jsonString);
-
-		String weekString = json.getString(JSON_WEEK_STRING);
-
-		WeekAnswers ret = new WeekAnswers(new Week(weekString));
-
-		for (Integer id : questionIds) {
-			ret.setAnswer(id, json.getBoolean(NameFromIdHelper.getNameFromId(id)));
-		}
-
-		return ret;
-	}
-
-	public String toJSON() throws JSONException {
-		JSONObject json = new JSONObject();
-
-		json.put(JSON_WEEK_STRING, week.toString());
-
-		for (int id : questionIds) {
-			putJSONAnswer(json, id);
-		}
-
-		return json.toString();
 	}
 
 	public boolean getAnswer(int id) {
@@ -126,10 +95,6 @@ public class WeekAnswers {
 				+ ((this.week == null) ? 0 : this.week.hashCode());
 
 		return result;
-	}
-
-	private void putJSONAnswer(JSONObject json, int id) throws JSONException {
-		json.put(NameFromIdHelper.getNameFromId(id), this.getAnswer(id));
 	}
 
 	public boolean getMalaise() {

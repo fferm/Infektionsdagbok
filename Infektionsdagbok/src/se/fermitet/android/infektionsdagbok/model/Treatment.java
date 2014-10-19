@@ -9,6 +9,19 @@ public class Treatment {
 	private DateTime startingDate;
 	private int numDays;
 	
+	public Treatment() {
+		super();
+	}
+	
+	public Treatment(String infectionType, String medicine, DateTime startingDate, int numDays) {
+		this();
+		
+		this.setInfectionType(infectionType);
+		this.setMedicine(medicine);
+		this.setStartingDate(startingDate);
+		this.setNumDays(numDays);
+	}
+
 	public String getInfectionType() {
 		return this.infectionType;
 	}

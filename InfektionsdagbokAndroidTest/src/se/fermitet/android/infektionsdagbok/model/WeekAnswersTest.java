@@ -96,14 +96,6 @@ public class WeekAnswersTest extends TestCase {
 		assertEquals(buf.toString(), wa.toString());
 	}
 
-	public void testJSONWriteAndRead() throws Exception {
-		for (int id : WeekAnswers.questionIds) {
-			wa.setAnswer(id, ! wa.getAnswer(id));
-
-			assertEquals("after changing " + NameFromIdHelper.getNameFromId(id), wa, WeekAnswers.fromJSON(wa.toJSON()));
-		}
-	}
-
 	public void testQuestionAccessors() throws Exception {
 		wa = new WeekAnswers(new Week(new DateTime()));
 		assertFalse("Malaise before", wa.getMalaise());
