@@ -122,13 +122,13 @@ public class Storage {
 		Collection<Treatment> ret = new ArrayList<Treatment>();
 		try {
 			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(TREAMENT_FILE_NAME)));
-			
+
 			String json;
 			while ((json = br.readLine()) != null) {
 				Treatment treatment = Jsonizer.treatmentFromJSON(json);
 				ret.add(treatment);
-			}			
-			
+			}
+
 			return ret;
 		} catch (FileNotFoundException e) {
 			// File does not exist yet, do nothing...
@@ -138,12 +138,15 @@ public class Storage {
 		}
 	}
 
-	public void insertTreatment(Treatment treatment) throws Exception {
+	public void saveTreatments(Collection<Treatment> treatments) throws Exception {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(this.context.openFileOutput(TREAMENT_FILE_NAME, Context.MODE_APPEND));
+			pw = new PrintWriter(this.context.openFileOutput(TREAMENT_FILE_NAME, Context.MODE_PRIVATE));
 
-			pw.println(Jsonizer.treatmentToJSON(treatment));
+			for (Treatment treatment : treatments) {
+				pw.println(Jsonizer.treatmentToJSON(treatment));
+			}
+
 		} finally {
 			if (pw != null) {
 				pw.flush();

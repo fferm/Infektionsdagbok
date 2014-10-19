@@ -80,48 +80,57 @@ public class StorageTest extends AndroidTestCase {
 		assertEquals("Size", saved.size(), retrieved.size());
 		assertTrue("Contains all", retrieved.containsAll(saved));
 	}
-	
-	public void testSaveAndGetTreatments() throws Exception {
+
+	public void testEmptyTreatments() throws Exception {
 		Collection<Treatment> received = storage.getAllTreatments();
-		
+
 		assertNotNull("Not null before any work", received);
 		assertEquals("Empty treatments before any work", 0, received.size());
-		
+	}
+
+	public void testSaveAndRetrieveTreatments() throws Exception {
+		Collection<Treatment> toSave = new ArrayList<Treatment>();
+
 		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
 		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
 		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
 		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
-		
-		storage.insertTreatment(t1);
-		storage.insertTreatment(t2);
-		storage.insertTreatment(t3);
-		storage.insertTreatment(t4);
-		
-		received = storage.getAllTreatments();
-		
+
+		toSave.add(t1);
+		toSave.add(t2);
+		toSave.add(t3);
+		toSave.add(t4);
+
+		storage.saveTreatments(toSave);
+
+		Collection<Treatment> received = storage.getAllTreatments();
+
 		assertEquals("Size after work", 4, received.size());
 		assertTrue("Contains t1", received.contains(t1));
 		assertTrue("Contains t2", received.contains(t2));
 		assertTrue("Contains t3", received.contains(t3));
 		assertTrue("Contains t4", received.contains(t4));
 	}
-	
+
 	public void testClearForTreatment() throws Exception {
+		Collection<Treatment> toSave = new ArrayList<Treatment>();
+
 		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
 		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
 		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
 		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
-		
-		storage.insertTreatment(t1);
-		storage.insertTreatment(t2);
-		storage.insertTreatment(t3);
-		storage.insertTreatment(t4);
+
+		toSave.add(t1);
+		toSave.add(t2);
+		toSave.add(t3);
+		toSave.add(t4);
+
+		storage.saveTreatments(toSave);
 
 		storage.clear();
-		
+
 		Collection<Treatment> received = storage.getAllTreatments();
-		
+
 		assertEquals("Empty after clear", 0, received.size());
 	}
-
 }
