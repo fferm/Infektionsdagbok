@@ -62,6 +62,9 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		case R.id.actionExport:
 			handleActionExport();
 			return true;
+		case R.id.actionTreatment:
+			handleActionTreatment();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -69,6 +72,10 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 
 	private void handleActionExport() {
 		startActivity(new Intent(this, ExportActivity.class));
+	}
+	
+	private void handleActionTreatment() {
+		startActivity(new Intent(this, TreatmentActivity.class));
 	}
 
 	@Override

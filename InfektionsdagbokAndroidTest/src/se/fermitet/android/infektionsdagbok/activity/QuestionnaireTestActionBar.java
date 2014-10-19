@@ -38,7 +38,7 @@ public class QuestionnaireTestActionBar extends ActivityTestWithSolo<Questionnai
 		solo.searchText("Behandling");
 		
 		solo.clickOnActionBarItem(R.id.actionTreatment);
-/*		assertTrue("Treatment activity started", solo.waitForActivity(TreatmentActivity.class));
+		assertTrue("Treatment activity started", solo.waitForActivity(TreatmentActivity.class));
 		
 		int options = solo.getCurrentActivity().getActionBar().getDisplayOptions();
 		assertTrue("DISPLAY_HOME_AS_UP option should be set on Activity actionbar", (options & ActionBar.DISPLAY_HOME_AS_UP) != 0);
@@ -46,6 +46,6 @@ public class QuestionnaireTestActionBar extends ActivityTestWithSolo<Questionnai
 		solo.clickOnActionBarHomeButton();
 		Thread.sleep(500); // Sleep to let navigation happen
 		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
-*/
+
 	}
 }
