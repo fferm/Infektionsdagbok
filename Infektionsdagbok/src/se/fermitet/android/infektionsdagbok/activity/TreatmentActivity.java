@@ -1,14 +1,22 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentView;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 
@@ -22,10 +30,18 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		try {
 			fillWithTestData();
 
-			view.setTreatmentsToShow(getLocalApplication().getModelManager().getAllTreatments());
+			syncListViewDataWithStored();
 		} catch (Exception e) {
 			handleException(e);
 		}
+	}
+
+	private void syncListViewDataWithStored() throws Exception {
+		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments();
+
+		TreatmentAdapter adapter = new TreatmentAdapter(this, new ArrayList<Treatment>(allTreatments));
+
+		view.setAdapter(adapter);
 	}
 
 	// TODO: Delete this
@@ -43,5 +59,32 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		testDataTreatments.add(t4);
 
 		getLocalApplication().getModelManager().saveTreatments(testDataTreatments);
+	}
+}
+
+class TreatmentAdapter extends ArrayAdapter<Treatment> {
+
+	private List<Treatment> values;
+
+	public TreatmentAdapter(Context context, List<Treatment> values) {
+		super(context, R.layout.treatment_item, values);
+		this.values = values;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		View rowView = inflater.inflate(R.layout.treatment_item, parent, false);
+
+		TextView dateView = (TextView) rowView.findViewById(R.id.dateValueField);
+		TextView numDaysView = (TextView) rowView.findViewById(R.id.numDaysValueField);
+
+
+		Treatment treatment = values.get(position);
+		dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
+		numDaysView.setText("" + treatment.getNumDays());
+
+		return rowView;
 	}
 }

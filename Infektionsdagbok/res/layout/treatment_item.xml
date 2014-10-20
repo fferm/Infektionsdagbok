@@ -5,21 +5,20 @@
     >
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/dateValueField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Datum"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
-        android:id="@+id/numDays"
+        android:id="@+id/numDaysValueField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/date"
-        android:text="Large Text"
+        android:layout_toRightOf="@id/dateValueField"
+        android:layout_marginLeft="20dp"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>
