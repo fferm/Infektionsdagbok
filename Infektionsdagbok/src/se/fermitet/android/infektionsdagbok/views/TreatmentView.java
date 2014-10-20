@@ -1,16 +1,18 @@
 package se.fermitet.android.infektionsdagbok.views;
 
+import java.util.Collection;
+
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 public class TreatmentView extends RelativeLayout {
 
 	private ListView listView;
-	private View header;
 
 	public TreatmentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -31,6 +33,14 @@ public class TreatmentView extends RelativeLayout {
 	}
 
 	private void setupWidgets() {
-		this.listView.addHeaderView(View.inflate(getContext(), R.layout.treatment_item, listView));
+	}
+
+
+	// TODO: Maybe the activity should manage the adapter?
+	public void setTreatmentsToShow(Collection<Treatment> allTreatments) {
+			ArrayAdapter<Treatment> adapter = new ArrayAdapter<Treatment>(getContext(), android.R.layout.simple_list_item_1);
+			adapter.addAll(allTreatments);
+
+			listView.setAdapter(adapter);
 	}
 }
