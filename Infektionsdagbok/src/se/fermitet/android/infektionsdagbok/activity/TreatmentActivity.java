@@ -28,7 +28,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			fillWithTestData();
+//			fillWithTestData();
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
@@ -36,7 +36,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		}
 	}
 
-	private void syncListViewDataWithStored() throws Exception {
+	public void syncListViewDataWithStored() throws Exception {
 		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments();
 
 		TreatmentAdapter adapter = new TreatmentAdapter(this, new ArrayList<Treatment>(allTreatments));
@@ -48,15 +48,20 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	private void fillWithTestData() throws Exception {
 		Collection<Treatment> testDataTreatments = new ArrayList<Treatment>();
 
-		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now().minusDays(1), 1);
-		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now().minusWeeks(2), 2);
-		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now().minusMonths(3), 3);
-		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now().minusYears(4), 4);
-
-		testDataTreatments.add(t1);
-		testDataTreatments.add(t2);
-		testDataTreatments.add(t3);
-		testDataTreatments.add(t4);
+		for (int i = 1; i <= 10; i++) {
+			DateTime date;
+			if (i % 4 == 0) date = DateTime.now().minusDays(i);
+			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
+			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
+			else date = DateTime.now().minusYears(i);
+			
+			testDataTreatments.add(
+					new Treatment(
+							"INF" + i,
+							"MED" + i,
+							date,
+							i));
+		}
 
 		getLocalApplication().getModelManager().saveTreatments(testDataTreatments);
 	}
@@ -70,7 +75,7 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		super(context, R.layout.treatment_item, values);
 		this.values = values;
 	}
-
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -80,11 +85,10 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		TextView dateView = (TextView) rowView.findViewById(R.id.dateValueField);
 		TextView numDaysView = (TextView) rowView.findViewById(R.id.numDaysValueField);
 
-
 		Treatment treatment = values.get(position);
 		dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
 		numDaysView.setText("" + treatment.getNumDays());
-
+		
 		return rowView;
 	}
 }

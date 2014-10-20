@@ -16,11 +16,21 @@
         android:text="Behandlingar"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <include 
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="10dp"
+        layout="@layout/treatment_item"
+        />
+    
     <ListView
         android:id="@+id/treatmentListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title" >
+        android:layout_below="@id/header" 
+        android:background="@drawable/background">
     </ListView>
 
 </se.fermitet.android.infektionsdagbok.views.TreatmentView>
