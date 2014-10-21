@@ -3,6 +3,8 @@ package se.fermitet.android.infektionsdagbok.activity;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -39,9 +41,27 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	public void syncListViewDataWithStored() throws Exception {
 		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments();
 
-		TreatmentAdapter adapter = new TreatmentAdapter(this, new ArrayList<Treatment>(allTreatments));
+		TreatmentAdapter adapter = new TreatmentAdapter(this, sortedListOfTreatments(allTreatments));
 
 		view.setAdapter(adapter);
+	}
+
+	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
+		List<Treatment> list = new ArrayList<Treatment>(unsorted);
+		
+		Collections.sort(list, new Comparator<Treatment>() {
+			@Override
+			public int compare(Treatment lhs, Treatment rhs) {
+				DateTime lhsDate = lhs.getStartingDate().withMillisOfDay(0);
+				DateTime rhsDate = rhs.getStartingDate().withMillisOfDay(0);
+				
+				if (lhsDate.isBefore(rhsDate)) return 1;
+				else if (lhsDate.equals(rhsDate)) return 0;
+				else return -1;
+			}
+		});
+		
+		return list;
 	}
 
 	// TODO: Delete this

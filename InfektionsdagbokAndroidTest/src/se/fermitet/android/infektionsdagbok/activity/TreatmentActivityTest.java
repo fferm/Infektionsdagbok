@@ -6,9 +6,12 @@ import java.util.Collection;
 
 import org.joda.time.DateTime;
 
+import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivity> {
 
@@ -60,6 +63,25 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			
 			assertTrue("Should show treatment date " + treatment.getStartingDate(), solo.waitForText(df.format(treatment.getStartingDate().toDate())));
 			assertTrue("Should show treatment numDays " + treatment.getNumDays(), solo.waitForText("" + treatment.getNumDays()));
+		}
+	}
+	
+	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
+		TreatmentActivity activity = getActivity();
+		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
+		ListAdapter adapter = listView.getAdapter();
+		
+		DateTime previousStartingDate = null;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			Treatment treatment = (Treatment) adapter.getItem(i);
+			
+			DateTime currentStartingDate = treatment.getStartingDate();
+			
+			boolean condition = (previousStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
+			
+			assertTrue("Wrong order on treatments starting with the one with startingDate =  " + treatment.getStartingDate(), condition);
+			
+			previousStartingDate = currentStartingDate;
 		}
 	}
 }
