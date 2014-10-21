@@ -12,6 +12,7 @@ import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivity> {
 
@@ -49,8 +50,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	public void testInitials() throws Exception {
 		assertTrue("Header text", solo.waitForText("Behandlingar"));
 
-		assertTrue("Date header", solo.waitForText("Start"));
-		assertTrue("numDays header", solo.waitForText("Dgr"));
+		assertTrue("Date list header", solo.waitForText("Start"));
+		assertTrue("numDays list header", solo.waitForText("Dgr"));
 
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
@@ -59,11 +60,22 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		// Just look for 2, that should be enough (performance...)
 		int i = 0;
 		for (Treatment treatment : testData) {
-			if (i++ > 2) break;
-			
+			if (i++ >= 2) break;
+
 			assertTrue("Should show treatment date " + treatment.getStartingDate(), solo.waitForText(df.format(treatment.getStartingDate().toDate())));
 			assertTrue("Should show treatment numDays " + treatment.getNumDays(), solo.waitForText("" + treatment.getNumDays()));
 		}
+		
+		checkHeaderTextView(R.id.startHeader, "Start");
+		checkHeaderTextView(R.id.numDaysHeader, "Dgr");
+		checkHeaderTextView(R.id.medicineHeader, "Preparat");
+		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom");
+	}
+	
+	private void checkHeaderTextView(int id, String text) {
+		TextView headerView = (TextView) solo.getView(id);
+		assertNotNull(text + " header null", headerView);
+		assertEquals(text + " header text", text, headerView.getText());
 	}
 	
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {

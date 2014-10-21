@@ -30,7 +30,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-//			fillWithTestData();
+			fillWithTestData();
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
