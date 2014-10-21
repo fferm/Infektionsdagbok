@@ -48,7 +48,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	private void fillWithTestData() throws Exception {
 		Collection<Treatment> testDataTreatments = new ArrayList<Treatment>();
 
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 20; i++) {
 			DateTime date;
 			if (i % 4 == 0) date = DateTime.now().minusDays(i);
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
