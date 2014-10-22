@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background" >
+
+    <TextView
+        android:id="@+id/startTV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/infectionTypeEdit"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/startHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/startTV"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/startTV"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="Start:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/numDaysEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/medicineEdit"
+        android:layout_below="@id/startTV"
+        android:ems="10"
+        android:paddingBottom="10dp"
+        android:inputType="number"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/numDaysHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/numDaysEdit"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/numDaysEdit"
+        android:labelFor="@id/numDaysEdit"
+        android:paddingLeft="10dp"
+        android:text="Dagar:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@id/medicineEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/infectionTypeEdit"
+        android:layout_below="@id/numDaysEdit"
+        android:ems="10"
+        android:paddingBottom="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/medicineHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/medicineEdit"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/medicineEdit"
+        android:paddingLeft="10dp"
+        android:text="Preparat:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@id/infectionTypeEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/medicineEdit"
+        android:layout_toRightOf="@+id/infectionTypeHeader"
+        android:ems="10"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+
+    </EditText>
+
+    <TextView
+        android:id="@id/infectionTypeHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/infectionTypeEdit"
+        android:layout_marginRight="10dp"
+        android:labelFor="@id/infectionTypeEdit"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:text="Sjukdom:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

@@ -10,6 +10,8 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +19,9 @@ import android.widget.TextView;
 public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivity> {
 
 	private ModelManager mm;
+	private Treatment nullMedicine;
+	private Treatment nullInfection;
+	private Treatment nullStartingDate;
 
 	public TreatmentActivityTest() {
 		super(TreatmentActivity.class);
@@ -43,6 +48,14 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 							i));
 		}
 
+		nullMedicine = new Treatment("INFECTION", null, DateTime.now().minusDays(100), 100);
+		nullInfection = new Treatment(null, "MEDICINE", DateTime.now().minusDays(101), 101);
+		nullStartingDate = new Treatment("INFECT102", "MEDICINE102", null, 102);
+
+		testData.add(nullMedicine);
+		testData.add(nullInfection);
+		testData.add(nullStartingDate);
+
 		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
 		mm.saveTreatments(testData);
 	}
@@ -53,8 +66,6 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertTrue("Date list header", solo.waitForText("Start"));
 		assertTrue("numDays list header", solo.waitForText("Dgr"));
 
-		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
 		Collection<Treatment> testData = mm.getAllTreatments();
 
 		// Just look for 2, that should be enough (performance...)
@@ -62,9 +73,9 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		for (Treatment treatment : testData) {
 			if (i++ >= 2) break;
 
-			assertTrue("Should show treatment date " + treatment.getStartingDate(), solo.waitForText(df.format(treatment.getStartingDate().toDate())));
-			assertTrue("Should show treatment numDays " + treatment.getNumDays(), solo.waitForText("" + treatment.getNumDays()));
+			checkListContents(treatment);
 		}
+		checkListContents(nullStartingDate);
 
 		checkHeaderTextView(R.id.startHeader, "Start:");
 		assertNotNull("Start date text field", solo.getView(R.id.startTV));
@@ -77,6 +88,37 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
+	}
+
+	protected void checkListContents(Treatment treatment) {
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+		TreatmentActivity activity = getActivity();
+		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
+		ListAdapter adapter = listView.getAdapter();
+
+		boolean foundTreatment = false;
+		for (int i = 0; i < adapter.getCount(); i++) {
+			Treatment fromView = (Treatment) adapter.getItem(i);
+			if (treatment.equals(fromView)) {
+				foundTreatment = true;
+
+				View treatmentView = adapter.getView(i, null, null);
+				TextView startTv = (TextView) treatmentView.findViewById(R.id.dateValueField);
+				TextView numDaysTV = (TextView) treatmentView.findViewById(R.id.numDaysValueField);
+
+				DateTime startingDate = treatment.getStartingDate();
+				if (startingDate == null) {
+					assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
+				} else {
+					assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(df.format(startingDate.toDate())));
+				}
+				assertTrue("Should show treatment numDays " + treatment.getNumDays(), numDaysTV.getText().equals("" + treatment.getNumDays()));
+
+				break;
+			}
+		}
+		assertTrue("Didn't find treatment in list: StartingDate: " + treatment.getStartingDate(), foundTreatment);
 	}
 
 	private void checkHeaderTextView(int id, String text) {
@@ -102,5 +144,28 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 			previousStartingDate = currentStartingDate;
 		}
+	}
+
+	public void testClickingOnListViewFillsEditors() throws Exception {
+		TreatmentActivity activity = getActivity();
+		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
+		ListAdapter adapter = listView.getAdapter();
+
+		int treatmentIdx = 0;
+		solo.clickInList(treatmentIdx);
+
+		Treatment t1 = (Treatment) adapter.getItem(treatmentIdx);
+
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+		assertEquals("Date text", df.format(t1.getStartingDate().toDate()), ((TextView) solo.getView(R.id.startTV)).getText());
+		assertEquals("Num Days text", "" + t1.getNumDays(), ((EditText) solo.getView(R.id.numDaysEdit)).getText().toString());
+		assertEquals("Medicine text", t1.getMedicine(), ((TextView) solo.getView(R.id.medicineEdit)).getText().toString());
+		assertEquals("Infection type text", t1.getInfectionType(), ((TextView) solo.getView(R.id.infectionTypeEdit)).getText().toString());
+	}
+
+	public void testClickingOnListViewFillsEditors_handleNulls() throws Exception {
+		// TODO
+
 	}
 }

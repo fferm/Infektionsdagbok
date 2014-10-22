@@ -4,7 +4,10 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -13,8 +16,10 @@ import android.widget.TextView;
 public class TreatmentView extends RelativeLayout {
 
 	private ListView listView;
-	private TextView dateHeader;
-	private TextView numDaysHeader;
+	private TextView startListHeader;
+	private TextView numDaysListHeader;
+
+	private SingleTreatmentEditorView singleTreatmentEditor;
 
 	public TreatmentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -29,15 +34,25 @@ public class TreatmentView extends RelativeLayout {
 
 	private void attachWidgets() {
 		this.listView = (ListView) findViewById(R.id.treatmentListView);
-		
+
 		ViewGroup headerRow = (ViewGroup) findViewById(R.id.header);
-		dateHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
-		numDaysHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
+		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
+		numDaysListHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
+
+		singleTreatmentEditor = (SingleTreatmentEditorView) findViewById(R.id.treatmentEdit);
 	}
 
 	private void setupWidgets() {
-		dateHeader.setText("Start");
-		numDaysHeader.setText("Dgr");
+		startListHeader.setText("Start");
+		numDaysListHeader.setText("Dgr");
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Treatment treatment = (Treatment) parent.getItemAtPosition(position);
+				TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+			}
+		});
 	}
 
 
