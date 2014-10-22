@@ -34,7 +34,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
 			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
 			else date = DateTime.now().minusYears(i);
-			
+
 			testData.add(
 					new Treatment(
 							"INF" + i,
@@ -46,7 +46,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
 		mm.saveTreatments(testData);
 	}
-	
+
 	public void testInitials() throws Exception {
 		assertTrue("Header text", solo.waitForText("Behandlingar"));
 
@@ -56,7 +56,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
 		Collection<Treatment> testData = mm.getAllTreatments();
-		
+
 		// Just look for 2, that should be enough (performance...)
 		int i = 0;
 		for (Treatment treatment : testData) {
@@ -65,34 +65,41 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			assertTrue("Should show treatment date " + treatment.getStartingDate(), solo.waitForText(df.format(treatment.getStartingDate().toDate())));
 			assertTrue("Should show treatment numDays " + treatment.getNumDays(), solo.waitForText("" + treatment.getNumDays()));
 		}
-		
-		checkHeaderTextView(R.id.startHeader, "Start");
-		checkHeaderTextView(R.id.numDaysHeader, "Dgr");
-		checkHeaderTextView(R.id.medicineHeader, "Preparat");
-		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom");
+
+		checkHeaderTextView(R.id.startHeader, "Start:");
+		assertNotNull("Start date text field", solo.getView(R.id.startTV));
+
+		checkHeaderTextView(R.id.numDaysHeader, "Dagar:");
+		assertNotNull("Num days edit text", solo.getView(R.id.numDaysEdit));
+
+		checkHeaderTextView(R.id.medicineHeader, "Preparat:");
+		assertNotNull("Medicine text field", solo.getView(R.id.medicineEdit));
+
+		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
+		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 	}
-	
+
 	private void checkHeaderTextView(int id, String text) {
 		TextView headerView = (TextView) solo.getView(id);
 		assertNotNull(text + " header null", headerView);
 		assertEquals(text + " header text", text, headerView.getText());
 	}
-	
+
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
 		TreatmentActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
 		ListAdapter adapter = listView.getAdapter();
-		
+
 		DateTime previousStartingDate = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
 			Treatment treatment = (Treatment) adapter.getItem(i);
-			
+
 			DateTime currentStartingDate = treatment.getStartingDate();
-			
+
 			boolean condition = (previousStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
-			
+
 			assertTrue("Wrong order on treatments starting with the one with startingDate =  " + treatment.getStartingDate(), condition);
-			
+
 			previousStartingDate = currentStartingDate;
 		}
 	}

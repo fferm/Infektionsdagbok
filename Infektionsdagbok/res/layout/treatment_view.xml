@@ -30,38 +30,81 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/startHeader"
         android:layout_below="@id/header"
-        android:background="@drawable/background" />
+        android:background="@drawable/background"
+        android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:id="@id/startHeader"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/infectionTypeEdit"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/numDaysHeader"
-        android:text="Start"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@id/numDaysHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/medicineHeader"
-        android:text="Dgr"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@id/medicineHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/infectionTypeHeader"
-        android:text="Preparat"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/infectionTypeHeader"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+    </EditText>
 
     <TextView
         android:id="@id/infectionTypeHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="Sjukdom"
+        android:layout_alignTop="@id/infectionTypeEdit"
+        android:text="Sjukdom:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/medicineEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/infectionTypeEdit"
+        android:layout_alignLeft="@id/infectionTypeEdit"
+        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/medicineHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/medicineEdit"
+        android:layout_toLeftOf="@id/medicineEdit"
+        android:text="Preparat:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/numDaysEdit"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/medicineEdit"
+        android:layout_alignLeft="@id/medicineEdit"
+        android:ems="10"
+        android:inputType="phone"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/numDaysHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/numDaysEdit"
+        android:layout_toLeftOf="@id/numDaysEdit"
+        android:labelFor="@id/numDaysEdit"
+        android:text="Dagar:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/startTV"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/numDaysEdit"
+        android:layout_alignLeft="@id/infectionTypeEdit"
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@id/startHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/startTV"
+        android:layout_toLeftOf="@id/startTV"
+        android:text="Start:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </se.fermitet.android.infektionsdagbok.views.TreatmentView>
