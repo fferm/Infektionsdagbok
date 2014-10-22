@@ -132,7 +132,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 			DateTime currentStartingDate = treatment.getStartingDate();
 
-			boolean condition = (previousStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
+			boolean condition = (previousStartingDate == null) || (currentStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
 
 			assertTrue("Wrong order on treatments starting with the one with startingDate =  " + treatment.getStartingDate(), condition);
 

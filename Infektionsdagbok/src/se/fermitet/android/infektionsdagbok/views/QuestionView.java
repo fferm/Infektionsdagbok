@@ -7,10 +7,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class QuestionView extends LinearLayout implements View.OnClickListener {
+public class QuestionView extends InfektionsdabokLinearLayoutView implements View.OnClickListener {
 
 	private static final String TEXT_ATTRIBUTE_NAME = "text";
 	private static final String ANDROID_NAMESPACE = "http://schemas.android.com/apk/res/android";
@@ -26,25 +25,29 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 
 	@Override
 	protected void onFinishInflate() {
-		super.onFinishInflate();
+		try {
+			super.onFinishInflate();
 
-		Activity ctx = (Activity) getContext();
-		LayoutInflater inflater = ctx.getLayoutInflater();
-		inflater.inflate(R.layout.question, this);
+			Activity ctx = (Activity) getContext();
+			LayoutInflater inflater = ctx.getLayoutInflater();
+			inflater.inflate(R.layout.question, this);
 
-		setupQuestionItems();
+			setupQuestionItems();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	public void setChecked(boolean checked) {
+	public void setChecked(boolean checked) throws Exception {
 		getAnswerSelector().setChecked(checked);
 		setBackgroundBasedOnCheckedStatus();
 	}
 
-	public boolean isChecked() {
+	public boolean isChecked() throws Exception {
 		return getAnswerSelector().isChecked();
 	}
 
-	private void setupQuestionItems() {
+	private void setupQuestionItems() throws Exception {
 		TextView questionTV = (TextView) findViewById(R.id.questionText);
 		questionTV.setText(this.questionText);
 		questionTV.setOnClickListener(this);
@@ -54,15 +57,19 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v == getAnswerSelector()) {
-			this.performClick();
-			setBackgroundBasedOnCheckedStatus();
-		} else {
-			getAnswerSelector().performClick();
+		try {
+			if (v == getAnswerSelector()) {
+				this.performClick();
+				setBackgroundBasedOnCheckedStatus();
+			} else {
+				getAnswerSelector().performClick();
+			}
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 
-	private void setBackgroundBasedOnCheckedStatus() {
+	private void setBackgroundBasedOnCheckedStatus() throws Exception {
 		boolean checked = this.isChecked();
 
 		if (checked) {
@@ -72,7 +79,7 @@ public class QuestionView extends LinearLayout implements View.OnClickListener {
 		}
 	}
 
-	private CompoundButton getAnswerSelector() {
+	private CompoundButton getAnswerSelector() throws Exception {
 		return (CompoundButton) findViewById(R.id.answerSelector);
 	}
 

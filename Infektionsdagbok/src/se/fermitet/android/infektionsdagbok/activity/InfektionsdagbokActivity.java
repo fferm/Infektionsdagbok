@@ -2,14 +2,14 @@ package se.fermitet.android.infektionsdagbok.activity;
 
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
+import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
-public class InfektionsdagbokActivity<V extends View> extends Activity {
+public class InfektionsdagbokActivity<V extends View & InfektionsdagbokView> extends Activity {
 
 	public static final String FACTORY_KEY = "se.fermitet.infektionsdagbok.FACTORY_OBJECT";
 
@@ -34,7 +34,7 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
 	        setContentView(view);
 
 		} catch (Exception e) {
-			handleException(e);
+			view.handleException(e);
 		}
 
 	}
@@ -54,16 +54,6 @@ public class InfektionsdagbokActivity<V extends View> extends Activity {
         	InfektionsdagbokApplication app = getLocalApplication();
         	app.setFactory(myFactory);
         }
-	}
-
-	protected void handleException(Exception e) {
-		e.printStackTrace();
-		notifyUserWithMessage(e.getMessage() + "\n" + e.getClass().getName());
-	}
-
-	protected void notifyUserWithMessage(String msg) {
-		Toast toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
-		toast.show();
 	}
 
 	protected InfektionsdagbokApplication getLocalApplication() {

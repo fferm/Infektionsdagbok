@@ -13,10 +13,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-public class ExportView extends RelativeLayout {
+public class ExportView extends InfektionsdagbokRelativeLayoutView {
 
 	private Button exportBTN;
 	private Spinner yearSpinner;
@@ -35,36 +34,48 @@ public class ExportView extends RelativeLayout {
 
 	@Override
 	protected void onFinishInflate() {
-		super.onFinishInflate();
-		attachWidgets();
-		setupWidgets();
+		try {
+			super.onFinishInflate();
+			attachWidgets();
+			setupWidgets();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	public void setYearsToShow(List<Integer> yearsToShow) {
+	public void setYearsToShow(List<Integer> yearsToShow) throws Exception {
 		this.yearsToShow = yearsToShow;
 		setupSpinner();
 	}
 
-	private void attachWidgets() {
+	private void attachWidgets() throws Exception {
 		exportBTN = (Button) findViewById(R.id.exportBTN);
 		yearSpinner = (Spinner) findViewById(R.id.yearSpinner);
 		nameEdit = (EditText) findViewById(R.id.nameEdit);
 		ssnEdit = (EditText) findViewById(R.id.ssnEdit);
 	}
 
-	private void setupWidgets() {
+	private void setupWidgets() throws Exception {
 		exportBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				handleExportButtonClick();
+				try {
+					handleExportButtonClick();
+				} catch (Exception e) {
+					handleException(e);
+				}
 			}
 		});
 
 		yearSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				int selectedYear = (Integer) yearSpinner.getSelectedItem();
-				ExportView.this.setSelectedYear(selectedYear);
+				try {
+					int selectedYear = (Integer) yearSpinner.getSelectedItem();
+					ExportView.this.setSelectedYear(selectedYear);
+				} catch (Exception e) {
+					handleException(e);
+				}
 			}
 
 			@Override
@@ -80,7 +91,11 @@ public class ExportView extends RelativeLayout {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				ExportView.this.setName(s.toString());
+				try {
+					ExportView.this.setName(s.toString());
+				} catch (Exception e) {
+					handleException(e);
+				}
 			}
 		});
 
@@ -93,7 +108,11 @@ public class ExportView extends RelativeLayout {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				ExportView.this.setSSN(s.toString());
+				try {
+					ExportView.this.setSSN(s.toString());
+				} catch (Exception e) {
+					handleException(e);
+				}
 			}
 		});
 	}
@@ -104,11 +123,11 @@ public class ExportView extends RelativeLayout {
 		yearSpinner.setAdapter(adapter);
 	}
 
-	public void setOnExportCommandListener(OnExportCommandListener listener) {
+	public void setOnExportCommandListener(OnExportCommandListener listener) throws Exception {
 		this.listener = listener;
 	}
 
-	private void handleExportButtonClick() {
+	private void handleExportButtonClick() throws Exception {
 		if (listener != null) {
 			listener.onExportCommand(getSelectedYear(), getName(), getSSN());
 		}
@@ -118,27 +137,27 @@ public class ExportView extends RelativeLayout {
 		public void onExportCommand(int year, String name, String ssn);
 	}
 
-	public int getSelectedYear() {
+	public int getSelectedYear() throws Exception {
 		return selectedYear;
 	}
 
-	private void setSelectedYear(int selectedYear) {
+	private void setSelectedYear(int selectedYear) throws Exception {
 		this.selectedYear = selectedYear;
 	}
 
-	public String getName() {
+	public String getName() throws Exception {
 		return this.name;
 	}
 
-	private void setName(String name) {
+	private void setName(String name) throws Exception {
 		this.name = name;
 	}
 
-	public String getSSN() {
+	public String getSSN() throws Exception{
 		return this.ssn;
 	}
 
-	private void setSSN(String ssn) {
+	private void setSSN(String ssn) throws Exception{
 		this.ssn = ssn;
 	}
 }

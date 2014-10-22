@@ -6,10 +6,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class QuestionnaireView extends RelativeLayout {
+public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 
 	private TextView weekDisplay;
 	private SparseArray<QuestionView> questions;
@@ -23,32 +22,36 @@ public class QuestionnaireView extends RelativeLayout {
 
 	@Override
 	protected void onFinishInflate() {
-		super.onFinishInflate();
-		attachWidgets();
-		setupWidgets();
+		try {
+			super.onFinishInflate();
+			attachWidgets();
+			setupWidgets();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	public void setModel(WeekAnswers model) {
+	public void setModel(WeekAnswers model) throws Exception {
 		this.model = model;
 
 		bindUIToModel();
 	}
 
-	public void setOnWeekChangeListener(OnWeekChangeListener listener) {
+	public void setOnWeekChangeListener(OnWeekChangeListener listener) throws Exception {
 		this.weekChangeListener = listener;
 	}
 
-	private void attachWidgets() {
+	private void attachWidgets() throws Exception {
 		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
 	}
 
 
-	private void setupWidgets() {
+	private void setupWidgets() throws Exception {
 		setupWeekNavigationButtons();
 		setupQuestions();
 	}
 
-	private void setupWeekNavigationButtons() {
+	private void setupWeekNavigationButtons() throws Exception {
 		findViewById(R.id.previousWeek).setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -66,7 +69,7 @@ public class QuestionnaireView extends RelativeLayout {
 		});
 	}
 
-	private void setupQuestions() {
+	private void setupQuestions() throws Exception {
 		questions = new SparseArray<QuestionView>();
 		for (int i = 0; i < getChildCount(); i++) {
 			View view = getChildAt(i);
@@ -77,13 +80,17 @@ public class QuestionnaireView extends RelativeLayout {
 
 				@Override
 				public void onClick(View v) {
-					onQuestionClicked((QuestionView) v);
+					try {
+						onQuestionClicked((QuestionView) v);
+					} catch (Exception e) {
+						handleException(e);
+					}
 				}
 			});
 		}
 	}
 
-	private void bindUIToModel() {
+	private void bindUIToModel() throws Exception {
 		weekDisplay.setText(model.week.toString());
 
 		for (int i = 0; i < this.getChildCount(); i++) {
@@ -96,11 +103,11 @@ public class QuestionnaireView extends RelativeLayout {
 		}
 	}
 
-	private void bindAnswer(QuestionView qv) {
+	private void bindAnswer(QuestionView qv) throws Exception {
 		qv.setChecked(model.getAnswer(qv.getId()));
 	}
 
-	public void onQuestionClicked(QuestionView qv) {
+	public void onQuestionClicked(QuestionView qv) throws Exception {
 		boolean checked = qv.isChecked();
 
 		int id = qv.getId();

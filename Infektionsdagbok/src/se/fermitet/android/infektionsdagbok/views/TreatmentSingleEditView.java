@@ -9,45 +9,48 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SingleTreatmentEditorView extends RelativeLayout {
+public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView {
 
 	private TextView startEdit;
 	private EditText numDaysEdit;
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
 
-	public SingleTreatmentEditorView(Context context, AttributeSet attrs) {
+	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
 	@Override
 	protected void onFinishInflate() {
-		super.onFinishInflate();
+		try {
+			super.onFinishInflate();
 
-		Activity ctx = (Activity) getContext();
-		LayoutInflater inflater = ctx.getLayoutInflater();
-		inflater.inflate(R.layout.single_treatment_view, this);
+			Activity ctx = (Activity) getContext();
+			LayoutInflater inflater = ctx.getLayoutInflater();
+			inflater.inflate(R.layout.single_treatment_view, this);
 
-		attachWidgets();
-		setupWidgets();
+			attachWidgets();
+			setupWidgets();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	private void attachWidgets() {
+	private void attachWidgets() throws Exception {
 		startEdit = (TextView) findViewById(R.id.startTV);
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 	}
 
-	private void setupWidgets() {
+	private void setupWidgets() throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void selectTreatment(Treatment treatment) {
+	public void selectTreatment(Treatment treatment) throws Exception {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
 		if (treatment.getStartingDate() == null) {

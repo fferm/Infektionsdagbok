@@ -34,7 +34,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 
 			setNewWeek(getLocalApplication().getModelManager().getInitialWeekAnswers());
 		} catch (Exception e) {
-			handleException(e);
+			view.handleException(e);
 		}
     }
 
@@ -87,7 +87,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		try {
 			setNewWeek(getLocalApplication().getModelManager().getNextWeekAnswers(this.model));
 		} catch (Exception e) {
-			handleException(e);
+			view.handleException(e);
 		}
 	}
 
@@ -97,11 +97,11 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		try {
 			setNewWeek(getLocalApplication().getModelManager().getPreviousWeekAnswers(this.model));
 		} catch (Exception e) {
-			handleException(e);
+			view.handleException(e);
 		}
 	}
 
-	private void setNewWeek(WeekAnswers newWeekAnswers) {
+	private void setNewWeek(WeekAnswers newWeekAnswers) throws Exception {
 		model = newWeekAnswers;
         view.setModel(newWeekAnswers);
 	}
