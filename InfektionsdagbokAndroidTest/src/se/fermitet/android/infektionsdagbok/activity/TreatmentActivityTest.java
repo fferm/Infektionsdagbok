@@ -33,7 +33,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 5; i++) {
 			DateTime date;
 			if (i % 4 == 0) date = DateTime.now().minusDays(i);
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
@@ -88,12 +88,10 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 	}
 
-	protected void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
+	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-		TreatmentActivity activity = getActivity();
-		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
-		ListAdapter adapter = listView.getAdapter();
+		ListAdapter adapter = getListAdapter();
 
 		boolean foundTreatment = false;
 		for (int i = 0; i < adapter.getCount(); i++) {
@@ -126,9 +124,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
-		TreatmentActivity activity = getActivity();
-		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
-		ListAdapter adapter = listView.getAdapter();
+		ListAdapter adapter = getListAdapter();
 
 		DateTime previousStartingDate = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
@@ -145,25 +141,68 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	public void testClickingOnListViewFillsEditors() throws Exception {
-		TreatmentActivity activity = getActivity();
-		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
-		ListAdapter adapter = listView.getAdapter();
+		ListAdapter adapter = getListAdapter();
+		
+		// Regular
+		clickOnItemInListAndCheckEditorContents((Treatment) adapter.getItem(0));
+		
+		// Nulls
+		clickOnItemInListAndCheckEditorContents(nullStartingDate);
+		clickOnItemInListAndCheckEditorContents(nullMedicine);
+		clickOnItemInListAndCheckEditorContents(nullInfection);
+	}
 
-		int treatmentIdx = 0;
-		solo.clickInList(treatmentIdx);
-
-		Treatment t1 = (Treatment) adapter.getItem(treatmentIdx);
+	private void clickOnItemInListAndCheckEditorContents(Treatment treatment) throws Exception {
+		ListAdapter adapter = getListAdapter();
+		
+		boolean found = false;
+		int i = 0;
+		for ( ; i < adapter.getCount(); i++) {
+			Treatment fromList = (Treatment) adapter.getItem(i);
+			if (fromList.equals(treatment)) {
+				found = true;
+				break;
+			}
+		}
+		assertTrue("Didn't find treatment " + treatment, found);
+		
+		solo.clickInList(i + 1);
+		Thread.sleep(100);
 
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-		assertEquals("Date text", df.format(t1.getStartingDate().toDate()), ((TextView) solo.getView(R.id.startTV)).getText());
-		assertEquals("Num Days text", "" + t1.getNumDays(), ((EditText) solo.getView(R.id.numDaysEdit)).getText().toString());
-		assertEquals("Medicine text", t1.getMedicine(), ((TextView) solo.getView(R.id.medicineEdit)).getText().toString());
-		assertEquals("Infection type text", t1.getInfectionType(), ((TextView) solo.getView(R.id.infectionTypeEdit)).getText().toString());
+		CharSequence dateTextFromUI = ((TextView) solo.getView(R.id.startTV)).getText();
+		if (treatment.getStartingDate() == null) {
+			assertTrue("Date text for treatment " + treatment + "  was: " + dateTextFromUI, (dateTextFromUI == null) || (dateTextFromUI.length() == 0));
+		} else {
+			assertEquals("Date text for treatment " + treatment, df.format(treatment.getStartingDate().toDate()), dateTextFromUI);
+		}
+
+		
+		assertEquals("Num Days text for treatment " + treatment, "" + treatment.getNumDays(), ((EditText) solo.getView(R.id.numDaysEdit)).getText().toString());
+
+		
+		String medicineTextFromUI = ((TextView) solo.getView(R.id.medicineEdit)).getText().toString();
+		if (treatment.getMedicine() == null) {
+			assertTrue("Medicine text for treatment " + treatment + "  was: " + medicineTextFromUI, (medicineTextFromUI == null) || (medicineTextFromUI.length() == 0));
+		} else {
+			assertEquals("Medicine text for treatment " + treatment, treatment.getMedicine(), medicineTextFromUI);
+		}
+		
+		
+		String infectionTypeTextFromUI = ((TextView) solo.getView(R.id.infectionTypeEdit)).getText().toString();
+		if (treatment.getInfectionType() == null) {
+			assertTrue("Infection type text for treatment " + treatment + "  was: " + infectionTypeTextFromUI, (infectionTypeTextFromUI == null) || (infectionTypeTextFromUI.length() == 0));
+		} else {
+			assertEquals("Infection type text for treatment " + treatment, treatment.getInfectionType(), infectionTypeTextFromUI);
+		}
+
 	}
 
-	public void testClickingOnListViewFillsEditors_handleNulls() throws Exception {
-		// TODO
-
+	private ListAdapter getListAdapter() {
+		TreatmentActivity activity = getActivity();
+		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
+		ListAdapter adapter = listView.getAdapter();
+		return adapter;
 	}
 }

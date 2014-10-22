@@ -50,9 +50,24 @@ public class SingleTreatmentEditorView extends RelativeLayout {
 	public void selectTreatment(Treatment treatment) {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-		startEdit.setText(df.format(treatment.getStartingDate().toDate()));
+		if (treatment.getStartingDate() == null) {
+			startEdit.setText(null);
+		} else {
+			startEdit.setText(df.format(treatment.getStartingDate().toDate()));
+		}
+		
 		numDaysEdit.setText("" + treatment.getNumDays());
-		medicineEdit.setText(treatment.getMedicine());
-		infectionTypeEdit.setText(treatment.getInfectionType());
+		
+		if (treatment.getMedicine() == null) {
+			medicineEdit.setText(null);
+		} else {
+			medicineEdit.setText(treatment.getMedicine());
+		}
+		
+		if (treatment.getInfectionType() == null) {
+			infectionTypeEdit.setText(null);
+		} else {
+			infectionTypeEdit.setText(treatment.getInfectionType());
+		}
 	}
 }

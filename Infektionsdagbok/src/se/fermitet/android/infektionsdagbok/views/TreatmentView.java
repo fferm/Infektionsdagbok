@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TreatmentView extends RelativeLayout {
 
@@ -49,8 +50,12 @@ public class TreatmentView extends RelativeLayout {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Treatment treatment = (Treatment) parent.getItemAtPosition(position);
-				TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+//				try {
+					Treatment treatment = (Treatment) parent.getItemAtPosition(position);
+					TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+//				} catch (Exception e) {
+//					handleException(e);
+//				}
 			}
 		});
 	}
@@ -59,4 +64,15 @@ public class TreatmentView extends RelativeLayout {
 	public void setAdapter(ArrayAdapter<Treatment> adapter) {
 		listView.setAdapter(adapter);
 	}
+	
+	private void handleException(Exception e) {
+		e.printStackTrace();
+		notifyUserWithMessage(e.getMessage() + "\n" + e.getClass().getName());
+	}
+
+	private void notifyUserWithMessage(String msg) {
+		Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
 }
