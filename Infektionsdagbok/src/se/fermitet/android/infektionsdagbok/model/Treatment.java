@@ -1,5 +1,7 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.text.DateFormat;
+
 import org.joda.time.DateTime;
 
 public class Treatment {
@@ -8,14 +10,14 @@ public class Treatment {
 	private String medicine;
 	private DateTime startingDate;
 	private int numDays;
-	
+
 	public Treatment() {
 		super();
 	}
-	
+
 	public Treatment(String infectionType, String medicine, DateTime startingDate, int numDays) {
 		this();
-		
+
 		this.setInfectionType(infectionType);
 		this.setMedicine(medicine);
 		this.setStartingDate(startingDate);
@@ -25,7 +27,7 @@ public class Treatment {
 	public String getInfectionType() {
 		return this.infectionType;
 	}
-	
+
 	public void setInfectionType(String infectionType) {
 		this.infectionType = infectionType;
 	}
@@ -49,8 +51,8 @@ public class Treatment {
 			this.startingDate = startingDate.withMillisOfDay(0);
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public int hashCode() {
@@ -103,5 +105,26 @@ public class Treatment {
 		this.numDays = numDays;
 	}
 
-	
+	@Override
+	public String toString() {
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+		StringBuffer buf = new StringBuffer();
+
+		buf.append("Treatment{start: ");
+
+		if (getStartingDate() == null) {
+			buf.append("null");
+		} else {
+			buf.append(df.format(getStartingDate().toDate()));
+		}
+
+		buf.append(", numDays: ").append(getNumDays())
+		.append(", medicine: ").append(getMedicine())
+		.append(", infectionType: ").append(getInfectionType())
+		.append("}");
+
+		return buf.toString();
+	}
+
 }

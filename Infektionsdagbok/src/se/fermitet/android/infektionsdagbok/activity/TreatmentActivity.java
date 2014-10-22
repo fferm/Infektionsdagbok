@@ -30,7 +30,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			fillWithTestData();
+//			fillWithTestData();
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
@@ -41,26 +41,36 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	public void syncListViewDataWithStored() throws Exception {
 		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments();
 
+		System.out.println("!!!! allTreatments size: " + allTreatments.size());
+
 		TreatmentAdapter adapter = new TreatmentAdapter(this, sortedListOfTreatments(allTreatments));
+
+		System.out.println("!!!! adapter size: " + adapter.getCount());
 
 		view.setAdapter(adapter);
 	}
 
 	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
 		List<Treatment> list = new ArrayList<Treatment>(unsorted);
-		
+
 		Collections.sort(list, new Comparator<Treatment>() {
 			@Override
 			public int compare(Treatment lhs, Treatment rhs) {
-				DateTime lhsDate = lhs.getStartingDate().withMillisOfDay(0);
-				DateTime rhsDate = rhs.getStartingDate().withMillisOfDay(0);
-				
+				DateTime lhsDate = lhs.getStartingDate();
+				DateTime rhsDate = rhs.getStartingDate();
+
+				if (lhsDate == null) return 1;
+				if (rhsDate == null) return -1;
+
+				lhsDate = lhsDate.withMillisOfDay(0);
+				rhsDate = rhsDate.withMillisOfDay(0);
+
 				if (lhsDate.isBefore(rhsDate)) return 1;
 				else if (lhsDate.equals(rhsDate)) return 0;
 				else return -1;
 			}
 		});
-		
+
 		return list;
 	}
 
@@ -74,7 +84,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
 			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
 			else date = DateTime.now().minusYears(i);
-			
+
 			testDataTreatments.add(
 					new Treatment(
 							"INF" + i,
@@ -95,7 +105,7 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		super(context, R.layout.treatment_item, values);
 		this.values = values;
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -106,9 +116,13 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		TextView numDaysView = (TextView) rowView.findViewById(R.id.numDaysValueField);
 
 		Treatment treatment = values.get(position);
-		dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
+		if (treatment.getStartingDate() == null) {
+			dateView.setText("");
+		} else {
+			dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
+		}
 		numDaysView.setText("" + treatment.getNumDays());
-		
+
 		return rowView;
 	}
 }

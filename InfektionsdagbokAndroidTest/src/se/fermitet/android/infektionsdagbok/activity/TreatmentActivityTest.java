@@ -68,14 +68,12 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		Collection<Treatment> testData = mm.getAllTreatments();
 
-		// Just look for 2, that should be enough (performance...)
-		int i = 0;
 		for (Treatment treatment : testData) {
-			if (i++ >= 2) break;
-
-			checkListContents(treatment);
+			searchForTreatmentInListAndCheckDisplayedValues(treatment);
 		}
-		checkListContents(nullStartingDate);
+		searchForTreatmentInListAndCheckDisplayedValues(nullStartingDate);
+		searchForTreatmentInListAndCheckDisplayedValues(nullInfection);
+		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
 
 		checkHeaderTextView(R.id.startHeader, "Start:");
 		assertNotNull("Start date text field", solo.getView(R.id.startTV));
@@ -90,7 +88,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 	}
 
-	protected void checkListContents(Treatment treatment) {
+	protected void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
 		TreatmentActivity activity = getActivity();
@@ -118,7 +116,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 				break;
 			}
 		}
-		assertTrue("Didn't find treatment in list: StartingDate: " + treatment.getStartingDate(), foundTreatment);
+		assertTrue("Didn't find treatment in list: " + treatment.toString(), foundTreatment);
 	}
 
 	private void checkHeaderTextView(int id, String text) {
