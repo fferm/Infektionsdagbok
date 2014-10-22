@@ -1,7 +1,5 @@
 package se.fermitet.android.infektionsdagbok.views;
 
-import java.text.DateFormat;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.app.Activity;
@@ -51,12 +49,10 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	}
 
 	public void selectTreatment(Treatment treatment) throws Exception {
-		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
 		if (treatment.getStartingDate() == null) {
 			startEdit.setText(null);
 		} else {
-			startEdit.setText(df.format(treatment.getStartingDate().toDate()));
+			startEdit.setText(treatment.getStartingDateString());
 		}
 		
 		numDaysEdit.setText("" + treatment.getNumDays());

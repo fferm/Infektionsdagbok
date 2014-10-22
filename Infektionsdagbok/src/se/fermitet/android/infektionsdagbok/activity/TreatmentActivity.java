@@ -1,6 +1,5 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -123,7 +122,7 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		if (treatment.getStartingDate() == null) {
 			dateView.setText("");
 		} else {
-			dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
+			dateView.setText(treatment.getStartingDateString());
 		}
 		numDaysView.setText("" + treatment.getNumDays());
 

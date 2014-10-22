@@ -69,6 +69,18 @@ public class TreatmentTest extends TestCase {
 		assertEquals("nullInfection", "Treatment{start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: null}", nullInfection.toString());
 		assertEquals("nullStart", "Treatment{start: null, numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", nullStart.toString());
 	}
+	
+	public void testStartingDateString() throws Exception {
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+		
+		DateTime start = DateTime.now();
+
+		Treatment normal = new Treatment(null, null, start, 0);
+		Treatment nullStart = new Treatment(null, null, null, 0);
+		
+		assertEquals("Normal", df.format(start.toDate()), normal.getStartingDateString());
+		assertNull("null", nullStart.getStartingDateString());
+	}
 
 	public void testValueObject() throws Exception {
 		String origInfectionType = "INFTYPE";

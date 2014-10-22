@@ -1,6 +1,5 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -89,8 +88,6 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
-		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
 		ListAdapter adapter = getListAdapter();
 
 		boolean foundTreatment = false;
@@ -107,7 +104,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 				if (startingDate == null) {
 					assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
 				} else {
-					assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(df.format(startingDate.toDate())));
+					assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(treatment.getStartingDateString()));
 				}
 				assertTrue("Should show treatment numDays " + treatment.getNumDays(), numDaysTV.getText().equals("" + treatment.getNumDays()));
 
@@ -169,13 +166,11 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		solo.clickInList(i + 1);
 		Thread.sleep(100);
 
-		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
 		CharSequence dateTextFromUI = ((TextView) solo.getView(R.id.startTV)).getText();
 		if (treatment.getStartingDate() == null) {
 			assertTrue("Date text for treatment " + treatment + "  was: " + dateTextFromUI, (dateTextFromUI == null) || (dateTextFromUI.length() == 0));
 		} else {
-			assertEquals("Date text for treatment " + treatment, df.format(treatment.getStartingDate().toDate()), dateTextFromUI);
+			assertEquals("Date text for treatment " + treatment, treatment.getStartingDateString(), dateTextFromUI);
 		}
 
 		
