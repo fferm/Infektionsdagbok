@@ -1,20 +1,29 @@
 package se.fermitet.android.infektionsdagbok.views;
 
+import org.joda.time.DateTime;
+
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView {
+public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView implements OnDateSetListener {
 
-	private TextView startEdit;
+	private TextView startTV;
 	private EditText numDaysEdit;
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
+	private DatePickerDialog dp;
+
+	private Treatment model;
 
 	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -27,7 +36,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 			Activity ctx = (Activity) getContext();
 			LayoutInflater inflater = ctx.getLayoutInflater();
-			inflater.inflate(R.layout.single_treatment_view, this);
+			inflater.inflate(R.layout.treatment_single_edit_view, this);
 
 			attachWidgets();
 			setupWidgets();
@@ -37,36 +46,77 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	}
 
 	private void attachWidgets() throws Exception {
-		startEdit = (TextView) findViewById(R.id.startTV);
+		startTV = (TextView) findViewById(R.id.startTV);
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 	}
 
 	private void setupWidgets() throws Exception {
-		// TODO Auto-generated method stub
-
+		startTV.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					dateClicked();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
 	}
 
 	public void selectTreatment(Treatment treatment) throws Exception {
-		if (treatment.getStartingDate() == null) {
-			startEdit.setText(null);
+		this.model = treatment;
+
+		syncUIWithModel();
+	}
+
+	private void syncUIWithModel() throws Exception {
+		if (model.getStartingDate() == null) {
+			startTV.setText(null);
 		} else {
-			startEdit.setText(treatment.getStartingDateString());
+			startTV.setText(model.getStartingDateString());
 		}
-		
-		numDaysEdit.setText("" + treatment.getNumDays());
-		
-		if (treatment.getMedicine() == null) {
+
+		numDaysEdit.setText("" + model.getNumDays());
+
+		if (model.getMedicine() == null) {
 			medicineEdit.setText(null);
 		} else {
-			medicineEdit.setText(treatment.getMedicine());
+			medicineEdit.setText(model.getMedicine());
 		}
-		
-		if (treatment.getInfectionType() == null) {
+
+		if (model.getInfectionType() == null) {
 			infectionTypeEdit.setText(null);
 		} else {
-			infectionTypeEdit.setText(treatment.getInfectionType());
+			infectionTypeEdit.setText(model.getInfectionType());
 		}
 	}
+
+	private void dateClicked() throws Exception {
+		DateTime startDate = model.getStartingDate();
+		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
+		dp.show();
+	}
+
+	public DatePickerDialog getDatePickerDialog() throws Exception {
+		return dp;
+	}
+
+	public Treatment getModel() throws Exception {
+		return this.model;
+	}
+
+	@Override
+	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+		try {
+			DateTime newDate = DateTime.now().withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
+			model.setStartingDate(newDate);
+
+			syncUIWithModel();
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
 }

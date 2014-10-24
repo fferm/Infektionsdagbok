@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -9,7 +10,9 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import android.app.DatePickerDialog;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -139,10 +142,10 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	public void testClickingOnListViewFillsEditors() throws Exception {
 		ListAdapter adapter = getListAdapter();
-		
+
 		// Regular
 		clickOnItemInListAndCheckEditorContents((Treatment) adapter.getItem(0));
-		
+
 		// Nulls
 		clickOnItemInListAndCheckEditorContents(nullStartingDate);
 		clickOnItemInListAndCheckEditorContents(nullMedicine);
@@ -151,7 +154,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	private void clickOnItemInListAndCheckEditorContents(Treatment treatment) throws Exception {
 		ListAdapter adapter = getListAdapter();
-		
+
 		boolean found = false;
 		int i = 0;
 		for ( ; i < adapter.getCount(); i++) {
@@ -162,7 +165,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			}
 		}
 		assertTrue("Didn't find treatment " + treatment, found);
-		
+
 		solo.clickInList(i + 1);
 		Thread.sleep(100);
 
@@ -173,24 +176,58 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			assertEquals("Date text for treatment " + treatment, treatment.getStartingDateString(), dateTextFromUI);
 		}
 
-		
+
 		assertEquals("Num Days text for treatment " + treatment, "" + treatment.getNumDays(), ((EditText) solo.getView(R.id.numDaysEdit)).getText().toString());
 
-		
+
 		String medicineTextFromUI = ((TextView) solo.getView(R.id.medicineEdit)).getText().toString();
 		if (treatment.getMedicine() == null) {
 			assertTrue("Medicine text for treatment " + treatment + "  was: " + medicineTextFromUI, (medicineTextFromUI == null) || (medicineTextFromUI.length() == 0));
 		} else {
 			assertEquals("Medicine text for treatment " + treatment, treatment.getMedicine(), medicineTextFromUI);
 		}
-		
-		
+
+
 		String infectionTypeTextFromUI = ((TextView) solo.getView(R.id.infectionTypeEdit)).getText().toString();
 		if (treatment.getInfectionType() == null) {
 			assertTrue("Infection type text for treatment " + treatment + "  was: " + infectionTypeTextFromUI, (infectionTypeTextFromUI == null) || (infectionTypeTextFromUI.length() == 0));
 		} else {
 			assertEquals("Infection type text for treatment " + treatment, treatment.getInfectionType(), infectionTypeTextFromUI);
 		}
+
+	}
+
+	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
+		solo.clickInList(1);
+
+		Treatment treatment = (Treatment) getListAdapter().getItem(0);
+
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+
+		solo.clickOnView(startTV);
+
+		assertTrue("Open date dialog", solo.waitForDialogToOpen());
+
+		DatePickerDialog dialog = getActivity().view.getSingleEditView().getDatePickerDialog();
+		assertNotNull("not null dialog", dialog);
+
+		DatePicker picker = dialog.getDatePicker();
+
+		assertEquals("year", treatment.getStartingDate().getYear(), picker.getYear());
+		assertEquals("month", treatment.getStartingDate().getMonthOfYear(), picker.getMonth() + 1);  // picker is 0 based in month
+		assertEquals("day", treatment.getStartingDate().getDayOfMonth(), picker.getDayOfMonth());
+
+		DateTime newDate = new DateTime(2012, 1, 1, 1, 1);
+
+		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
+		solo.clickOnButton("StŠll in");
+
+		assertEquals("Start date field text", DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate()), startTV.getText());
+
+		DateTime newDateFromView = getActivity().view.getSingleEditView().getModel().getStartingDate();
+		assertEquals("view model date value (year)", newDate.year(), newDateFromView.year());
+		assertEquals("view model date value (month)", newDate.monthOfYear(), newDateFromView.monthOfYear());
+		assertEquals("view model date value (day)", newDate.dayOfMonth(), newDateFromView.dayOfMonth());
 
 	}
 

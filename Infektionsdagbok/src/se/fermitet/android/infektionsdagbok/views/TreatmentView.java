@@ -18,7 +18,7 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 	private TextView startListHeader;
 	private TextView numDaysListHeader;
 
-	private TreatmentSingleEditView singleTreatmentEditor;
+	private TreatmentSingleEditView treatmentSingleEditView;
 
 	public TreatmentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -38,7 +38,7 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
 		numDaysListHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
 
-		singleTreatmentEditor = (TreatmentSingleEditView) findViewById(R.id.treatmentEdit);
+		treatmentSingleEditView = (TreatmentSingleEditView) findViewById(R.id.treatmentEdit);
 	}
 
 	private void setupWidgets() {
@@ -50,7 +50,7 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				try {
 					Treatment treatment = (Treatment) parent.getItemAtPosition(position);
-					TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+					TreatmentView.this.treatmentSingleEditView.selectTreatment(treatment);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -61,5 +61,9 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 
 	public void setAdapter(ArrayAdapter<Treatment> adapter) {
 		listView.setAdapter(adapter);
+	}
+
+	public TreatmentSingleEditView getSingleEditView() {
+		return this.treatmentSingleEditView;
 	}
 }
