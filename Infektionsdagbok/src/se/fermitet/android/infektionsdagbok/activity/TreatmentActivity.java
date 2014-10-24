@@ -1,6 +1,5 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -30,11 +29,11 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-//			fillWithTestData();
+			fillWithTestData();
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
-			handleException(e);
+			view.handleException(e);
 		}
 	}
 
@@ -72,24 +71,32 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 
 	// TODO: Delete this
 	private void fillWithTestData() throws Exception {
-		Collection<Treatment> testDataTreatments = new ArrayList<Treatment>();
+		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 5; i++) {
 			DateTime date;
 			if (i % 4 == 0) date = DateTime.now().minusDays(i);
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
 			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
 			else date = DateTime.now().minusYears(i);
 
-			testDataTreatments.add(
+			testData.add(
 					new Treatment(
 							"INF" + i,
-							"MED" + i,
+							"MEDICINE_NAME" + i,
 							date,
 							i));
 		}
 
-		getLocalApplication().getModelManager().saveTreatments(testDataTreatments);
+		Treatment nullMedicine = new Treatment("INFECTION", null, DateTime.now().minusDays(100), 100);
+		Treatment nullInfection = new Treatment(null, "MEDICINE", DateTime.now().minusDays(101), 101);
+		Treatment nullStartingDate = new Treatment("INFECT102", "MEDICINE102", null, 102);
+
+		testData.add(nullMedicine);
+		testData.add(nullInfection);
+		testData.add(nullStartingDate);
+
+		getLocalApplication().getModelManager().saveTreatments(testData);
 	}
 }
 
@@ -115,7 +122,7 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		if (treatment.getStartingDate() == null) {
 			dateView.setText("");
 		} else {
-			dateView.setText(DateFormat.getDateInstance(DateFormat.SHORT).format(treatment.getStartingDate().toDate()));
+			dateView.setText(treatment.getStartingDateString());
 		}
 		numDaysView.setText("" + treatment.getNumDays());
 

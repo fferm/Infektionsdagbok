@@ -10,9 +10,12 @@ public class Treatment {
 	private String medicine;
 	private DateTime startingDate;
 	private int numDays;
+	private DateFormat df;
 
 	public Treatment() {
 		super();
+		
+		df = DateFormat.getDateInstance(DateFormat.SHORT);
 	}
 
 	public Treatment(String infectionType, String medicine, DateTime startingDate, int numDays) {
@@ -42,6 +45,16 @@ public class Treatment {
 
 	public DateTime getStartingDate() {
 		return startingDate;
+	}
+	
+	public String getStartingDateString() {
+		DateTime date = getStartingDate();
+		
+		if (date == null) {
+			return null;
+		} else {
+			return df.format(date.toDate());
+		}
 	}
 
 	public void setStartingDate(DateTime startingDate) {
@@ -107,8 +120,6 @@ public class Treatment {
 
 	@Override
 	public String toString() {
-		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("Treatment{start: ");
@@ -116,7 +127,7 @@ public class Treatment {
 		if (getStartingDate() == null) {
 			buf.append("null");
 		} else {
-			buf.append(df.format(getStartingDate().toDate()));
+			buf.append(getStartingDateString());
 		}
 
 		buf.append(", numDays: ").append(getNumDays())

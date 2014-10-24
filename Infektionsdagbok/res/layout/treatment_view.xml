@@ -34,7 +34,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/background" />
 
-    <se.fermitet.android.infektionsdagbok.views.SingleTreatmentEditorView
+    <se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView
         android:id="@id/treatmentEdit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

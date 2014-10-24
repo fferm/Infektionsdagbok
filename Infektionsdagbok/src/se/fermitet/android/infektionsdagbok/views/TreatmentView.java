@@ -10,16 +10,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class TreatmentView extends RelativeLayout {
+public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 
 	private ListView listView;
 	private TextView startListHeader;
 	private TextView numDaysListHeader;
 
-	private SingleTreatmentEditorView singleTreatmentEditor;
+	private TreatmentSingleEditView singleTreatmentEditor;
 
 	public TreatmentView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -39,7 +38,7 @@ public class TreatmentView extends RelativeLayout {
 		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
 		numDaysListHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
 
-		singleTreatmentEditor = (SingleTreatmentEditorView) findViewById(R.id.treatmentEdit);
+		singleTreatmentEditor = (TreatmentSingleEditView) findViewById(R.id.treatmentEdit);
 	}
 
 	private void setupWidgets() {
@@ -49,8 +48,12 @@ public class TreatmentView extends RelativeLayout {
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Treatment treatment = (Treatment) parent.getItemAtPosition(position);
-				TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+				try {
+					Treatment treatment = (Treatment) parent.getItemAtPosition(position);
+					TreatmentView.this.singleTreatmentEditor.selectTreatment(treatment);
+				} catch (Exception e) {
+					handleException(e);
+				}
 			}
 		});
 	}

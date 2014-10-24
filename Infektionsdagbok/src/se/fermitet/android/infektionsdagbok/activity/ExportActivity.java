@@ -40,7 +40,7 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		} catch (Exception e) {
-			this.handleException(e);
+			view.handleException(e);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class ExportActivity extends InfektionsdagbokActivity<ExportView> impleme
 				email.sendEmail(file, this);
 			}
 		} catch (Exception e) {
-			this.handleException(e);
+			view.handleException(e);
 		}
 	}
 
