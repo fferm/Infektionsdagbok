@@ -200,8 +200,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
 		solo.clickInList(1);
 
-		Treatment treatment = (Treatment) getListAdapter().getItem(0);
-
+		Treatment treatment = getActivity().view.getSingleEditView().getModel();
+		
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 
 		solo.clickOnView(startTV);
@@ -230,7 +230,32 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertEquals("view model date value (day)", newDate.dayOfMonth(), newDateFromView.dayOfMonth());
 
 	}
+	
+	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
+		solo.clickInList(1);
 
+		Treatment treatment = getActivity().view.getSingleEditView().getModel();
+		
+		String newMedicine = "NEW MEDICINE";
+		String newInfectionType = "NEW INFECTION TYPE";
+		int newNumDays = 1000;
+		
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		solo.clearEditText(medicineEdit);
+		solo.enterText(medicineEdit, newMedicine);
+		assertEquals("Medicine", newMedicine, treatment.getMedicine());
+		
+		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		solo.clearEditText(infectionTypeEdit);
+		solo.enterText(infectionTypeEdit, newInfectionType);
+		assertEquals("Infection type", newInfectionType, treatment.getInfectionType());
+		
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		solo.clearEditText(numDaysEdit);
+		solo.enterText(numDaysEdit, "" + newNumDays);
+		assertEquals("Num days", newNumDays, treatment.getNumDays());
+	}
+	
 	private ListAdapter getListAdapter() {
 		TreatmentActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);

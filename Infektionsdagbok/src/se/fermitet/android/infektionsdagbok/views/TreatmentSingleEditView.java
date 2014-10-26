@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +65,57 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 				}
 			}
 		});
+		
+		medicineEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					medicineChanged();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+		
+		infectionTypeEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					infectionTypeChanged();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+		
+		numDaysEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					numDaysChanged();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
 	}
 
 	public void selectTreatment(Treatment treatment) throws Exception {
@@ -98,7 +151,22 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		dp.show();
 	}
+	
+	private void medicineChanged() throws Exception {
+		String newMedicine = medicineEdit.getText().toString();
+		this.model.setMedicine(newMedicine);
+	}
+	
+	private void infectionTypeChanged() throws Exception {
+		String newInfectionType = infectionTypeEdit.getText().toString();
+		this.model.setInfectionType(newInfectionType);
+	}
 
+	private void numDaysChanged() throws Exception {
+		String newNumDaysText = numDaysEdit.getText().toString();
+		this.model.setNumDays(Integer.valueOf(newNumDaysText));
+	}
+	
 	public DatePickerDialog getDatePickerDialog() throws Exception {
 		return dp;
 	}
