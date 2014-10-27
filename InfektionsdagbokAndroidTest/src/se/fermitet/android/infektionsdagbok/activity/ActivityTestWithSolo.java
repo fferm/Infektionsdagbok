@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
+import se.fermitet.android.infektionsdagbok.test.DoNotHandleExceptionsFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
@@ -16,7 +17,7 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 	private Class<? extends Factory> mockedFactoryClassOrNull;
 
 	public ActivityTestWithSolo(Class<T> activityClass) {
-		this(activityClass, null);
+		this(activityClass, DoNotHandleExceptionsFactory.class);
 	}
 
 	public ActivityTestWithSolo(Class<T> activityClass, Class<? extends Factory> mockedFactoryClassOrNull) {

@@ -13,9 +13,9 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView implements OnDateSetListener {
@@ -24,7 +24,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	private EditText numDaysEdit;
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
-	private Button saveBTN;
+	private ImageButton saveBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
@@ -56,7 +56,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
-		saveBTN = (Button) findViewById(R.id.saveBTN);
+		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
 	}
 
 	private void setupWidgets() throws Exception {
@@ -92,6 +92,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			public void afterTextChanged(Editable s) {
 				try {
 					String newMedicine = medicineEdit.getText().toString();
+					System.out.println("!!!! model: " + TreatmentSingleEditView.this.model);
 					TreatmentSingleEditView.this.model.setMedicine(newMedicine);
 				} catch (Exception e) {
 					handleException(e);
@@ -132,7 +133,9 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			public void afterTextChanged(Editable s) {
 				try {
 					String newNumDaysText = numDaysEdit.getText().toString();
-					TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+					if (newNumDaysText != null && newNumDaysText.length() > 0) {
+						TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+					}
 				} catch (Exception e) {
 					handleException(e);
 				}

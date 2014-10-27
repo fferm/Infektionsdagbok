@@ -10,7 +10,6 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
-import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
@@ -45,12 +44,23 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
-
+		long TIMEOUT = 5000;
+		
 		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
 			boolean before = model.getAnswer(id);
 
 			clickOnQuestionWithId(id);
+			
+			long start = DateTime.now().getMillis();
+			long elapsed;
+			boolean after;
+			
+			do {
+				after = model.getAnswer(id);
+				elapsed = DateTime.now().getMillis() - start;
+			} while (after == before && elapsed < TIMEOUT);
+			
 			assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != model.getAnswer(id));
 		}
 	}
@@ -62,9 +72,9 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		View selector = questionView.findViewById(R.id.answerSelector);
 		View text = questionView.findViewById(R.id.questionText);
 
-		assertClickingQuestionPart(questionId, selector, "selector", true);
-		assertClickingQuestionPart(questionId, text, "text view", true);
-		assertClickingQuestionPart(questionId, questionView, "full question", true);
+		assertClickingQuestionPartWithTimeout(questionId, selector, "selector", true);
+		assertClickingQuestionPartWithTimeout(questionId, text, "text view", true);
+		assertClickingQuestionPartWithTimeout(questionId, questionView, "full question", true);
 
 	}
 
@@ -106,24 +116,6 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 
 		verify(storage).getAnswersForWeek(new Week(new DateTime()));
-	}
-
-	public void testExceptionInStorageGivesNotification() throws Exception {
-		String msg = "PROBLEM";
-		String expected = msg + "\n" + Exception.class.getName();
-
-		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
-		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
-		ModelManager mgr = app.getModelManager();
-		Storage storage = mgr.getStorage();
-
-		doThrow(new Exception(msg)).when(storage).saveAnswers(any(WeekAnswers.class));
-
-		solo.clickOnView(solo.getView(R.id.nextWeek));
-		assertTrue("Next week: Should give error message", solo.searchText(expected));
-
-		solo.clickOnView(solo.getView(R.id.previousWeek));
-		assertTrue("Prev week: Should give error message", solo.searchText(expected));
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {

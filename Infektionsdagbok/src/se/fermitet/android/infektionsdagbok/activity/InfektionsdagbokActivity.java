@@ -28,7 +28,7 @@ public class InfektionsdagbokActivity<V extends View & InfektionsdagbokView> ext
 		super.onCreate(savedInstanceState);
 
         try {
-			setApplicationFactory();
+        	handleInformationFromIntent();
 
 			view = (V) View.inflate(this, this.viewLayoutId, null);
 	        setContentView(view);
@@ -39,14 +39,18 @@ public class InfektionsdagbokActivity<V extends View & InfektionsdagbokView> ext
 
 	}
 
-	private void setApplicationFactory() throws Exception {
+	private void handleInformationFromIntent() throws Exception {
 		Intent intent = getIntent();
 		if (intent == null) return;
 
         Bundle extras = intent.getExtras();
         if (extras == null) return;
 
-        String factoryClassName = extras.getString(FACTORY_KEY);
+        setApplicationFactory(extras);
+	}
+
+	private void setApplicationFactory(Bundle extras) throws Exception{
+		String factoryClassName = extras.getString(FACTORY_KEY);
         if (factoryClassName != null) {
         	Class<?> clz = Class.forName(factoryClassName);
         	Factory myFactory = (Factory) clz.getConstructor(Context.class).newInstance(this);
@@ -55,7 +59,7 @@ public class InfektionsdagbokActivity<V extends View & InfektionsdagbokView> ext
         	app.setFactory(myFactory);
         }
 	}
-
+	
 	protected InfektionsdagbokApplication getLocalApplication() {
 		return (InfektionsdagbokApplication) getApplication();
 	}

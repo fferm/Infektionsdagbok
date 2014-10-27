@@ -1,10 +1,11 @@
 package se.fermitet.android.infektionsdagbok.views;
 
+import se.fermitet.android.infektionsdagbok.app.Factory;
+import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 public interface InfektionsdagbokView {
 
@@ -12,48 +13,31 @@ public interface InfektionsdagbokView {
 }
 
 class InfektionsdagbokRelativeLayoutView extends RelativeLayout implements InfektionsdagbokView {
-
-	private InfektionsdagbokViewImpl impl;
-
 	public InfektionsdagbokRelativeLayoutView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		impl = new InfektionsdagbokViewImpl(context);
 	}
 
 	@Override
 	public void handleException(Exception e) {
-		impl.handleException(e);
+		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
+		InfektionsdagbokViewHandler handler = factory.createInfektionsdagbokViewHandler(getContext());
+		
+		handler.handleExceptionFromView(e);
 	}
 }
 
 class InfektionsdabokLinearLayoutView extends LinearLayout implements InfektionsdagbokView {
 
-	private InfektionsdagbokViewImpl impl;
-
 	public InfektionsdabokLinearLayoutView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		impl = new InfektionsdagbokViewImpl(context);
 	}
 
 	@Override
 	public void handleException(Exception e) {
-		impl.handleException(e);
+		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
+		InfektionsdagbokViewHandler handler = factory.createInfektionsdagbokViewHandler(getContext());
+		
+		handler.handleExceptionFromView(e);
 	}
 }
 
-class InfektionsdagbokViewImpl {
-	private Context context;
-
-	public InfektionsdagbokViewImpl(Context context) {
-		this.context = context;
-	}
-	public void handleException(Exception e) {
-		e.printStackTrace();
-		notifyUserWithMessage(e.getMessage() + "\n" + e.getClass().getName());
-	}
-	
-	protected void notifyUserWithMessage(String msg) {
-		Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-		toast.show();
-	}
-}

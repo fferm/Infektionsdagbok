@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.app;
 
 import se.fermitet.android.infektionsdagbok.storage.EmailHandler;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokViewHandler;
 import android.app.AlarmManager;
 import android.content.Context;
 
@@ -29,6 +30,10 @@ public class InfektionsdagbokFactory implements Factory {
 	@Override
 	public EmailHandler createEmailHandler() {
 		return new EmailHandler();
+	}
+	@Override
+	public InfektionsdagbokViewHandler createInfektionsdagbokViewHandler(Context context) {
+		return new InfektionsdagbokViewHandler(context);
 	}
 }
 

@@ -1,6 +1,6 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -86,16 +86,52 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 	public void testExportCreatesFileAndCallsEmailHandler() throws Exception {
 		int desiredYear = 2013;
-
-		setYearSpinnerToDesiredYear(desiredYear);
-
-		solo.clickOnView(solo.getView(R.id.exportBTN));
-		Thread.sleep(1000); // Sleep to ensure time for the file to get written
-
 		final String expectedFileName = "Infektionsdagbok" + desiredYear + ".xls";
 
-		File externalFilesDir = getActivity().getExternalFilesDir(null);
+		setYearSpinnerToDesiredYear(desiredYear);
+		removeOldFile(expectedFileName);
+		solo.clickOnView(solo.getView(R.id.exportBTN));
+
+		File foundFile = timeoutSearchForFileWithName(expectedFileName);
+		
+		DateTime lastModified = new DateTime(foundFile.lastModified());
+		Duration duration = new Duration(lastModified, DateTime.now());
+
+		int age = duration.toStandardSeconds().getSeconds();
+		assertTrue("File must be max 5 seconds old.  Was " + age, age <= 5);
+
+		// Email
+		EmailHandler mockedEmailHandler = getActivity().getLocalApplication().getEmailHandler();
+		verify(mockedEmailHandler, timeout(5000)).sendEmail(foundFile, getActivity());
+	}
+	
+	private void removeOldFile(String expectedFileName) {
+		File oldFile = getFileFromStorage(expectedFileName);
+		if (oldFile != null) {
+			oldFile.delete();
+		}
+	}
+
+	private File timeoutSearchForFileWithName(String expectedFileName) {
+		long TIMEOUT = 5000;
+		long startTime = DateTime.now().getMillis();
+		long elapsed;
 		File foundFile = null;
+		
+		do {
+			foundFile = getFileFromStorage(expectedFileName);
+
+			elapsed = DateTime.now().getMillis() - startTime;
+		} while (foundFile == null && elapsed < TIMEOUT);
+
+		assertNotNull("Should find file with name " + expectedFileName, foundFile);
+
+		return foundFile;
+	}
+
+	private File getFileFromStorage(String expectedFileName) {
+		File foundFile = null;
+		File externalFilesDir = getActivity().getExternalFilesDir(null);
 		File[] files = externalFilesDir.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
@@ -104,19 +140,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 				break;
 			}
 		}
-
-		assertNotNull("Should find file with name " + expectedFileName, foundFile);
-
-		DateTime lastModified = new DateTime(foundFile.lastModified());
-		Duration duration = new Duration(lastModified, DateTime.now());
-
-		int age = duration.toStandardSeconds().getSeconds();
-		assertTrue("File must be max 5 seconds old.  Was " + age, age <= 5);
-
-
-		// Email
-		EmailHandler mockedEmailHandler = getActivity().getLocalApplication().getEmailHandler();
-		verify(mockedEmailHandler).sendEmail(foundFile, getActivity());
+		return foundFile;
 	}
 
 

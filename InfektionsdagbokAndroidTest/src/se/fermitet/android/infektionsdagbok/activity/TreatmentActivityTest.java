@@ -10,6 +10,7 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import se.fermitet.android.infektionsdagbok.test.DoNotHandleExceptionsFactory;
 import android.app.DatePickerDialog;
 import android.view.View;
 import android.widget.DatePicker;
@@ -26,13 +27,17 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	private Treatment nullStartingDate;
 
 	public TreatmentActivityTest() {
-		super(TreatmentActivity.class);
+		super(TreatmentActivity.class, DoNotHandleExceptionsFactory.class);
 	}
 
 	@Override
 	protected void onBeforeActivityCreation() throws Exception {
 		super.onBeforeActivityCreation();
 
+		saveTestData();
+	}
+
+	private void saveTestData() throws Exception {
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
@@ -238,7 +243,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
 		solo.clickInList(1);
-
+		
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
 		int newNumDays = 1000;
@@ -279,21 +284,21 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	public void testChangingFieldsInSingleEditViewAffectsOtherModelsOnlyWhenSavePressed() throws Exception {
 		String newMedicine = "NEW MEDICINE";
-
 		solo.clickInList(1);
+
+		timeoutGetSingleEditViewModel(); // Wait for the model to be set, i e the effect of the click to happen
 
 		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
 		String oldMedicineInList = treatmentFromList.getMedicine();
-
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
 		solo.enterText(medicineEdit, newMedicine);
-
+		
 		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
-
+		
 		solo.clickOnView(solo.getView(R.id.saveBTN));
 		Thread.sleep(100);
-
+		
 		Treatment newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
 		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
 		// TODO: Check list ui is changed

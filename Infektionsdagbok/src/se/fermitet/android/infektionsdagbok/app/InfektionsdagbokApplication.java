@@ -13,6 +13,16 @@ public class InfektionsdagbokApplication extends Application {
 	private AlarmManager alarmManager = null;
 	private EmailHandler emailHandler = null;
 
+	private static InfektionsdagbokApplication instance = null;
+	public InfektionsdagbokApplication() {
+		super();
+		instance = this;
+	}
+	
+	public static InfektionsdagbokApplication getApplicationInstance() {
+		return instance;
+	}
+	
 	public Storage getStorage() {
 		if (this.storage == null) {
 			this.storage = getFactory().createStorage();

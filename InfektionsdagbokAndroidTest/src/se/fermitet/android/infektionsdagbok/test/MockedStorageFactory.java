@@ -1,12 +1,11 @@
 package se.fermitet.android.infektionsdagbok.test;
 
 import static org.mockito.Mockito.mock;
-import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokFactory;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.app.AlarmManager;
 import android.content.Context;
 
-public class MockedStorageFactory extends InfektionsdagbokFactory {
+public class MockedStorageFactory extends DoNotHandleExceptionsFactory {
 
 	public MockedStorageFactory(Context context) {
 		super(context);
