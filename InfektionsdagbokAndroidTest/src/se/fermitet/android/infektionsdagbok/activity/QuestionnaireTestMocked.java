@@ -44,7 +44,6 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
-		long TIMEOUT = 5000;
 		
 		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
@@ -52,14 +51,14 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 			clickOnQuestionWithId(id);
 			
-			long start = DateTime.now().getMillis();
-			long elapsed;
 			boolean after;
-			
+
+			setStart();
 			do {
 				after = model.getAnswer(id);
-				elapsed = DateTime.now().getMillis() - start;
-			} while (after == before && elapsed < TIMEOUT);
+				
+				setElapsed();
+			} while (after == before && notYetTimeout());
 			
 			assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != model.getAnswer(id));
 		}
@@ -86,23 +85,23 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		Storage storage = app.getStorage();
 
 		solo.clickOnView(solo.getView(R.id.nextWeek));
-		verify(storage).saveAnswers(model);
+		verify(storage, timeout((int) TIMEOUT)).saveAnswers(model);
 		reset(storage);
 
 		model = questionnaire.model;
 		solo.clickOnView(solo.getView(R.id.previousWeek));
-		verify(storage).saveAnswers(model);
+		verify(storage, timeout((int) TIMEOUT)).saveAnswers(model);
 		reset(storage);
 
 		model = questionnaire.model;
 		Instrumentation ins = getInstrumentation();
 		ins.callActivityOnPause(questionnaire);
 		solo.clickOnView(solo.getView(R.id.previousWeek));
-		verify(storage).saveAnswers(model);
+		verify(storage, timeout((int) TIMEOUT)).saveAnswers(model);
 		reset(storage);
 
 		app.getModelManager().reset();
-		verify(storage).clear();
+		verify(storage, timeout((int) TIMEOUT)).clear();
 	}
 
 	public void testReadFromStorage() throws Exception {
@@ -114,8 +113,9 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		// Back and forward to get back to original week
 		solo.clickOnView(solo.getView(R.id.nextWeek));
 		solo.clickOnView(solo.getView(R.id.previousWeek));
+		Thread.sleep(1000);
 
-		verify(storage).getAnswersForWeek(new Week(new DateTime()));
+		verify(storage, timeout((int) TIMEOUT)).getAnswersForWeek(new Week(new DateTime()));
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {
@@ -131,7 +131,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		long week = 7 * 24 * 60 * 60 * 1000;
 
 		// I was unable to check the intent...
-		verify(mgr).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
+		verify(mgr, timeout((int) TIMEOUT)).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
 	}
 }
 

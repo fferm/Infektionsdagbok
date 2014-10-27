@@ -25,7 +25,7 @@ public class ModelManagerTestMockedStorage extends TestCase {
 
 	public void testSaveTreatments() throws Exception {
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
-		toSave.add(new Treatment("TEST", "TEST", DateTime.now(), 3));
+		toSave.add(new Treatment(DateTime.now(), 3, "TEST", "TEST"));
 
 		modelManager.saveTreatments(toSave);
 

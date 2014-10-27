@@ -1,5 +1,7 @@
 package se.fermitet.android.infektionsdagbok.storage;
 
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +14,7 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 public class Jsonizer {
 
 	private static final String WEEK_ANSWERS_WEEK = "week";
+	private static final String TREATMENT_UUID = "uuid";
 	private static final String TREATMENT_INFECTION_TYPE = "infectionType";
 	private static final String TREATMENT_MEDICINE = "medicine";
 	private static final String TREATMENT_STARTING_DATE = "startingDate";
@@ -49,6 +52,7 @@ public class Jsonizer {
 	public static String treatmentToJSON(Treatment treatment) throws JSONException {
 		JSONObject treatmentJson = new JSONObject();
 		
+		treatmentJson.put(TREATMENT_UUID, treatment.getUUID().toString());
 		treatmentJson.put(TREATMENT_INFECTION_TYPE, treatment.getInfectionType());
 		treatmentJson.put(TREATMENT_MEDICINE, treatment.getMedicine());
 		if (treatment.getStartingDate() != null) {
@@ -63,6 +67,7 @@ public class Jsonizer {
 		JSONObject json = new JSONObject(treatmentJson);
 		Treatment treatment = new Treatment();
 		
+		if (! json.isNull(TREATMENT_UUID)) treatment.setUUID(UUID.fromString(json.getString(TREATMENT_UUID)));
 		if (! json.isNull(TREATMENT_INFECTION_TYPE)) treatment.setInfectionType(json.getString(TREATMENT_INFECTION_TYPE));
 		if (! json.isNull(TREATMENT_MEDICINE)) treatment.setMedicine(json.getString(TREATMENT_MEDICINE));
 		if (! json.isNull(TREATMENT_STARTING_DATE)) treatment.setStartingDate(getDateWithoutTimeFromJsonObject(json.getJSONObject(TREATMENT_STARTING_DATE)));

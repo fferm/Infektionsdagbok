@@ -49,15 +49,15 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 			testData.add(
 					new Treatment(
-							"INF" + i,
-							"MEDICINE_NAME" + i,
 							date,
-							i));
+							i,
+							"INF" + i,
+							"MEDICINE_NAME" + i));
 		}
 
-		nullMedicine = new Treatment("INFECTION", null, DateTime.now().minusDays(100), 100);
-		nullInfection = new Treatment(null, "MEDICINE", DateTime.now().minusDays(101), 101);
-		nullStartingDate = new Treatment("INFECT102", "MEDICINE102", null, 102);
+		nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
+		nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
+		nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
 
 		testData.add(nullMedicine);
 		testData.add(nullInfection);
@@ -230,9 +230,17 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
 		solo.clickOnButton("StŠll in");
-		Thread.sleep(1000);
+		
+		String startTVText = null;
+		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate());
+		setStart();
+		do {
+			startTVText = startTV.getText().toString();
+			
+			setElapsed();
+		} while (!expected.equals(startTVText) && notYetTimeout());
 
-		assertEquals("Start date field text", DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate()), startTV.getText());
+		assertEquals("Start date field text", expected, startTV.getText());
 
 		DateTime newDateFromView = getActivity().view.getSingleEditView().getModel().getStartingDate();
 		assertEquals("view model date value (year)", newDate.year(), newDateFromView.year());
@@ -267,17 +275,16 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	protected Treatment timeoutGetSingleEditViewModel() throws Exception {
-		long TIMEOUT = 2000;
-
 		Treatment treatment = null;
-		long startTime = DateTime.now().getMillis();
-		long elapsed;
+		
+		setStart();
 		do {
 			treatment = getActivity().view.getSingleEditView().getModel();
-			elapsed = DateTime.now().getMillis() - startTime;
-		} while (treatment == null && elapsed < TIMEOUT);
+			
+			setElapsed();
+		} while (treatment == null && notYetTimeout());
 
-		assertTrue("Timeout", elapsed < TIMEOUT);
+		assertNotNull("Null treatment after timeout", treatment);
 
 		return treatment;
 	}

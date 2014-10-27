@@ -91,10 +91,10 @@ public class StorageTest extends AndroidTestCase {
 	public void testSaveAndRetrieveTreatments() throws Exception {
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 
-		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
-		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
-		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
-		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
+		Treatment t1 = new Treatment(DateTime.now(), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(DateTime.now(), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(DateTime.now(), 3, "INF3", "MED3");
+		Treatment t4 = new Treatment(DateTime.now(), 4, "INF4", "MED4");
 
 		toSave.add(t1);
 		toSave.add(t2);
@@ -115,10 +115,10 @@ public class StorageTest extends AndroidTestCase {
 	public void testClearForTreatment() throws Exception {
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 
-		Treatment t1 = new Treatment("INF1", "MED1", DateTime.now(), 1);
-		Treatment t2 = new Treatment("INF2", "MED2", DateTime.now(), 2);
-		Treatment t3 = new Treatment("INF3", "MED3", DateTime.now(), 3);
-		Treatment t4 = new Treatment("INF4", "MED4", DateTime.now(), 4);
+		Treatment t1 = new Treatment(DateTime.now(), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(DateTime.now(), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(DateTime.now(), 3, "INF3", "MED3");
+		Treatment t4 = new Treatment(DateTime.now(), 4, "INF4", "MED4");
 
 		toSave.add(t1);
 		toSave.add(t2);

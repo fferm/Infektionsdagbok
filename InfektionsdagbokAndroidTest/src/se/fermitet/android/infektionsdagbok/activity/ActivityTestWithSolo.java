@@ -1,5 +1,7 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import org.joda.time.DateTime;
+
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
 import se.fermitet.android.infektionsdagbok.test.DoNotHandleExceptionsFactory;
@@ -16,6 +18,9 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 	private Class<? extends Factory> mockedFactoryClassOrNull;
 
+	protected static long TIMEOUT = 5000;
+	protected long start, elapsed;
+	
 	public ActivityTestWithSolo(Class<T> activityClass) {
 		this(activityClass, DoNotHandleExceptionsFactory.class);
 	}
@@ -62,4 +67,18 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 		super.tearDown();
 	}
+	
+	protected void setStart() {
+		start = DateTime.now().getMillis();
+	}
+	
+	protected void setElapsed() {
+		elapsed = DateTime.now().getMillis() - start;
+	}
+	
+	protected boolean notYetTimeout() {
+		return elapsed < TIMEOUT;
+	}
+
+
 }

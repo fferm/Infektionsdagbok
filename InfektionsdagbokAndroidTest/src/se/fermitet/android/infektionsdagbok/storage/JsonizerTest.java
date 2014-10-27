@@ -27,11 +27,11 @@ public class JsonizerTest extends TestCase {
 		DateTime origStartingDate = DateTime.now();
 		int origNumDays = 5;
 
-		Treatment original = new Treatment(origInfectionType, origMedicine, origStartingDate, origNumDays);
+		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
 		
-		Treatment nullInfectionType = new Treatment(null, origMedicine, origStartingDate, origNumDays);
-		Treatment nullMedicine = new Treatment(origInfectionType, null, origStartingDate, origNumDays);
-		Treatment nullStartingDate = new Treatment(origInfectionType, origMedicine, null, origNumDays);
+		Treatment nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
+		Treatment nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
+		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
 		
 		assertEquals("Original", original, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(original)));
 		assertEquals("nullInfectionType", nullInfectionType, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullInfectionType)));

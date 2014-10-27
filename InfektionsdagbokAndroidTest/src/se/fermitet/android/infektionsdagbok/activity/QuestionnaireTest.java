@@ -1,7 +1,5 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import org.joda.time.DateTime;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
@@ -64,14 +62,13 @@ public abstract class QuestionnaireTest extends ActivityTestWithSolo<Questionnai
 		
 		boolean expected = shouldChange ? !before : before;
 		boolean after;
-		
-		long TIMEOUT = 5000;
-		long start = DateTime.now().getMillis();
-		long elapsed;
+
+		setStart();
 		do {
 			after = getActivity().model.getAnswer(questionId);
-			elapsed = DateTime.now().getMillis() - start;
-		} while (after != expected && elapsed < TIMEOUT);
+			
+			setElapsed();
+		} while (after != expected && notYetTimeout());
 
 		if (shouldChange) {
 			assertFalse("Should have changed after clicking " + nameOfView, before == after);

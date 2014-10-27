@@ -36,24 +36,53 @@ public class QuestionnaireTestNotMocked extends QuestionnaireTest {
 
 	public void testClickingArrowNavigation() throws Exception {
 		clickOnQuestionWithId(R.id.fever); // Change someting so that later check does not compare with default
+		
+		setStart();
+		WeekAnswers beforeModel = null;
+		boolean condition;
+		do {
+			beforeModel = getActivity().model;
+			condition = beforeModel.getAnswer(R.id.fever);
+			
+			setElapsed();
+		} while ( !condition && notYetTimeout());
+		assertTrue("beforeModel fever should have changed", condition);
 
-		WeekAnswers beforeModel = getActivity().model;
-
-		assertTrue("beforeModel fever should have changed", beforeModel.getAnswer(R.id.fever));
-
+		
 		solo.clickOnView(solo.getView(R.id.previousWeek));
+		
+		boolean sameCondition, equalsCondition, weekBeforeCondition;
+		WeekAnswers afterModel;
 
-		WeekAnswers afterModel = getActivity().model;
-
-		assertFalse("not same model", beforeModel == afterModel);
-		assertFalse("not equal models", beforeModel.equals(afterModel));
-		assertTrue("week before model", beforeModel.week.previous().equals(afterModel.week));
+		setStart();
+		do {
+			afterModel = getActivity().model;
+			
+			sameCondition = beforeModel == afterModel;
+			equalsCondition = beforeModel.equals(afterModel);
+			weekBeforeCondition = beforeModel.week.previous().equals(afterModel.week);
+			
+			setElapsed();
+		} while ((sameCondition || equalsCondition || !weekBeforeCondition) && notYetTimeout());
+		
+		assertFalse("not same model", sameCondition);
+		assertFalse("not equal models", equalsCondition);
+		assertTrue("week before model", weekBeforeCondition);
+		
 
 		solo.clickOnView(solo.getView(R.id.nextWeek));
 
-		WeekAnswers nextModel = getActivity().model;
+		WeekAnswers nextModel;
 
-		assertEquals("same week again after going back and forward", beforeModel.week, nextModel.week);
+		setStart();
+		do {
+			nextModel = getActivity().model;
+			
+			equalsCondition = beforeModel.equals(nextModel);
+			
+			setElapsed();
+		} while ( (!equalsCondition) && notYetTimeout());
+
 		assertEquals("week answers equality when going back and forward", beforeModel, nextModel);
 	}
 

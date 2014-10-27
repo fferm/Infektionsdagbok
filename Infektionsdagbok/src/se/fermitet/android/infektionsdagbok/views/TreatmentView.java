@@ -2,7 +2,6 @@ package se.fermitet.android.infektionsdagbok.views;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnSavePressedListener;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -58,12 +57,12 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 			}
 		});
 
-		treatmentSingleEditView.setOnSavePressedListener(new OnSavePressedListener() {
-			@Override
-			public void onSavePressed(Treatment treatment) throws Exception {
-				// TODO:
-			}
-		});
+//		treatmentSingleEditView.setOnSavePressedListener(new OnSavePressedListener() {
+//			@Override
+//			public void onSavePressed(Treatment treatment) throws Exception {
+//				// TODO:
+//			}
+//		});
 	}
 
 

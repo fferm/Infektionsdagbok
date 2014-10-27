@@ -1,6 +1,7 @@
 package se.fermitet.android.infektionsdagbok.model;
 
 import java.text.DateFormat;
+import java.util.UUID;
 
 import junit.framework.TestCase;
 
@@ -23,7 +24,7 @@ public class TreatmentTest extends TestCase {
 		DateTime startingDate = DateTime.now();
 		int numDays = 5;
 
-		Treatment treatment = new Treatment(infectionType, medicine, startingDate, numDays);
+		Treatment treatment = new Treatment(startingDate, numDays, infectionType, medicine);
 
 		assertEquals("Infection type", infectionType, treatment.getInfectionType());
 		assertEquals("Medicine", medicine, treatment.getMedicine());
@@ -37,7 +38,7 @@ public class TreatmentTest extends TestCase {
 		DateTime startingDate = DateTime.now();
 		int numDays = 5;
 
-		Treatment original = new Treatment(infectionType, medicine, startingDate, numDays);
+		Treatment original = new Treatment(startingDate, numDays, infectionType, medicine);
 		Treatment copy = new Treatment(original);
 
 		assertEquals("Equal", original, copy);
@@ -47,6 +48,10 @@ public class TreatmentTest extends TestCase {
 	public void testGettersAndSetter() throws Exception {
 		Treatment treatment = new Treatment();
 
+		UUID testUUID = UUID.randomUUID();
+		treatment.setUUID(testUUID);
+		assertEquals("UUID", testUUID, treatment.getUUID());
+		
 		String testInfectionType = "TESTINFECTIONTYPE";
 		treatment.setInfectionType(testInfectionType);
 		assertEquals("Infection type", testInfectionType, treatment.getInfectionType());
@@ -70,17 +75,17 @@ public class TreatmentTest extends TestCase {
 		String medicine = "MEDICINE";
 		String infectionType = "INFECTION_TYPE";
 
-		Treatment normal = new Treatment(infectionType, medicine, start, numDays);
-		Treatment nullInfection = new Treatment(null, medicine, start, numDays);
-		Treatment nullMedicine = new Treatment(infectionType, null, start, numDays);
-		Treatment nullStart = new Treatment(infectionType, medicine, null, numDays);
+		Treatment normal = new Treatment(start, numDays, infectionType, medicine);
+		Treatment nullInfection = new Treatment(start, numDays, null, medicine);
+		Treatment nullMedicine = new Treatment(start, numDays, infectionType, null);
+		Treatment nullStart = new Treatment(null, numDays, infectionType, medicine);
 
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-		assertEquals("normal", "Treatment{start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", normal.toString());
-		assertEquals("nullMedicine", "Treatment{start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: null, infectionType: " + infectionType + "}", nullMedicine.toString());
-		assertEquals("nullInfection", "Treatment{start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: null}", nullInfection.toString());
-		assertEquals("nullStart", "Treatment{start: null, numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", nullStart.toString());
+		assertEquals("normal", "Treatment{uuid: " + normal.getUUID().toString() + ", start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", normal.toString());
+		assertEquals("nullMedicine", "Treatment{uuid: " + nullMedicine.getUUID().toString() + ", start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: null, infectionType: " + infectionType + "}", nullMedicine.toString());
+		assertEquals("nullInfection", "Treatment{uuid: " + nullInfection.getUUID().toString() + ", start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: null}", nullInfection.toString());
+		assertEquals("nullStart", "Treatment{uuid: " + nullStart.getUUID().toString() + ", start: null, numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", nullStart.toString());
 	}
 
 	public void testStartingDateString() throws Exception {
@@ -88,8 +93,8 @@ public class TreatmentTest extends TestCase {
 
 		DateTime start = DateTime.now();
 
-		Treatment normal = new Treatment(null, null, start, 0);
-		Treatment nullStart = new Treatment(null, null, null, 0);
+		Treatment normal = new Treatment(start, 0, null, null);
+		Treatment nullStart = new Treatment(null, 0, null, null);
 
 		assertEquals("Normal", df.format(start.toDate()), normal.getStartingDateString());
 		assertNull("null", nullStart.getStartingDateString());
@@ -101,22 +106,28 @@ public class TreatmentTest extends TestCase {
 		DateTime origStartingDate = DateTime.now();
 		int origNumDays = 5;
 
-		Treatment original = new Treatment(origInfectionType, origMedicine, origStartingDate, origNumDays);
-		Treatment equal = new Treatment(origInfectionType, origMedicine, origStartingDate, origNumDays);
+		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
+		Treatment equal = new Treatment(original);
+		
+		Treatment sameValuesDifferentUUID = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
 
-		Treatment nullInfectionType = new Treatment(null, origMedicine, origStartingDate, origNumDays);
-		Treatment nullMedicine = new Treatment(origInfectionType, null, origStartingDate, origNumDays);
-		Treatment nullStartingDate = new Treatment(origInfectionType, origMedicine, null, origNumDays);
+		Treatment nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
+		Treatment nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
+		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
 
-		Treatment diffInfectionType = new Treatment("DIFFERENT", origMedicine, origStartingDate, origNumDays);
-		Treatment diffMedicine = new Treatment(origInfectionType, "DIFFERENT", origStartingDate, origNumDays);
-		Treatment diffStartingDate = new Treatment(origInfectionType, origMedicine, new DateTime(2012,1,1,1,1), origNumDays);
-		Treatment diffNumDays = new Treatment(origInfectionType, origMedicine, origStartingDate, 20);
-		Treatment diffStartingDateButSameDay = new Treatment(origInfectionType, origMedicine, DateTime.now().plusSeconds(1), origNumDays);
+		Treatment diffInfectionType = new Treatment(origStartingDate, origNumDays, "DIFFERENT", origMedicine);
+		Treatment diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
+		Treatment diffStartingDate = new Treatment(new DateTime(2012,1,1,1,1), origNumDays, origInfectionType, origMedicine);
+		Treatment diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
+		
+		
+		Treatment diffStartingDateButSameDay = new Treatment(original);
+		diffStartingDateButSameDay.setStartingDate(diffStartingDateButSameDay.getStartingDate().plusSeconds(1));
 
 		assertTrue("Equal to equal", original.equals(equal));
 		assertTrue("Equal to same starting date but same day", original.equals(diffStartingDateButSameDay));
 
+		assertFalse("Not equal to sameValuesDifferentUUID", original.equals(sameValuesDifferentUUID));
 		assertFalse("Not equal to nullInfectionType", original.equals(nullInfectionType));
 		assertFalse("Not equal to nullMedicine", original.equals(nullMedicine));
 		assertFalse("Not equal to nullStartingDate", original.equals(nullStartingDate));

@@ -30,7 +30,15 @@ public class QuestionnaireTestActionBar extends ActivityTestWithSolo<Questionnai
 		assertTrue("DISPLAY_HOME_AS_UP option should be set on Activity actionbar", (options & ActionBar.DISPLAY_HOME_AS_UP) != 0);
 
 		solo.clickOnActionBarHomeButton();
-		Thread.sleep(500); // Sleep to let navigation happen
+		
+		Class<?> activityClass = null;
+		setStart();
+		do {
+			activityClass = solo.getCurrentActivity().getClass();
+			
+			setElapsed();
+		} while (!Questionnaire.class.equals(activityClass) && notYetTimeout());
+		
 		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
 	}
 	
@@ -44,8 +52,15 @@ public class QuestionnaireTestActionBar extends ActivityTestWithSolo<Questionnai
 		assertTrue("DISPLAY_HOME_AS_UP option should be set on Activity actionbar", (options & ActionBar.DISPLAY_HOME_AS_UP) != 0);
 
 		solo.clickOnActionBarHomeButton();
-		Thread.sleep(500); // Sleep to let navigation happen
-		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
 
+		Class<?> activityClass = null;
+		setStart();
+		do {
+			activityClass = solo.getCurrentActivity().getClass();
+			
+			setElapsed();
+		} while (!Questionnaire.class.equals(activityClass) && notYetTimeout());
+		
+		assertEquals("Should be back to Questionnaire after back click", Questionnaire.class,  solo.getCurrentActivity().getClass());
 	}
 }

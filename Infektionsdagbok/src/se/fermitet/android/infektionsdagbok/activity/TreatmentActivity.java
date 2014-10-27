@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnSavePressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentView;
 import android.content.Context;
 import android.os.Bundle;
@@ -31,6 +32,13 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		try {
 			fillWithTestData();
 
+			view.getSingleEditView().setOnSavePressedListener(new OnSavePressedListener() {
+				@Override
+				public void onSavePressed(Treatment treatment) throws Exception {
+					TreatmentActivity.this.savePressed(treatment);
+				}
+			});
+			
 			syncListViewDataWithStored();
 		} catch (Exception e) {
 			view.handleException(e);
@@ -43,6 +51,10 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		TreatmentAdapter adapter = new TreatmentAdapter(this, sortedListOfTreatments(allTreatments));
 
 		view.setAdapter(adapter);
+	}
+	
+	private void savePressed(Treatment treatment) throws Exception {
+		
 	}
 
 	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
@@ -82,15 +94,15 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 
 			testData.add(
 					new Treatment(
-							"INF" + i,
-							"MEDICINE_NAME" + i,
 							date,
-							i));
+							i,
+							"INF" + i,
+							"MEDICINE_NAME" + i));
 		}
 
-		Treatment nullMedicine = new Treatment("INFECTION", null, DateTime.now().minusDays(100), 100);
-		Treatment nullInfection = new Treatment(null, "MEDICINE", DateTime.now().minusDays(101), 101);
-		Treatment nullStartingDate = new Treatment("INFECT102", "MEDICINE102", null, 102);
+		Treatment nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
+		Treatment nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
+		Treatment nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
 
 		testData.add(nullMedicine);
 		testData.add(nullInfection);

@@ -102,7 +102,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 		// Email
 		EmailHandler mockedEmailHandler = getActivity().getLocalApplication().getEmailHandler();
-		verify(mockedEmailHandler, timeout(5000)).sendEmail(foundFile, getActivity());
+		verify(mockedEmailHandler, timeout((int) TIMEOUT)).sendEmail(foundFile, getActivity());
 	}
 	
 	private void removeOldFile(String expectedFileName) {
@@ -113,16 +113,14 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 	}
 
 	private File timeoutSearchForFileWithName(String expectedFileName) {
-		long TIMEOUT = 5000;
-		long startTime = DateTime.now().getMillis();
-		long elapsed;
 		File foundFile = null;
 		
+		setStart();
 		do {
 			foundFile = getFileFromStorage(expectedFileName);
 
-			elapsed = DateTime.now().getMillis() - startTime;
-		} while (foundFile == null && elapsed < TIMEOUT);
+			setElapsed();
+		} while (foundFile == null && notYetTimeout());
 
 		assertNotNull("Should find file with name " + expectedFileName, foundFile);
 
@@ -165,9 +163,17 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		solo.enterText(ssnEdit, testSSN);
 
 		solo.clickOnView(solo.getView(R.id.exportBTN));
-		Thread.sleep(1000);  // Sleep to let file handling happen
+		
+		Workbook wb;
+		
+		setStart();
+		do {
+			wb = getActivity().wb;
+			
+			setElapsed();
+		} while (wb == null && notYetTimeout());
+		assertNotNull("Workbook null", wb);
 
-		Workbook wb = getActivity().wb;
 		Sheet sheet = wb.getSheet("Infektionsdagbok");
 
 		Cell nameCell = sheet.getRow(1).getCell(10);

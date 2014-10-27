@@ -1,16 +1,19 @@
 package se.fermitet.android.infektionsdagbok.model;
 
 import java.text.DateFormat;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
 public class Treatment {
 
-	private String infectionType;
-	private String medicine;
 	private DateTime startingDate;
 	private int numDays;
+	private String infectionType;
+	private String medicine;
 	private static DateFormat df;
+	
+	private UUID uuid;
 
 	static {
 		df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -18,35 +21,31 @@ public class Treatment {
 
 	public Treatment() {
 		super();
+		
+		this.uuid = UUID.randomUUID();
 	}
 
-	public Treatment(String infectionType, String medicine, DateTime startingDate, int numDays) {
+	public Treatment(DateTime startingDate, int numDays, String infectionType, String medicine) {
 		this();
 
-		this.setInfectionType(infectionType);
-		this.setMedicine(medicine);
 		this.setStartingDate(startingDate);
 		this.setNumDays(numDays);
+		this.setInfectionType(infectionType);
+		this.setMedicine(medicine);
 	}
 
 	public Treatment(Treatment original) {
-		this(original.getInfectionType(), original.getMedicine(), original.getStartingDate(), original.getNumDays());
+		this(original.getStartingDate(), original.getNumDays(), original.getInfectionType(), original.getMedicine());
+		
+		this.uuid = original.uuid;
 	}
 
-	public String getInfectionType() {
-		return this.infectionType;
+	public UUID getUUID() {
+		return this.uuid;
 	}
-
-	public void setInfectionType(String infectionType) {
-		this.infectionType = infectionType;
-	}
-
-	public String getMedicine() {
-		return medicine;
-	}
-
-	public void setMedicine(String medicine) {
-		this.medicine = medicine;
+	
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public DateTime getStartingDate() {
@@ -71,7 +70,29 @@ public class Treatment {
 		}
 	}
 
+	public int getNumDays() {
+		return numDays;
+	}
 
+	public void setNumDays(int numDays) {
+		this.numDays = numDays;
+	}
+
+	public String getInfectionType() {
+		return this.infectionType;
+	}
+
+	public void setInfectionType(String infectionType) {
+		this.infectionType = infectionType;
+	}
+
+	public String getMedicine() {
+		return medicine;
+	}
+
+	public void setMedicine(String medicine) {
+		this.medicine = medicine;
+	}
 
 	@Override
 	public int hashCode() {
@@ -84,6 +105,7 @@ public class Treatment {
 		result = prime * result + numDays;
 		result = prime * result
 				+ ((startingDate == null) ? 0 : startingDate.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -113,22 +135,21 @@ public class Treatment {
 				return false;
 		} else if (!startingDate.equals(other.startingDate))
 			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
 		return true;
-	}
-
-	public int getNumDays() {
-		return numDays;
-	}
-
-	public void setNumDays(int numDays) {
-		this.numDays = numDays;
 	}
 
 	@Override
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
 
-		buf.append("Treatment{start: ");
+		buf.append("Treatment{uuid: ").append(getUUID().toString());
+		
+		buf.append(", start: ");
 
 		if (getStartingDate() == null) {
 			buf.append("null");
@@ -143,5 +164,6 @@ public class Treatment {
 
 		return buf.toString();
 	}
+
 
 }
