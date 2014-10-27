@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,9 +24,12 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	private EditText numDaysEdit;
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
+	private Button saveBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
+
+	private OnSavePressedListener onSavePressedListener;
 
 	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -52,9 +56,18 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
+		saveBTN = (Button) findViewById(R.id.saveBTN);
 	}
 
 	private void setupWidgets() throws Exception {
+		setupStartTV();
+		setupMedicineEdit();
+		setupInfectionTypeEdit();
+		setupNumDaysEdit();
+		setupSaveBTN();
+	}
+
+	private void setupStartTV() throws Exception {
 		startTV.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -65,58 +78,81 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 				}
 			}
 		});
-		
+	}
+
+	private void setupMedicineEdit() throws Exception {
 		medicineEdit.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
 				try {
-					medicineChanged();
-				} catch (Exception e) {
-					handleException(e);
-				}
-			}
-		});
-		
-		infectionTypeEdit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				try {
-					infectionTypeChanged();
-				} catch (Exception e) {
-					handleException(e);
-				}
-			}
-		});
-		
-		numDaysEdit.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				try {
-					numDaysChanged();
+					String newMedicine = medicineEdit.getText().toString();
+					TreatmentSingleEditView.this.model.setMedicine(newMedicine);
 				} catch (Exception e) {
 					handleException(e);
 				}
 			}
 		});
 	}
+
+	private void setupInfectionTypeEdit() throws Exception {
+		infectionTypeEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					String newInfectionType = infectionTypeEdit.getText().toString();
+					TreatmentSingleEditView.this.model.setInfectionType(newInfectionType);
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
+
+	private void setupNumDaysEdit() throws Exception {
+		numDaysEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				try {
+					String newNumDaysText = numDaysEdit.getText().toString();
+					TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
+
+	private void setupSaveBTN() throws Exception {
+		saveBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentSingleEditView.this.onSavePressedListener.onSavePressed(getModel());
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
+
 
 	public void selectTreatment(Treatment treatment) throws Exception {
 		this.model = treatment;
@@ -151,22 +187,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		dp.show();
 	}
-	
-	private void medicineChanged() throws Exception {
-		String newMedicine = medicineEdit.getText().toString();
-		this.model.setMedicine(newMedicine);
-	}
-	
-	private void infectionTypeChanged() throws Exception {
-		String newInfectionType = infectionTypeEdit.getText().toString();
-		this.model.setInfectionType(newInfectionType);
-	}
 
-	private void numDaysChanged() throws Exception {
-		String newNumDaysText = numDaysEdit.getText().toString();
-		this.model.setNumDays(Integer.valueOf(newNumDaysText));
-	}
-	
 	public DatePickerDialog getDatePickerDialog() throws Exception {
 		return dp;
 	}
@@ -185,6 +206,14 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		} catch (Exception e) {
 			handleException(e);
 		}
+	}
+
+	public interface OnSavePressedListener {
+		public void onSavePressed(Treatment treatment) throws Exception;
+	}
+
+	public void setOnSavePressedListener(OnSavePressedListener listener) {
+		this.onSavePressedListener = listener;
 	}
 
 }

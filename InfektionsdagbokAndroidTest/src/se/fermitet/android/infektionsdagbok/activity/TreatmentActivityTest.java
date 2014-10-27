@@ -88,6 +88,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
+
+		assertNotNull("Save button", solo.getView(R.id.saveBTN));
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -166,7 +168,9 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		}
 		assertTrue("Didn't find treatment " + treatment, found);
 
-		solo.clickInList(i + 1);
+		solo.waitForText("" + treatment.getNumDays(), 1, 500, true);
+		solo.clickOnText("" + treatment.getNumDays());
+//		solo.clickInList(i + 1);
 		Thread.sleep(100);
 
 		CharSequence dateTextFromUI = ((TextView) solo.getView(R.id.startTV)).getText();
@@ -200,8 +204,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
 		solo.clickInList(1);
 
-		Treatment treatment = getActivity().view.getSingleEditView().getModel();
-		
+		Treatment treatment = timeoutGetSingleEditViewModel();
+
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 
 		solo.clickOnView(startTV);
@@ -221,6 +225,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
 		solo.clickOnButton("StŠll in");
+		Thread.sleep(1000);
 
 		assertEquals("Start date field text", DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate()), startTV.getText());
 
@@ -230,32 +235,71 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertEquals("view model date value (day)", newDate.dayOfMonth(), newDateFromView.dayOfMonth());
 
 	}
-	
+
 	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
 		solo.clickInList(1);
 
-		Treatment treatment = getActivity().view.getSingleEditView().getModel();
-		
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
 		int newNumDays = 1000;
-		
+
+		Treatment treatment = timeoutGetSingleEditViewModel();
+
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
 		solo.enterText(medicineEdit, newMedicine);
 		assertEquals("Medicine", newMedicine, treatment.getMedicine());
-		
+
 		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
 		solo.clearEditText(infectionTypeEdit);
 		solo.enterText(infectionTypeEdit, newInfectionType);
 		assertEquals("Infection type", newInfectionType, treatment.getInfectionType());
-		
+
 		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
 		solo.clearEditText(numDaysEdit);
 		solo.enterText(numDaysEdit, "" + newNumDays);
 		assertEquals("Num days", newNumDays, treatment.getNumDays());
 	}
-	
+
+	protected Treatment timeoutGetSingleEditViewModel() throws Exception {
+		long TIMEOUT = 2000;
+
+		Treatment treatment = null;
+		long startTime = DateTime.now().getMillis();
+		long elapsed;
+		do {
+			treatment = getActivity().view.getSingleEditView().getModel();
+			elapsed = DateTime.now().getMillis() - startTime;
+		} while (treatment == null && elapsed < TIMEOUT);
+
+		assertTrue("Timeout", elapsed < TIMEOUT);
+
+		return treatment;
+	}
+
+	public void testChangingFieldsInSingleEditViewAffectsOtherModelsOnlyWhenSavePressed() throws Exception {
+		String newMedicine = "NEW MEDICINE";
+
+		solo.clickInList(1);
+
+		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
+		String oldMedicineInList = treatmentFromList.getMedicine();
+
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		solo.clearEditText(medicineEdit);
+		solo.enterText(medicineEdit, newMedicine);
+
+		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
+
+		solo.clickOnView(solo.getView(R.id.saveBTN));
+		Thread.sleep(100);
+
+		Treatment newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
+		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
+		// TODO: Check list ui is changed
+		// TODO: Check saved file is changed
+	}
+
 	private ListAdapter getListAdapter() {
 		TreatmentActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);

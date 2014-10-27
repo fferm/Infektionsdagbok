@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
+import com.robotium.solo.Solo.Config;
 
 public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrumentationTestCase2<T>{
 
@@ -31,7 +32,8 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 		handleFactory();
 
-		solo = new Solo(getInstrumentation(), getActivity());
+		Config conf = new Config();
+		solo = new Solo(getInstrumentation(), conf, getActivity());
 	}
 
 	protected void onBeforeActivityCreation() throws Exception {}

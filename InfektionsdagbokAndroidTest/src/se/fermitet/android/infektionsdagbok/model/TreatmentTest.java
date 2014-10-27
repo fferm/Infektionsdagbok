@@ -31,6 +31,19 @@ public class TreatmentTest extends TestCase {
 		assertEquals("num days", numDays, treatment.getNumDays());
 	}
 
+	public void testCopyConstructor() throws Exception {
+		String infectionType ="TESTINFECTIONTYPE";
+		String medicine = "MEDICINE";
+		DateTime startingDate = DateTime.now();
+		int numDays = 5;
+
+		Treatment original = new Treatment(infectionType, medicine, startingDate, numDays);
+		Treatment copy = new Treatment(original);
+
+		assertEquals("Equal", original, copy);
+		assertFalse("Not same", original == copy);
+	}
+
 	public void testGettersAndSetter() throws Exception {
 		Treatment treatment = new Treatment();
 
@@ -69,15 +82,15 @@ public class TreatmentTest extends TestCase {
 		assertEquals("nullInfection", "Treatment{start: " + df.format(start.toDate()) + ", numDays: " + numDays + ", medicine: " + medicine + ", infectionType: null}", nullInfection.toString());
 		assertEquals("nullStart", "Treatment{start: null, numDays: " + numDays + ", medicine: " + medicine + ", infectionType: " + infectionType + "}", nullStart.toString());
 	}
-	
+
 	public void testStartingDateString() throws Exception {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-		
+
 		DateTime start = DateTime.now();
 
 		Treatment normal = new Treatment(null, null, start, 0);
 		Treatment nullStart = new Treatment(null, null, null, 0);
-		
+
 		assertEquals("Normal", df.format(start.toDate()), normal.getStartingDateString());
 		assertNull("null", nullStart.getStartingDateString());
 	}

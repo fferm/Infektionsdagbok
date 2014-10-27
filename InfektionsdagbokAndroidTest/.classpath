@@ -6,11 +6,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="libs/robotium-solo-5.0.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/InfektionsdagbokAndroidTest/libs/robotium-solo-5.0.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="libs/mockito-all-1.9.5.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/usr/local/mockito/mockito-1.9.5/javadoc/"/>
@@ -19,5 +14,10 @@
 	<classpathentry kind="lib" path="libs/dexmaker-1.0.jar"/>
 	<classpathentry kind="lib" path="libs/dexmaker-mockito-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="libs/robotium-solo-5.2.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/InfektionsdagbokAndroidTest/libs/robotium-solo-5.2.1-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

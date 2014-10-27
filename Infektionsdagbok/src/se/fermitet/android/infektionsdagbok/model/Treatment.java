@@ -10,12 +10,14 @@ public class Treatment {
 	private String medicine;
 	private DateTime startingDate;
 	private int numDays;
-	private DateFormat df;
+	private static DateFormat df;
+
+	static {
+		df = DateFormat.getDateInstance(DateFormat.SHORT);
+	}
 
 	public Treatment() {
 		super();
-		
-		df = DateFormat.getDateInstance(DateFormat.SHORT);
 	}
 
 	public Treatment(String infectionType, String medicine, DateTime startingDate, int numDays) {
@@ -25,6 +27,10 @@ public class Treatment {
 		this.setMedicine(medicine);
 		this.setStartingDate(startingDate);
 		this.setNumDays(numDays);
+	}
+
+	public Treatment(Treatment original) {
+		this(original.getInfectionType(), original.getMedicine(), original.getStartingDate(), original.getNumDays());
 	}
 
 	public String getInfectionType() {
@@ -46,10 +52,10 @@ public class Treatment {
 	public DateTime getStartingDate() {
 		return startingDate;
 	}
-	
+
 	public String getStartingDateString() {
 		DateTime date = getStartingDate();
-		
+
 		if (date == null) {
 			return null;
 		} else {
