@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -117,16 +120,16 @@ public class Storage {
         }
 	}
 
-	public Collection<Treatment> getAllTreatments() throws Exception {
+	public Map<UUID, Treatment> getAllTreatments() throws Exception {
 		BufferedReader br = null;
-		Collection<Treatment> ret = new ArrayList<Treatment>();
+		Map<UUID, Treatment> ret = new HashMap<UUID, Treatment>();
 		try {
 			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(TREAMENT_FILE_NAME)));
 
 			String json;
 			while ((json = br.readLine()) != null) {
 				Treatment treatment = Jsonizer.treatmentFromJSON(json);
-				ret.add(treatment);
+				ret.put(treatment.getUUID(), treatment);
 			}
 
 			return ret;

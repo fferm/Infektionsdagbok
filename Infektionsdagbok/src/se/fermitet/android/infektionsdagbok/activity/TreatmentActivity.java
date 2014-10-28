@@ -46,7 +46,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	}
 
 	public void syncListViewDataWithStored() throws Exception {
-		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments();
+		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments().values();
 
 		TreatmentAdapter adapter = new TreatmentAdapter(this, sortedListOfTreatments(allTreatments));
 

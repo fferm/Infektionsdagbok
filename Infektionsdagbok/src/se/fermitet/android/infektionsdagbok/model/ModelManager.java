@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -105,7 +106,7 @@ public class ModelManager {
 		return ret;
 	}
 
-	public Collection<Treatment> getAllTreatments() throws Exception {
+	public Map<UUID, Treatment> getAllTreatments() throws Exception {
 		return storage.getAllTreatments();
 	}
 

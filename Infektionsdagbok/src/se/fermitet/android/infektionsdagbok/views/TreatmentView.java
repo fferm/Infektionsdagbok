@@ -56,13 +56,6 @@ public class TreatmentView extends InfektionsdagbokRelativeLayoutView {
 				}
 			}
 		});
-
-//		treatmentSingleEditView.setOnSavePressedListener(new OnSavePressedListener() {
-//			@Override
-//			public void onSavePressed(Treatment treatment) throws Exception {
-//				// TODO:
-//			}
-//		});
 	}
 
 

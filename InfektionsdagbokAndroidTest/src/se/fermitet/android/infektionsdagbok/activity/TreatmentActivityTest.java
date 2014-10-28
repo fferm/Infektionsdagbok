@@ -73,7 +73,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertTrue("Date list header", solo.waitForText("Start"));
 		assertTrue("numDays list header", solo.waitForText("Dgr"));
 
-		Collection<Treatment> testData = mm.getAllTreatments();
+		Collection<Treatment> testData = mm.getAllTreatments().values();
 
 		for (Treatment treatment : testData) {
 			searchForTreatmentInListAndCheckDisplayedValues(treatment);

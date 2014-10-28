@@ -3,6 +3,8 @@ package se.fermitet.android.infektionsdagbok.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -82,7 +84,7 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testEmptyTreatments() throws Exception {
-		Collection<Treatment> received = storage.getAllTreatments();
+		Map<UUID, Treatment> received = storage.getAllTreatments();
 
 		assertNotNull("Not null before any work", received);
 		assertEquals("Empty treatments before any work", 0, received.size());
@@ -103,13 +105,18 @@ public class StorageTest extends AndroidTestCase {
 
 		storage.saveTreatments(toSave);
 
-		Collection<Treatment> received = storage.getAllTreatments();
+		Map<UUID, Treatment> received = storage.getAllTreatments();
 
 		assertEquals("Size after work", 4, received.size());
-		assertTrue("Contains t1", received.contains(t1));
-		assertTrue("Contains t2", received.contains(t2));
-		assertTrue("Contains t3", received.contains(t3));
-		assertTrue("Contains t4", received.contains(t4));
+		assertTrue("Contains t1", received.values().contains(t1));
+		assertTrue("Contains t2", received.values().contains(t2));
+		assertTrue("Contains t3", received.values().contains(t3));
+		assertTrue("Contains t4", received.values().contains(t4));
+		
+		for (UUID uuid : received.keySet()) {
+			Treatment treatment = received.get(uuid);
+			assertEquals("Key for treatment", uuid, treatment.getUUID());
+		}
 	}
 
 	public void testClearForTreatment() throws Exception {
@@ -129,7 +136,7 @@ public class StorageTest extends AndroidTestCase {
 
 		storage.clear();
 
-		Collection<Treatment> received = storage.getAllTreatments();
+		Map<UUID, Treatment> received = storage.getAllTreatments();
 
 		assertEquals("Empty after clear", 0, received.size());
 	}
