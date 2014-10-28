@@ -12,7 +12,6 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
-import se.fermitet.android.infektionsdagbok.test.DoNotHandleExceptionsFactory;
 import android.app.DatePickerDialog;
 import android.view.View;
 import android.widget.DatePicker;
@@ -29,7 +28,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	private Treatment nullStartingDate;
 
 	public TreatmentActivityTest() {
-		super(TreatmentActivity.class, DoNotHandleExceptionsFactory.class);
+		super(TreatmentActivity.class);
 	}
 
 	@Override

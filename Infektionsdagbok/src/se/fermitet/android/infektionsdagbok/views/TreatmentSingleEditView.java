@@ -33,6 +33,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		this.model = new Treatment();
 	}
 
 	@Override
@@ -157,6 +158,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 
 	public void selectTreatment(Treatment treatment) throws Exception {
+		System.out.println("!!!! select treatment: " + treatment);
 		this.model = treatment;
 
 		syncUIWithModel();
@@ -186,6 +188,8 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 	private void dateClicked() throws Exception {
 		DateTime startDate = model.getStartingDate();
+		if (startDate == null) startDate = DateTime.now();
+		
 		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		dp.show();
 	}

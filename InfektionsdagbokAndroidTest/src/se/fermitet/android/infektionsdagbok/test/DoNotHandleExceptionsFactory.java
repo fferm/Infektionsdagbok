@@ -27,6 +27,6 @@ class DoNotHandleExceptionsViewHandler extends InfektionsdagbokViewHandler {
 	@Override
 	public void handleExceptionFromView(Exception e)  {
 		e.printStackTrace();
-		Assert.fail(e.getMessage());
+		Assert.fail(e.getMessage() + "   " + e.getClass().getName());
 	}
 }
