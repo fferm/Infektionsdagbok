@@ -97,6 +97,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 
 		assertNotNull("Save button", solo.getView(R.id.saveBTN));
+		assertNotNull("New button", solo.getView(R.id.newBTN));
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -209,12 +210,12 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
+		Treatment previous = getActivity().view.getSingleEditView().getModel();
 		solo.clickInList(1);
 
-		Treatment treatment = timeoutGetSingleEditViewModel();
-
+		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
+		
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
-
 		solo.clickOnView(startTV);
 
 		assertTrue("Open date dialog", solo.waitForDialogToOpen());
@@ -252,13 +253,15 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	}
 
 	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
+		Treatment previous = getActivity().view.getSingleEditView().getModel();
+
 		solo.clickInList(1);
 		
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
 		int newNumDays = 1000;
 
-		Treatment treatment = timeoutGetSingleEditViewModel();
+		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
 
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
@@ -276,7 +279,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertEquals("Num days", newNumDays, treatment.getNumDays());
 	}
 
-	protected Treatment timeoutGetSingleEditViewModel() throws Exception {
+	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
 		Treatment treatment = null;
 		
 		setStart();
@@ -284,18 +287,19 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 			treatment = getActivity().view.getSingleEditView().getModel();
 			
 			setElapsed();
-		} while (treatment == null && notYetTimeout());
-
-		assertNotNull("Null treatment after timeout", treatment);
+		} while (treatment.equals(previous) && notYetTimeout());
+		assertTrue("Timeout", notYetTimeout());
 
 		return treatment;
 	}
 
 	public void testChangingFieldsInSingleEditViewAffectsOtherModelsOnlyWhenSavePressed() throws Exception {
+		Treatment previous = getActivity().view.getSingleEditView().getModel();
+
 		String newMedicine = "NEW MEDICINE";
 		solo.clickInList(1);
 
-		timeoutGetSingleEditViewModel(); // Wait for the model to be set, i e the effect of the click to happen
+		timeoutGetSingleEditViewModelChangesFrom(previous); // Wait for the model to be set, i e the effect of the click to happen
 
 		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
 		UUID uuid = treatmentFromList.getUUID();
@@ -325,8 +329,41 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		
 		assertEquals("Medicine changed on file", newMedicine, medicineOnFile);
 		
-		Treatment newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
+		Treatment newTreatmentFromList = null;
+		setStart();
+		do {
+			newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
+			setElapsed();
+		} while (!newMedicine.equals(newTreatmentFromList.getMedicine()) && notYetTimeout());
 		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
+	}
+	
+	public void testClickingNewButtonClearsSingleEditView() throws Exception {
+		Treatment previous = getActivity().view.getSingleEditView().getModel();
+		solo.clickInList(1);
+		
+		Treatment afterClickInList = timeoutGetSingleEditViewModelChangesFrom(previous);
+		
+		solo.clickOnView(solo.getView(R.id.newBTN));
+		
+		Treatment afterClickOnNew = timeoutGetSingleEditViewModelChangesFrom(afterClickInList);
+		
+		Treatment compare = new Treatment();
+		
+		assertBothNullOrBothEqual("Starting date", compare.getStartingDate(), afterClickOnNew.getStartingDate());
+		assertBothNullOrBothEqual("num days", compare.getNumDays(), afterClickOnNew.getNumDays());
+		assertBothNullOrBothEqual("medicine", compare.getMedicine(), afterClickOnNew.getMedicine());
+		assertBothNullOrBothEqual("infection type", compare.getInfectionType(), afterClickOnNew.getInfectionType());
+	}
+
+	private void assertBothNullOrBothEqual(String message, Object expected, Object actual) {
+		if (expected == null) assertNull(message, actual);
+		else assertEquals(message, expected, actual);
+	}
+
+	private void assertBothNullOrBothEqual(String message, String expected, String actual) {
+		if (expected == null || expected.length() == 0) assertTrue(message, actual == null || actual.length() == 0);
+		else assertEquals(message, expected, actual);
 	}
 
 	private ListAdapter getListAdapter() {

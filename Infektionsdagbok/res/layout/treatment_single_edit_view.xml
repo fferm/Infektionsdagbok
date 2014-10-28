@@ -5,9 +5,20 @@
     android:background="@drawable/background" >
     
     <ImageButton
+        android:id="@+id/newBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_new" 
+        style="?android:attr/buttonStyleSmall"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        />
+    
+    <ImageButton
         android:id="@+id/saveBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/newBTN"
         android:src="@drawable/ic_action_save" 
         style="?android:attr/buttonStyleSmall"
         android:layout_marginTop="10dp"
@@ -19,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/infectionTypeEdit"
-        android:layout_below="@id/saveBTN"
+        android:layout_below="@id/newBTN"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"

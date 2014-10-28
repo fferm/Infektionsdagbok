@@ -25,6 +25,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
 	private ImageButton saveBTN;
+	private ImageButton newBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
@@ -58,6 +59,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
+		newBTN = (ImageButton) findViewById(R.id.newBTN);
 	}
 
 	private void setupWidgets() throws Exception {
@@ -66,6 +68,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		setupInfectionTypeEdit();
 		setupNumDaysEdit();
 		setupSaveBTN();
+		setupNewBTN();
 	}
 
 	private void setupStartTV() throws Exception {
@@ -155,10 +158,23 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			}
 		});
 	}
+	
+	private void setupNewBTN() throws Exception {
+		newBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentSingleEditView.this.selectTreatment(new Treatment());
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
+
 
 
 	public void selectTreatment(Treatment treatment) throws Exception {
-		System.out.println("!!!! select treatment: " + treatment);
 		this.model = treatment;
 
 		syncUIWithModel();
