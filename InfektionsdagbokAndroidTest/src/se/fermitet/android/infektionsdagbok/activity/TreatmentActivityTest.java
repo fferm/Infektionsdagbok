@@ -3,6 +3,8 @@ package se.fermitet.android.infektionsdagbok.activity;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -34,6 +36,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	protected void onBeforeActivityCreation() throws Exception {
 		super.onBeforeActivityCreation();
 
+		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
+
 		saveTestData();
 	}
 
@@ -63,7 +67,6 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		testData.add(nullInfection);
 		testData.add(nullStartingDate);
 
-		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
 		mm.saveTreatments(testData);
 	}
 
@@ -296,6 +299,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		timeoutGetSingleEditViewModel(); // Wait for the model to be set, i e the effect of the click to happen
 
 		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
+		UUID uuid = treatmentFromList.getUUID();
+		
 		String oldMedicineInList = treatmentFromList.getMedicine();
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
@@ -304,12 +309,25 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
 		
 		solo.clickOnView(solo.getView(R.id.saveBTN));
-		Thread.sleep(100);
+		
+		String medicineOnFile = null;
+		ModelManager modelManager = getActivity().getLocalApplication().getModelManager();
+		setStart();
+		do {
+			Map<UUID, Treatment> allTreatmentsFromFile = modelManager.getAllTreatments();
+			Treatment savedTreatment = allTreatmentsFromFile.get(uuid);
+			
+			if (savedTreatment != null) {
+				medicineOnFile = savedTreatment.getMedicine();
+			}
+			
+			setElapsed();
+		} while ((medicineOnFile == null || !medicineOnFile.equals(newMedicine)) && notYetTimeout());
+		
+		assertEquals("Medicine changed on file", newMedicine, medicineOnFile);
 		
 		Treatment newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
 		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
-		// TODO: Check list ui is changed
-		// TODO: Check saved file is changed
 	}
 
 	private ListAdapter getListAdapter() {

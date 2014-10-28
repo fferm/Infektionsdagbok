@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnSavePressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentView;
@@ -30,7 +31,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try {
-			fillWithTestData();
+//			fillWithTestData();
 
 			view.getSingleEditView().setOnSavePressedListener(new OnSavePressedListener() {
 				@Override
@@ -54,7 +55,8 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	}
 	
 	private void savePressed(Treatment treatment) throws Exception {
-		
+		getLocalApplication().getModelManager().saveTreatment(treatment);
+		syncListViewDataWithStored();
 	}
 
 	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
@@ -83,6 +85,9 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 
 	// TODO: Delete this
 	private void fillWithTestData() throws Exception {
+		ModelManager mm = getLocalApplication().getModelManager();
+		if (mm.getAllTreatments().size() == 0) return;
+		
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
@@ -108,7 +113,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		testData.add(nullInfection);
 		testData.add(nullStartingDate);
 
-		getLocalApplication().getModelManager().saveTreatments(testData);
+		mm.saveTreatments(testData);
 	}
 }
 

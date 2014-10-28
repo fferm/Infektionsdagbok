@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
-import se.fermitet.android.infektionsdagbok.model.ModelManagerTest;
+import se.fermitet.android.infektionsdagbok.model.ModelManagerTest_WeekAnswers;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
@@ -40,10 +40,10 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 
 		this.mm = new ModelManager(new Storage(getContext()));
 
-		this.testData = ModelManagerTest.prepareTestDataIndexedByWeek(year);
+		this.testData = ModelManagerTest_WeekAnswers.prepareTestDataIndexedByWeek(year);
 		mm.saveWeekAnswers(this.testData.values());
 
-		this.testData53 = ModelManagerTest.prepareTestDataIndexedByWeek(year53);
+		this.testData53 = ModelManagerTest_WeekAnswers.prepareTestDataIndexedByWeek(year53);
 		mm.saveWeekAnswers(this.testData53.values());
 
 		this.sheet = getSheet(year);

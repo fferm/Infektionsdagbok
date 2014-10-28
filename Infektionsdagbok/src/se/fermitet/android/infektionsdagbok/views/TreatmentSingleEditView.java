@@ -92,7 +92,6 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			public void afterTextChanged(Editable s) {
 				try {
 					String newMedicine = medicineEdit.getText().toString();
-					System.out.println("!!!! model: " + TreatmentSingleEditView.this.model);
 					TreatmentSingleEditView.this.model.setMedicine(newMedicine);
 				} catch (Exception e) {
 					handleException(e);

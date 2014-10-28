@@ -12,7 +12,7 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.test.AndroidTestCase;
 
-public class ModelManagerTest extends AndroidTestCase {
+public class ModelManagerTest_WeekAnswers extends AndroidTestCase {
 
 	private ModelManager modelManager;
 
@@ -20,7 +20,6 @@ public class ModelManagerTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		// TODO: maybe this should be done through some factory instead
 		modelManager = new ModelManager(new Storage(getContext()));
 	}
 
@@ -149,6 +148,14 @@ public class ModelManagerTest extends AndroidTestCase {
 		toSave.put(week, new WeekAnswers(week));
 
 		return toSave;
+	}
+	
+	public void testSaveTreatmentForUpdate() throws Exception {
+		
+	}
+	
+	public void testSaveTreatmentForInsert() throws Exception {
+		// TODO
 	}
 }
 

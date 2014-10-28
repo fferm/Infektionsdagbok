@@ -110,6 +110,14 @@ public class ModelManager {
 		return storage.getAllTreatments();
 	}
 
+	public void saveTreatment(Treatment t) throws Exception {
+		Map<UUID, Treatment> treatmentMap = getAllTreatments();
+		
+		treatmentMap.put(t.getUUID(), t);
+		
+		storage.saveTreatments(treatmentMap.values());
+	}
+
 	public void saveTreatments(Collection<Treatment> toSave) throws Exception {
 		storage.saveTreatments(toSave);
 	}
