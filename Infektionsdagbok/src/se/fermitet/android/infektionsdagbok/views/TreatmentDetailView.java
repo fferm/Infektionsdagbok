@@ -18,7 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView implements OnDateSetListener {
+public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView implements OnDateSetListener {
 
 	private TextView startTV;
 	private EditText numDaysEdit;
@@ -33,7 +33,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 	private OnButtonsPressedListener onButtonsPressedListener;
 
-	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
+	public TreatmentDetailView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		model = new Treatment();
 	}
@@ -45,7 +45,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 
 			Activity ctx = (Activity) getContext();
 			LayoutInflater inflater = ctx.getLayoutInflater();
-			inflater.inflate(R.layout.treatment_single_edit_view, this);
+			inflater.inflate(R.layout.treatment_detail_view, this);
 
 			attachWidgets();
 			setupWidgets();
@@ -99,7 +99,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			public void afterTextChanged(Editable s) {
 				try {
 					String newMedicine = medicineEdit.getText().toString();
-					TreatmentSingleEditView.this.model.setMedicine(newMedicine);
+					TreatmentDetailView.this.model.setMedicine(newMedicine);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -119,7 +119,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			public void afterTextChanged(Editable s) {
 				try {
 					String newInfectionType = infectionTypeEdit.getText().toString();
-					TreatmentSingleEditView.this.model.setInfectionType(newInfectionType);
+					TreatmentDetailView.this.model.setInfectionType(newInfectionType);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -141,9 +141,9 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 					String newNumDaysText = numDaysEdit.getText().toString();
 					if (newNumDaysText != null && newNumDaysText.length() > 0) {
 						if (newNumDaysText.equals("null")) {
-							TreatmentSingleEditView.this.model.setNumDays(null);
+							TreatmentDetailView.this.model.setNumDays(null);
 						} else {
-							TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+							TreatmentDetailView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
 						}
 					}
 				} catch (Exception e) {
@@ -158,7 +158,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentSingleEditView.this.onButtonsPressedListener.onSavePressed(getModel());
+					TreatmentDetailView.this.onButtonsPressedListener.onSavePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -171,7 +171,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentSingleEditView.this.selectTreatment(new Treatment());
+					TreatmentDetailView.this.selectTreatment(new Treatment());
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -184,7 +184,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentSingleEditView.this.onButtonsPressedListener.onDeletePressed(getModel());
+					TreatmentDetailView.this.onButtonsPressedListener.onDeletePressed(getModel());
 					reset();
 				} catch (Exception e) {
 					handleException(e);

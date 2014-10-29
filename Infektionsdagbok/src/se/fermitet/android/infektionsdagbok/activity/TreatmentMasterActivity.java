@@ -10,20 +10,14 @@ import org.joda.time.DateTime;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnButtonsPressedListener;
-import se.fermitet.android.infektionsdagbok.views.TreatmentView;
-import android.content.Context;
+import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
+import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
-public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
+public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentMasterView> {
 
-	public TreatmentActivity() {
-		super(R.layout.treatment_view);
+	public TreatmentMasterActivity() {
+		super(R.layout.treatment_master_view);
 	}
 
 	@Override
@@ -32,16 +26,16 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		try {
 //			fillWithTestData();
 
-			view.getSingleEditView().setOnButtonsPressedListener(new OnButtonsPressedListener() {
+/*			view.getSingleEditView().setOnButtonsPressedListener(new OnButtonsPressedListener() {
 				@Override
 				public void onSavePressed(Treatment treatment) throws Exception {
-					TreatmentActivity.this.savePressed(treatment);
+					TreatmentMasterActivity.this.savePressed(treatment);
 				}
 				@Override
 				public void onDeletePressed(Treatment treatment) throws Exception {
-					TreatmentActivity.this.deletePressed(treatment);
+					TreatmentMasterActivity.this.deletePressed(treatment);
 				}
-			});
+			});*/
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
@@ -57,7 +51,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		view.setAdapter(adapter);
 	}
 
-	private void savePressed(Treatment treatment) throws Exception {
+/*	private void savePressed(Treatment treatment) throws Exception {
 		getLocalApplication().getModelManager().saveTreatment(treatment);
 		syncListViewDataWithStored();
 	}
@@ -65,7 +59,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	private void deletePressed(Treatment treatment) throws Exception {
 		getLocalApplication().getModelManager().delete(treatment);
 		syncListViewDataWithStored();
-	}
+	}*/
 
 	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
 		List<Treatment> list = new ArrayList<Treatment>(unsorted);
@@ -125,37 +119,3 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	}
 }
 
-class TreatmentAdapter extends ArrayAdapter<Treatment> {
-
-	private List<Treatment> values;
-
-	public TreatmentAdapter(Context context, List<Treatment> values) {
-		super(context, R.layout.treatment_item, values);
-		this.values = values;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-		View rowView = inflater.inflate(R.layout.treatment_item, parent, false);
-
-		TextView dateView = (TextView) rowView.findViewById(R.id.dateValueField);
-		TextView numDaysView = (TextView) rowView.findViewById(R.id.numDaysValueField);
-
-		Treatment treatment = values.get(position);
-		if (treatment.getStartingDate() == null) {
-			dateView.setText("");
-		} else {
-			dateView.setText(treatment.getStartingDateString());
-		}
-
-		if (treatment.getNumDays() == null) {
-			numDaysView.setText("");
-		} else {
-			numDaysView.setText("" + treatment.getNumDays());
-		}
-
-		return rowView;
-	}
-}

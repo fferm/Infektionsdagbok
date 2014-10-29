@@ -79,7 +79,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 	}
 
 	private void handleActionTreatment() {
-		startActivity(new Intent(this, TreatmentActivity.class));
+		startActivity(new Intent(this, TreatmentMasterActivity.class));
 	}
 
 	@Override

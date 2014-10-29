@@ -40,8 +40,14 @@
             android:screenOrientation="userPortrait" >
         </activity>
         <activity
-            android:name="se.fermitet.android.infektionsdagbok.activity.TreatmentActivity"
-            android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.Questionnaire" 
+            android:name="se.fermitet.android.infektionsdagbok.activity.TreatmentMasterActivity"
+            android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.Questionnaire"
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="se.fermitet.android.infektionsdagbok.activity.TreatmentDetailActivity"
+            android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.TreatmentMasterActivity"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>

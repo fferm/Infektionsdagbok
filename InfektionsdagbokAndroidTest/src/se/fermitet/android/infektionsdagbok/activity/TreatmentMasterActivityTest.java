@@ -1,10 +1,7 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -12,15 +9,12 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
-import android.app.DatePickerDialog;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivity> {
+public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentMasterActivity> {
 
 	private ModelManager mm;
 	private Treatment nullMedicine;
@@ -28,8 +22,8 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	private Treatment nullStartingDate;
 	private Treatment nullNumDays;
 
-	public TreatmentActivityTest() {
-		super(TreatmentActivity.class);
+	public TreatmentMasterActivityTest() {
+		super(TreatmentMasterActivity.class);
 	}
 
 	@Override
@@ -39,37 +33,6 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
 
 		saveTestData();
-	}
-
-	private void saveTestData() throws Exception {
-		ArrayList<Treatment> testData = new ArrayList<Treatment>();
-
-		for (int i = 1; i <= 5; i++) {
-			DateTime date;
-			if (i % 4 == 0) date = DateTime.now().minusDays(i);
-			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
-			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
-			else date = DateTime.now().minusYears(i);
-
-			testData.add(
-					new Treatment(
-							date,
-							i,
-							"INF" + i,
-							"MEDICINE_NAME" + i));
-		}
-
-		nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
-		nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
-		nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
-		nullNumDays = new Treatment(DateTime.now().minusDays(103), null, "INFECT103", "MEDICINE103");
-
-		testData.add(nullMedicine);
-		testData.add(nullInfection);
-		testData.add(nullStartingDate);
-		testData.add(nullNumDays);
-
-		mm.saveTreatments(testData);
 	}
 
 	public void testInitials() throws Exception {
@@ -88,21 +51,9 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
 		searchForTreatmentInListAndCheckDisplayedValues(nullNumDays);
 
-		checkHeaderTextView(R.id.startHeader, "Start:");
-		assertNotNull("Start date text field", solo.getView(R.id.startTV));
-
-		checkHeaderTextView(R.id.numDaysHeader, "Dagar:");
-		assertNotNull("Num days edit text", solo.getView(R.id.numDaysEdit));
-
-		checkHeaderTextView(R.id.medicineHeader, "Preparat:");
-		assertNotNull("Medicine text field", solo.getView(R.id.medicineEdit));
-
-		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
-		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
-
-		assertNotNull("Save button", solo.getView(R.id.saveBTN));
+/*		assertNotNull("Save button", solo.getView(R.id.saveBTN));
 		assertNotNull("New button", solo.getView(R.id.newBTN));
-		assertNotNull("Delete button", solo.getView(R.id.deleteBTN));
+		assertNotNull("Delete button", solo.getView(R.id.deleteBTN));*/
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -124,7 +75,14 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 				} else {
 					assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(treatment.getStartingDateString()));
 				}
-				assertTrue("Should show treatment numDays " + treatment.getNumDays(), numDaysTV.getText().equals("" + treatment.getNumDays()));
+
+				Integer numDays = treatment.getNumDays();
+				CharSequence shownText = numDaysTV.getText();
+				if (numDays == null) {
+					assertTrue("Should show numDays as null", shownText == null || shownText.length() == 0);
+				} else {
+					assertTrue("Should show treatment numDays " + treatment.getNumDays(), numDaysTV.getText().equals("" + treatment.getNumDays()));
+				}
 
 				break;
 			}
@@ -132,11 +90,6 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		assertTrue("Didn't find treatment in list: " + treatment.toString(), foundTreatment);
 	}
 
-	private void checkHeaderTextView(int id, String text) {
-		TextView headerView = (TextView) solo.getView(id);
-		assertNotNull(text + " header null", headerView);
-		assertEquals(text + " header text", text, headerView.getText());
-	}
 
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
 		ListAdapter adapter = getListAdapter();
@@ -155,7 +108,16 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		}
 	}
 
-	public void testClickingOnListViewFillsEditors() throws Exception {
+	public void testClickingOnTreatmentHighlightsIt() throws Exception {
+
+		solo.clickInList(1);
+
+		Thread.sleep(10000);
+
+
+
+	}
+/*	public void testClickingOnListViewFillsEditors() throws Exception {
 		ListAdapter adapter = getListAdapter();
 
 		// Regular
@@ -444,10 +406,42 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	private void assertBothNullOrBothEqual(String message, String expected, String actual) {
 		if (expected == null || expected.length() == 0) assertTrue(message, actual == null || actual.length() == 0);
 		else assertEquals(message, expected, actual);
+	}*/
+
+	private void saveTestData() throws Exception {
+		ArrayList<Treatment> testData = new ArrayList<Treatment>();
+
+		for (int i = 1; i <= 5; i++) {
+			DateTime date;
+			if (i % 4 == 0) date = DateTime.now().minusDays(i);
+			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
+			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
+			else date = DateTime.now().minusYears(i);
+
+			testData.add(
+					new Treatment(
+							date,
+							i,
+							"INF" + i,
+							"MEDICINE_NAME" + i));
+		}
+
+		nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
+		nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
+		nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
+		nullNumDays = new Treatment(DateTime.now().minusDays(103), null, "INFECT103", "MEDICINE103");
+
+		testData.add(nullMedicine);
+		testData.add(nullInfection);
+		testData.add(nullStartingDate);
+		testData.add(nullNumDays);
+
+		mm.saveTreatments(testData);
 	}
 
+
 	private ListAdapter getListAdapter() {
-		TreatmentActivity activity = getActivity();
+		TreatmentMasterActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
 		ListAdapter adapter = listView.getAdapter();
 		return adapter;

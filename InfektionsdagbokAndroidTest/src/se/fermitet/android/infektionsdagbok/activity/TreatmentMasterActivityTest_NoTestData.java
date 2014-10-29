@@ -1,26 +1,13 @@
 package se.fermitet.android.infektionsdagbok.activity;
-import java.util.Map;
-import java.util.UUID;
-
-import org.joda.time.DateTime;
-
-import se.fermitet.android.infektionsdagbok.R;
-import se.fermitet.android.infektionsdagbok.model.Treatment;
-import android.app.DatePickerDialog;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 
-public class TreatmentActivityTest_NoTestData extends ActivityTestWithSolo<TreatmentActivity>{
+public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo<TreatmentMasterActivity>{
 
-	public TreatmentActivityTest_NoTestData() {
-		super(TreatmentActivity.class);
+	public TreatmentMasterActivityTest_NoTestData() {
+		super(TreatmentMasterActivity.class);
 	}
 
-	public void testEnterNewTreatmentFromEmpty() throws Exception {
+/*	public void testEnterNewTreatmentFromEmpty() throws Exception {
 		DateTime startDate = DateTime.now().withMillisOfDay(0);
 		Integer numDays = 100;
 		String infectionType = "INFTYPE";
@@ -86,11 +73,11 @@ public class TreatmentActivityTest_NoTestData extends ActivityTestWithSolo<Treat
 	}
 
 	private ListAdapter getListAdapter() {
-		TreatmentActivity activity = getActivity();
+		TreatmentMasterActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
 		ListAdapter adapter = listView.getAdapter();
 		return adapter;
-	}
+	}*/
 
 
 }

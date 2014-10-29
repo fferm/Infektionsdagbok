@@ -4,6 +4,16 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background" >
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:text="Behandlingar"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <ImageButton
         android:id="@+id/deleteBTN"
         style="?android:attr/buttonStyleSmall"
