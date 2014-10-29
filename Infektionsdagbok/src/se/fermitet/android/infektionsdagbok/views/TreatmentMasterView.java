@@ -41,18 +41,17 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 
 	private void setupWidgets() {
 		startListHeader.setText("Start");
+		startListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
+		
 		numDaysListHeader.setText("Dgr");
-
+		numDaysListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
+		
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				try {
-					listView.setItemChecked(position, true);
-					listView.setSelection(position);
-					((TreatmentAdapter) listView.getAdapter()).setSelectedItem(position);
-//					Treatment treatment = (Treatment) parent.getItemAtPosition(position);
-//					TreatmentMasterView.this.treatmentSingleEditView.selectTreatment(new Treatment(treatment));
+					clickOnPosition(position);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -60,6 +59,31 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 		});
 	}
 
+
+	private void clickOnPosition(int position) throws Exception {
+		handleClicksForItemChecked(position);
+		handleClicksForSelection(position);
+//		Treatment treatment = (Treatment) parent.getItemAtPosition(position);
+//		TreatmentMasterView.this.treatmentSingleEditView.selectTreatment(new Treatment(treatment));
+	}
+	
+	private void handleClicksForItemChecked(int position) throws Exception {
+		if (listView.getCheckedItemPosition() == position) {
+			listView.setItemChecked(position, false);
+		} else {
+			listView.setItemChecked(position, true);
+		}
+	}
+	
+	private void handleClicksForSelection(int position) throws Exception {
+		TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
+		
+		if (adapter.getSelectedPosition() != null && ((int) adapter.getSelectedPosition()) == position) {
+			adapter.setSelectedPosition(null);
+		} else {
+			adapter.setSelectedPosition(position);
+		}
+	}
 
 	public void setAdapter(TreatmentAdapter adapter) {
 		listView.setAdapter(adapter);

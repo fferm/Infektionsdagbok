@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="selectedQuestionBackground">#809D9DA6</color>
+    <color name="appIconBackground">#984C4E</color>
+    
+    <color name="headerBackground">#80A6FF</color>
+    <color name="selectedBackground">#C3D1F3</color>
+    <color name="notSelectedBackground">#FFFFFF</color>
+    <color name="border">#3E6BE6</color>
+    
     
 </resources>

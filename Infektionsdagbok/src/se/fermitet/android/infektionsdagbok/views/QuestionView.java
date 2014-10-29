@@ -73,7 +73,7 @@ public class QuestionView extends InfektionsdabokLinearLayoutView implements Vie
 		boolean checked = this.isChecked();
 
 		if (checked) {
-			this.setBackgroundColor(getContext().getResources().getColor(R.color.selectedQuestionBackground));
+			this.setBackgroundColor(getContext().getResources().getColor(R.color.selectedBackground));
 		} else {
 			this.setBackground(null);
 		}

@@ -9,6 +9,7 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -109,14 +110,43 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 	}
 
 	public void testClickingOnTreatmentHighlightsIt() throws Exception {
-
-		solo.clickInList(1);
-
-		Thread.sleep(10000);
-
-
-
+		checkAdapterSelected(null);
+		
+		solo.clickInList(3);
+		checkAdapterSelected(3);
+		
+		solo.clickInList(2);
+		checkAdapterSelected(2);
+		
+		solo.clickInList(2);
+		checkAdapterSelected(null);
 	}
+	
+	private void checkAdapterSelected(Integer positionOrNull) throws Exception {
+		TreatmentAdapter adapter = getListAdapter();
+
+		Integer selectedPosition = null;
+		boolean condition;
+		setStart();
+		do {
+			selectedPosition = adapter.getSelectedPosition();
+			
+			if (positionOrNull == null) {
+				condition = selectedPosition == null;
+			} else {
+				if (selectedPosition != null) condition = ((positionOrNull - 1) == ((int) selectedPosition));
+				else condition = false;
+			}
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		
+		if (positionOrNull == null) {
+			assertNull("Should have no selection", selectedPosition);
+		} else {
+			assertEquals("Selection position",  positionOrNull - 1, (int) selectedPosition);
+		}
+	}
+
 /*	public void testClickingOnListViewFillsEditors() throws Exception {
 		ListAdapter adapter = getListAdapter();
 
@@ -411,7 +441,7 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 	private void saveTestData() throws Exception {
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 20; i++) {
 			DateTime date;
 			if (i % 4 == 0) date = DateTime.now().minusDays(i);
 			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
@@ -440,10 +470,9 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 	}
 
 
-	private ListAdapter getListAdapter() {
+	private TreatmentAdapter getListAdapter() {
 		TreatmentMasterActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
-		ListAdapter adapter = listView.getAdapter();
-		return adapter;
+		return (TreatmentAdapter) listView.getAdapter();
 	}
 }
