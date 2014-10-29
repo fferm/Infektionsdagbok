@@ -20,7 +20,7 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 	protected static long TIMEOUT = 5000;
 	protected long start, elapsed;
-	
+
 	public ActivityTestWithSolo(Class<T> activityClass) {
 		this(activityClass, DoNotHandleExceptionsFactory.class);
 	}
@@ -61,21 +61,20 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 		app.getModelManager().reset();
 
-		solo.finishOpenedActivities();
 		getActivity().finish();
 		app.clear();
 
 		super.tearDown();
 	}
-	
+
 	protected void setStart() {
 		start = DateTime.now().getMillis();
 	}
-	
+
 	protected void setElapsed() {
 		elapsed = DateTime.now().getMillis() - start;
 	}
-	
+
 	protected boolean notYetTimeout() {
 		return elapsed < TIMEOUT;
 	}

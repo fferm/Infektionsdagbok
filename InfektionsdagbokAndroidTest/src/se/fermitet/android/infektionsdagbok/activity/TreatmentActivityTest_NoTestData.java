@@ -26,6 +26,8 @@ public class TreatmentActivityTest_NoTestData extends ActivityTestWithSolo<Treat
 		String infectionType = "INFTYPE";
 		String medicine = "MEDICINE";
 
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
+
 		// Enter data
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
@@ -52,9 +54,8 @@ public class TreatmentActivityTest_NoTestData extends ActivityTestWithSolo<Treat
 			allFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
 
 			setElapsed();
-		} while (allFromFile.size() != 1 && notYetTimeout());
-		System.out.println("!!! elapsed: " + elapsed);
-		assertEquals("Size after save", 1, allFromFile.size());
+		} while (allFromFile.size() != sizeBefore + 1 && notYetTimeout());
+		assertEquals("Size after save", sizeBefore + 1, allFromFile.size());
 
 		Treatment fromFile = allFromFile.values().iterator().next();
 
