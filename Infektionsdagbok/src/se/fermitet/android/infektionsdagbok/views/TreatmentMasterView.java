@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +16,10 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 	private ListView listView;
 	private TextView startListHeader;
 	private TextView numDaysListHeader;
+	private ImageButton editBTN;
+	private ImageButton deleteBTN;
+	private ImageButton newBTN;
+	private OnButtonsPressedListener onButtonsPressedListener;
 
 //	private TreatmentDetailView treatmentSingleEditView;
 
@@ -25,27 +30,49 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
-		attachWidgets();
-		setupWidgets();
+		try {
+			attachWidgets();
+			setupWidgets();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	private void attachWidgets() {
+	private void attachWidgets() throws Exception {
 		this.listView = (ListView) findViewById(R.id.treatmentListView);
 
 		ViewGroup headerRow = (ViewGroup) findViewById(R.id.header);
 		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
 		numDaysListHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
+		editBTN = (ImageButton) findViewById(R.id.editBTN);
+		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
+		newBTN = (ImageButton) findViewById(R.id.newBTN);
 
 //		treatmentSingleEditView = (TreatmentDetailView) findViewById(R.id.treatmentEdit);
 	}
 
-	private void setupWidgets() {
+	private void setupWidgets() throws Exception {
 		startListHeader.setText("Start");
 		startListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
-		
+
 		numDaysListHeader.setText("Dgr");
 		numDaysListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
-		
+
+		editBTN.setEnabled(false);
+
+		deleteBTN.setEnabled(false);
+
+		newBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentMasterView.this.onButtonsPressedListener.onNewPressed();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -61,32 +88,51 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 
 
 	private void clickOnPosition(int position) throws Exception {
-		handleClicksForItemChecked(position);
-		handleClicksForSelection(position);
+		if (!wasSelectedBefore(position)) {
+			select(position);
+			handleButtonsEnablement(true);
+		} else {
+			deselect(position);
+			handleButtonsEnablement(false);
+		}
 //		Treatment treatment = (Treatment) parent.getItemAtPosition(position);
 //		TreatmentMasterView.this.treatmentSingleEditView.selectTreatment(new Treatment(treatment));
 	}
-	
-	private void handleClicksForItemChecked(int position) throws Exception {
-		if (listView.getCheckedItemPosition() == position) {
-			listView.setItemChecked(position, false);
-		} else {
-			listView.setItemChecked(position, true);
-		}
-	}
-	
-	private void handleClicksForSelection(int position) throws Exception {
+
+	private boolean wasSelectedBefore(int position) throws Exception {
 		TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
-		
-		if (adapter.getSelectedPosition() != null && ((int) adapter.getSelectedPosition()) == position) {
-			adapter.setSelectedPosition(null);
-		} else {
-			adapter.setSelectedPosition(position);
-		}
+		return (adapter.getSelectedPosition() != null && (adapter.getSelectedPosition()) == position);
+	}
+
+	private void select(int position) throws Exception{
+		TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
+
+		listView.setItemChecked(position, true);
+		adapter.setSelectedPosition(position);
+	}
+
+	private void deselect(int position) throws Exception {
+		TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
+
+		listView.setItemChecked(position, false);
+		adapter.setSelectedPosition(null);
+	}
+
+	private void handleButtonsEnablement(boolean isEnabled) {
+		editBTN.setEnabled(isEnabled);
+		deleteBTN.setEnabled(isEnabled);
 	}
 
 	public void setAdapter(TreatmentAdapter adapter) {
 		listView.setAdapter(adapter);
+	}
+
+	public void setOnButtonsPressedListener(OnButtonsPressedListener listener) {
+		this.onButtonsPressedListener = listener;
+	}
+
+	public interface OnButtonsPressedListener {
+		public void onNewPressed() throws Exception;
 	}
 
 /*	public TreatmentDetailView getSingleEditView() {

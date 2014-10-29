@@ -12,6 +12,8 @@ import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
+import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView.OnButtonsPressedListener;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentMasterView> {
@@ -36,6 +38,13 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 					TreatmentMasterActivity.this.deletePressed(treatment);
 				}
 			});*/
+
+			view.setOnButtonsPressedListener(new OnButtonsPressedListener() {
+				@Override
+				public void onNewPressed() throws Exception {
+					startActivity(new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class));
+				}
+			});
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {

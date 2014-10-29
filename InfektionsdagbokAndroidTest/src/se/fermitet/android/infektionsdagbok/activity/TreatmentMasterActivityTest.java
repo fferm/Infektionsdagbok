@@ -11,6 +11,7 @@ import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +52,18 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		searchForTreatmentInListAndCheckDisplayedValues(nullInfection);
 		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
 		searchForTreatmentInListAndCheckDisplayedValues(nullNumDays);
+
+		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
+		assertNotNull("Edit button", editBTN);
+		assertFalse("Edit button enabled", editBTN.isEnabled());
+
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		assertNotNull("Delete button", deleteBTN);
+		assertFalse("Delete button enabled", deleteBTN.isEnabled());
+
+		ImageButton newBTN = (ImageButton) solo.getView(R.id.newBTN);
+		assertNotNull("New button", newBTN);
+		assertTrue("New button enabled", newBTN.isEnabled());
 
 /*		assertNotNull("Save button", solo.getView(R.id.saveBTN));
 		assertNotNull("New button", solo.getView(R.id.newBTN));
@@ -109,19 +122,35 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		}
 	}
 
-	public void testClickingOnTreatmentHighlightsIt() throws Exception {
+	public void testClickingOnTreatmentHighlightsItAndAffectsButtonsEnabledState() throws Exception {
+		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		ImageButton newBTN = (ImageButton) solo.getView(R.id.newBTN);
+
 		checkAdapterSelected(null);
-		
+		timeoutCheckButtonEnabled("edit button enabled", editBTN, false);
+		timeoutCheckButtonEnabled("deleteButton enabled", deleteBTN, false);
+		timeoutCheckButtonEnabled("new button enabled", newBTN, true);
+
 		solo.clickInList(3);
 		checkAdapterSelected(3);
-		
+		timeoutCheckButtonEnabled("edit button enabled", editBTN, true);
+		timeoutCheckButtonEnabled("deleteButton enabled", deleteBTN, true);
+		timeoutCheckButtonEnabled("new button enabled", newBTN, true);
+
 		solo.clickInList(2);
 		checkAdapterSelected(2);
-		
+		timeoutCheckButtonEnabled("edit button enabled", editBTN, true);
+		timeoutCheckButtonEnabled("deleteButton enabled", deleteBTN, true);
+		timeoutCheckButtonEnabled("new button enabled", newBTN, true);
+
 		solo.clickInList(2);
 		checkAdapterSelected(null);
+		timeoutCheckButtonEnabled("edit button enabled", editBTN, false);
+		timeoutCheckButtonEnabled("deleteButton enabled", deleteBTN, false);
+		timeoutCheckButtonEnabled("new button enabled", newBTN, true);
 	}
-	
+
 	private void checkAdapterSelected(Integer positionOrNull) throws Exception {
 		TreatmentAdapter adapter = getListAdapter();
 
@@ -130,21 +159,44 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		setStart();
 		do {
 			selectedPosition = adapter.getSelectedPosition();
-			
+
 			if (positionOrNull == null) {
 				condition = selectedPosition == null;
 			} else {
-				if (selectedPosition != null) condition = ((positionOrNull - 1) == ((int) selectedPosition));
+				if (selectedPosition != null) condition = ((positionOrNull - 1) == (selectedPosition));
 				else condition = false;
 			}
 			setElapsed();
 		} while (!condition && notYetTimeout());
-		
+
 		if (positionOrNull == null) {
 			assertNull("Should have no selection", selectedPosition);
 		} else {
 			assertEquals("Selection position",  positionOrNull - 1, (int) selectedPosition);
 		}
+	}
+
+	private void timeoutCheckButtonEnabled(String message, ImageButton button, boolean shouldBeEnabled) throws Exception {
+		setStart();
+		do {
+			setElapsed();
+		} while (button.isEnabled() != shouldBeEnabled && notYetTimeout());
+		assertTrue(message, button.isEnabled() == shouldBeEnabled);
+	}
+
+	public void testClickingOnNewOpensEmptyTreatmentDetailActivityPlusBackNavigation() throws Exception {
+		solo.clickOnView(solo.getView(R.id.newBTN));
+
+		boolean condition;
+		setStart();
+		do {
+			condition = TreatmentDetailActivity.class.equals(solo.getCurrentActivity().getClass());
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		assertEquals("Should start new activity", TreatmentDetailActivity.class, solo.getCurrentActivity().getClass());
+
+		// TODO: Check empty
+		// TODO: Check back navigation
 	}
 
 /*	public void testClickingOnListViewFillsEditors() throws Exception {

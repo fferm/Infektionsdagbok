@@ -17,11 +17,40 @@
         android:text="Behandlingar"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <ImageButton
+        android:id="@+id/editBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_action_edit" />
+
+    <ImageButton
+        android:id="@+id/newBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_toLeftOf="@id/editBTN"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_action_new" />
+    
+    <ImageButton
+        android:id="@+id/deleteBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/editBTN"
+        android:src="@drawable/ic_action_discard" />
+
     <RelativeLayout
         android:id="@+id/totalTreatmentList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
+        android:layout_below="@id/editBTN"
         android:background="@drawable/thick_border"
         android:padding="3dp" >
 
@@ -29,16 +58,14 @@
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            layout="@layout/treatment_item"
-             />
+            layout="@layout/treatment_item" />
 
         <ListView
             android:id="@+id/treatmentListView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/header"
-            android:background="@drawable/background_not_selected_item"
-             />
+            android:background="@drawable/background_not_selected_item" />
     </RelativeLayout>
 
 </se.fermitet.android.infektionsdagbok.views.TreatmentMasterView>

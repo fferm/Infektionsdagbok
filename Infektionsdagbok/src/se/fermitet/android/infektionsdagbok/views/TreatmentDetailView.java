@@ -212,13 +212,10 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 			startTV.setText(model.getStartingDateString());
 		}
 
-		System.out.println("!!!! model.getNumDays() = " + model.getNumDays());
 		if (model.getNumDays() == null) {
 			numDaysEdit.setText(null);
-			System.out.println("!!!! setting text null");
 		} else {
 			numDaysEdit.setText(model.getNumDays().toString());
-			System.out.println("!!!! setting text");
 		}
 
 		if (model.getMedicine() == null) {
