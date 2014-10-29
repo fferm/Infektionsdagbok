@@ -8,11 +8,11 @@ import org.joda.time.DateTime;
 public class Treatment {
 
 	private DateTime startingDate;
-	private int numDays;
+	private Integer numDays;
 	private String infectionType;
 	private String medicine;
 	private static DateFormat df;
-	
+
 	private UUID uuid;
 
 	static {
@@ -21,11 +21,11 @@ public class Treatment {
 
 	public Treatment() {
 		super();
-		
+
 		this.uuid = UUID.randomUUID();
 	}
 
-	public Treatment(DateTime startingDate, int numDays, String infectionType, String medicine) {
+	public Treatment(DateTime startingDate, Integer numDays, String infectionType, String medicine) {
 		this();
 
 		this.setStartingDate(startingDate);
@@ -36,14 +36,14 @@ public class Treatment {
 
 	public Treatment(Treatment original) {
 		this(original.getStartingDate(), original.getNumDays(), original.getInfectionType(), original.getMedicine());
-		
+
 		this.uuid = original.uuid;
 	}
 
 	public UUID getUUID() {
 		return this.uuid;
 	}
-	
+
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
 	}
@@ -70,11 +70,11 @@ public class Treatment {
 		}
 	}
 
-	public int getNumDays() {
+	public Integer getNumDays() {
 		return numDays;
 	}
 
-	public void setNumDays(int numDays) {
+	public void setNumDays(Integer numDays) {
 		this.numDays = numDays;
 	}
 
@@ -148,7 +148,7 @@ public class Treatment {
 		StringBuffer buf = new StringBuffer();
 
 		buf.append("Treatment{uuid: ").append(getUUID().toString());
-		
+
 		buf.append(", start: ");
 
 		if (getStartingDate() == null) {

@@ -26,15 +26,16 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	private EditText infectionTypeEdit;
 	private ImageButton saveBTN;
 	private ImageButton newBTN;
+	private ImageButton deleteBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
 
-	private OnSavePressedListener onSavePressedListener;
+	private OnButtonsPressedListener onButtonsPressedListener;
 
 	public TreatmentSingleEditView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		this.model = new Treatment();
+		model = new Treatment();
 	}
 
 	@Override
@@ -60,6 +61,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
 		newBTN = (ImageButton) findViewById(R.id.newBTN);
+		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
 	}
 
 	private void setupWidgets() throws Exception {
@@ -69,6 +71,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		setupNumDaysEdit();
 		setupSaveBTN();
 		setupNewBTN();
+		setupDeleteBTN();
 	}
 
 	private void setupStartTV() throws Exception {
@@ -137,7 +140,11 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 				try {
 					String newNumDaysText = numDaysEdit.getText().toString();
 					if (newNumDaysText != null && newNumDaysText.length() > 0) {
-						TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+						if (newNumDaysText.equals("null")) {
+							TreatmentSingleEditView.this.model.setNumDays(null);
+						} else {
+							TreatmentSingleEditView.this.model.setNumDays(Integer.valueOf(newNumDaysText));
+						}
 					}
 				} catch (Exception e) {
 					handleException(e);
@@ -151,14 +158,14 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentSingleEditView.this.onSavePressedListener.onSavePressed(getModel());
+					TreatmentSingleEditView.this.onButtonsPressedListener.onSavePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}
 			}
 		});
 	}
-	
+
 	private void setupNewBTN() throws Exception {
 		newBTN.setOnClickListener(new OnClickListener() {
 			@Override
@@ -172,11 +179,29 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		});
 	}
 
+	private void setupDeleteBTN() throws Exception{
+		deleteBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentSingleEditView.this.onButtonsPressedListener.onDeletePressed(getModel());
+					reset();
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
 
 
 	public void selectTreatment(Treatment treatment) throws Exception {
 		this.model = treatment;
 
+		syncUIWithModel();
+	}
+
+	private void reset() throws Exception {
+		this.model = new Treatment();
 		syncUIWithModel();
 	}
 
@@ -187,7 +212,14 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 			startTV.setText(model.getStartingDateString());
 		}
 
-		numDaysEdit.setText("" + model.getNumDays());
+		System.out.println("!!!! model.getNumDays() = " + model.getNumDays());
+		if (model.getNumDays() == null) {
+			numDaysEdit.setText(null);
+			System.out.println("!!!! setting text null");
+		} else {
+			numDaysEdit.setText(model.getNumDays().toString());
+			System.out.println("!!!! setting text");
+		}
 
 		if (model.getMedicine() == null) {
 			medicineEdit.setText(null);
@@ -205,7 +237,7 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 	private void dateClicked() throws Exception {
 		DateTime startDate = model.getStartingDate();
 		if (startDate == null) startDate = DateTime.now();
-		
+
 		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		dp.show();
 	}
@@ -230,12 +262,13 @@ public class TreatmentSingleEditView extends InfektionsdagbokRelativeLayoutView 
 		}
 	}
 
-	public interface OnSavePressedListener {
+	public interface OnButtonsPressedListener {
 		public void onSavePressed(Treatment treatment) throws Exception;
+		public void onDeletePressed(Treatment treatment) throws Exception;
 	}
 
-	public void setOnSavePressedListener(OnSavePressedListener listener) {
-		this.onSavePressedListener = listener;
+	public void setOnButtonsPressedListener(OnButtonsPressedListener listener) {
+		this.onButtonsPressedListener = listener;
 	}
 
 }

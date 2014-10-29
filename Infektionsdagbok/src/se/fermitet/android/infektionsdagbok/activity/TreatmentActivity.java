@@ -1,5 +1,4 @@
 package se.fermitet.android.infektionsdagbok.activity;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,7 +10,7 @@ import org.joda.time.DateTime;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnSavePressedListener;
+import se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView.OnButtonsPressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentView;
 import android.content.Context;
 import android.os.Bundle;
@@ -33,13 +32,17 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 		try {
 //			fillWithTestData();
 
-			view.getSingleEditView().setOnSavePressedListener(new OnSavePressedListener() {
+			view.getSingleEditView().setOnButtonsPressedListener(new OnButtonsPressedListener() {
 				@Override
 				public void onSavePressed(Treatment treatment) throws Exception {
 					TreatmentActivity.this.savePressed(treatment);
 				}
+				@Override
+				public void onDeletePressed(Treatment treatment) throws Exception {
+					TreatmentActivity.this.deletePressed(treatment);
+				}
 			});
-			
+
 			syncListViewDataWithStored();
 		} catch (Exception e) {
 			view.handleException(e);
@@ -53,9 +56,14 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 
 		view.setAdapter(adapter);
 	}
-	
+
 	private void savePressed(Treatment treatment) throws Exception {
 		getLocalApplication().getModelManager().saveTreatment(treatment);
+		syncListViewDataWithStored();
+	}
+
+	private void deletePressed(Treatment treatment) throws Exception {
+		getLocalApplication().getModelManager().delete(treatment);
 		syncListViewDataWithStored();
 	}
 
@@ -87,7 +95,7 @@ public class TreatmentActivity extends InfektionsdagbokActivity<TreatmentView> {
 	private void fillWithTestData() throws Exception {
 		ModelManager mm = getLocalApplication().getModelManager();
 		if (mm.getAllTreatments().size() == 0) return;
-		
+
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
@@ -141,7 +149,12 @@ class TreatmentAdapter extends ArrayAdapter<Treatment> {
 		} else {
 			dateView.setText(treatment.getStartingDateString());
 		}
-		numDaysView.setText("" + treatment.getNumDays());
+
+		if (treatment.getNumDays() == null) {
+			numDaysView.setText("");
+		} else {
+			numDaysView.setText("" + treatment.getNumDays());
+		}
 
 		return rowView;
 	}

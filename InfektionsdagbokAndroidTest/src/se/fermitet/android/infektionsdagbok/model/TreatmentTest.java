@@ -15,14 +15,14 @@ public class TreatmentTest extends TestCase {
 		assertNull("Null InfectionType", treatment.getInfectionType());
 		assertNull("Null Medicine", treatment.getMedicine());
 		assertNull("Null startingDate", treatment.getStartingDate());
-		assertEquals("0 numDays to start with", 0, treatment.getNumDays());
+		assertNull("Null numDays", treatment.getNumDays());
 	}
 
 	public void testConstructorWithValues() throws Exception {
 		String infectionType ="TESTINFECTIONTYPE";
 		String medicine = "MEDICINE";
 		DateTime startingDate = DateTime.now();
-		int numDays = 5;
+		Integer numDays = 5;
 
 		Treatment treatment = new Treatment(startingDate, numDays, infectionType, medicine);
 
@@ -51,7 +51,7 @@ public class TreatmentTest extends TestCase {
 		UUID testUUID = UUID.randomUUID();
 		treatment.setUUID(testUUID);
 		assertEquals("UUID", testUUID, treatment.getUUID());
-		
+
 		String testInfectionType = "TESTINFECTIONTYPE";
 		treatment.setInfectionType(testInfectionType);
 		assertEquals("Infection type", testInfectionType, treatment.getInfectionType());
@@ -64,7 +64,7 @@ public class TreatmentTest extends TestCase {
 		treatment.setStartingDate(testStartingDate);
 		assertEquals("Starting Date", testStartingDate.withMillisOfDay(0), treatment.getStartingDate());
 
-		int testNumDays = 1000;
+		Integer testNumDays = 1000;
 		treatment.setNumDays(testNumDays);
 		assertEquals("Num days", testNumDays, treatment.getNumDays());
 	}
@@ -108,19 +108,20 @@ public class TreatmentTest extends TestCase {
 
 		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
 		Treatment equal = new Treatment(original);
-		
+
 		Treatment sameValuesDifferentUUID = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
 
 		Treatment nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
 		Treatment nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
 		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
+		Treatment nullNumDays = new Treatment(origStartingDate, null, origInfectionType, origMedicine);
 
 		Treatment diffInfectionType = new Treatment(origStartingDate, origNumDays, "DIFFERENT", origMedicine);
 		Treatment diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
 		Treatment diffStartingDate = new Treatment(new DateTime(2012,1,1,1,1), origNumDays, origInfectionType, origMedicine);
 		Treatment diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
-		
-		
+
+
 		Treatment diffStartingDateButSameDay = new Treatment(original);
 		diffStartingDateButSameDay.setStartingDate(diffStartingDateButSameDay.getStartingDate().plusSeconds(1));
 
@@ -131,6 +132,7 @@ public class TreatmentTest extends TestCase {
 		assertFalse("Not equal to nullInfectionType", original.equals(nullInfectionType));
 		assertFalse("Not equal to nullMedicine", original.equals(nullMedicine));
 		assertFalse("Not equal to nullStartingDate", original.equals(nullStartingDate));
+		assertFalse("Not equal to nullNumDays", original.equals(nullNumDays));
 		assertFalse("Not equal to diffInfectionType", original.equals(diffInfectionType));
 		assertFalse("Not equal to diffMedicine", original.equals(diffMedicine));
 		assertFalse("Not equal to diffStartingDate", original.equals(diffStartingDate));

@@ -22,16 +22,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:layout_marginBottom="10dp"
- />
-    
+        android:layout_marginBottom="10dp" />
+
     <RelativeLayout
         android:id="@+id/listViewLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_below="@id/treatmentEdit"
-       >
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/treatmentEdit" >
 
         <include
             android:id="@+id/header"
@@ -46,9 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
             android:background="@drawable/background"
-                        android:paddingBottom="20dp"
-             />
+            android:paddingBottom="20dp" />
     </RelativeLayout>
-
 
 </se.fermitet.android.infektionsdagbok.views.TreatmentView>

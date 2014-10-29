@@ -13,14 +13,14 @@ public class JsonizerTest extends TestCase {
 
 	public void testToFromWeekAnswers() throws Exception {
 		WeekAnswers wa = new WeekAnswers(new Week(DateTime.now()));
-		
+
 		for (int id : WeekAnswers.questionIds) {
 			wa.setAnswer(id, ! wa.getAnswer(id));
 
 			assertEquals("after changing " + NameFromIdHelper.getNameFromId(id), wa, Jsonizer.weekAnswersFromJSON(Jsonizer.weekAnswersToJSON(wa)));
 		}
 	}
-	
+
 	public void testToFromTreatment() throws Exception {
 		String origInfectionType = "INFTYPE";
 		String origMedicine = "MEDICINE";
@@ -28,14 +28,16 @@ public class JsonizerTest extends TestCase {
 		int origNumDays = 5;
 
 		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
-		
+
 		Treatment nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
 		Treatment nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
 		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
-		
+		Treatment nullNumDays = new Treatment(origStartingDate, null, origInfectionType, origMedicine);
+
 		assertEquals("Original", original, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(original)));
 		assertEquals("nullInfectionType", nullInfectionType, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullInfectionType)));
 		assertEquals("nullMedicine", nullMedicine, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullMedicine)));
 		assertEquals("nullStartingDate", nullStartingDate, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullStartingDate)));
+		assertEquals("nullNumDays", nullNumDays, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullNumDays)));
 	}
 }

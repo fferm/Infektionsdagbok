@@ -26,6 +26,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 	private Treatment nullMedicine;
 	private Treatment nullInfection;
 	private Treatment nullStartingDate;
+	private Treatment nullNumDays;
 
 	public TreatmentActivityTest() {
 		super(TreatmentActivity.class);
@@ -61,10 +62,12 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
 		nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
 		nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
+		nullNumDays = new Treatment(DateTime.now().minusDays(103), null, "INFECT103", "MEDICINE103");
 
 		testData.add(nullMedicine);
 		testData.add(nullInfection);
 		testData.add(nullStartingDate);
+		testData.add(nullNumDays);
 
 		mm.saveTreatments(testData);
 	}
@@ -83,6 +86,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		searchForTreatmentInListAndCheckDisplayedValues(nullStartingDate);
 		searchForTreatmentInListAndCheckDisplayedValues(nullInfection);
 		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
+		searchForTreatmentInListAndCheckDisplayedValues(nullNumDays);
 
 		checkHeaderTextView(R.id.startHeader, "Start:");
 		assertNotNull("Start date text field", solo.getView(R.id.startTV));
@@ -190,7 +194,12 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		}
 
 
-		assertEquals("Num Days text for treatment " + treatment, "" + treatment.getNumDays(), ((EditText) solo.getView(R.id.numDaysEdit)).getText().toString());
+		String numDaysTextFromUI = ((TextView) solo.getView(R.id.numDaysEdit)).getText().toString();
+		if (treatment.getNumDays() == null) {
+			assertTrue("NumDays text for treatment " + treatment + "  was: " + numDaysTextFromUI, (numDaysTextFromUI == null) || (numDaysTextFromUI.length() == 0));
+		} else {
+			assertEquals("NumDays text for treatment " + treatment, treatment.getNumDays().toString(), numDaysTextFromUI);
+		}
 
 
 		String medicineTextFromUI = ((TextView) solo.getView(R.id.medicineEdit)).getText().toString();
@@ -215,7 +224,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		solo.clickInList(1);
 
 		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
-		
+
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
 
@@ -234,13 +243,13 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
 		solo.clickOnButton("StŠll in");
-		
+
 		String startTVText = null;
 		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate());
 		setStart();
 		do {
 			startTVText = startTV.getText().toString();
-			
+
 			setElapsed();
 		} while (!expected.equals(startTVText) && notYetTimeout());
 
@@ -257,10 +266,10 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		Treatment previous = getActivity().view.getSingleEditView().getModel();
 
 		solo.clickInList(1);
-		
+
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
-		int newNumDays = 1000;
+		Integer newNumDays = 1000;
 
 		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
 
@@ -282,11 +291,11 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
 		Treatment treatment = null;
-		
+
 		setStart();
 		do {
 			treatment = getActivity().view.getSingleEditView().getModel();
-			
+
 			setElapsed();
 		} while (treatment.equals(previous) && notYetTimeout());
 		assertTrue("Timeout", notYetTimeout());
@@ -304,32 +313,32 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
 		UUID uuid = treatmentFromList.getUUID();
-		
+
 		String oldMedicineInList = treatmentFromList.getMedicine();
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
 		solo.enterText(medicineEdit, newMedicine);
-		
+
 		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
-		
+
 		solo.clickOnView(solo.getView(R.id.saveBTN));
-		
+
 		String medicineOnFile = null;
 		ModelManager modelManager = getActivity().getLocalApplication().getModelManager();
 		setStart();
 		do {
 			Map<UUID, Treatment> allTreatmentsFromFile = modelManager.getAllTreatments();
 			Treatment savedTreatment = allTreatmentsFromFile.get(uuid);
-			
+
 			if (savedTreatment != null) {
 				medicineOnFile = savedTreatment.getMedicine();
 			}
-			
+
 			setElapsed();
 		} while ((medicineOnFile == null || !medicineOnFile.equals(newMedicine)) && notYetTimeout());
-		
+
 		assertEquals("Medicine changed on file", newMedicine, medicineOnFile);
-		
+
 		Treatment newTreatmentFromList = null;
 		setStart();
 		do {
@@ -338,23 +347,93 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		} while (!newMedicine.equals(newTreatmentFromList.getMedicine()) && notYetTimeout());
 		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
 	}
-	
+
 	public void testClickingNewButtonClearsSingleEditView() throws Exception {
 		Treatment previous = getActivity().view.getSingleEditView().getModel();
 		solo.clickInList(1);
-		
+
 		Treatment afterClickInList = timeoutGetSingleEditViewModelChangesFrom(previous);
-		
+
 		solo.clickOnView(solo.getView(R.id.newBTN));
-		
+
 		Treatment afterClickOnNew = timeoutGetSingleEditViewModelChangesFrom(afterClickInList);
-		
+
 		Treatment compare = new Treatment();
-		
+
 		assertBothNullOrBothEqual("Starting date", compare.getStartingDate(), afterClickOnNew.getStartingDate());
 		assertBothNullOrBothEqual("num days", compare.getNumDays(), afterClickOnNew.getNumDays());
 		assertBothNullOrBothEqual("medicine", compare.getMedicine(), afterClickOnNew.getMedicine());
 		assertBothNullOrBothEqual("infection type", compare.getInfectionType(), afterClickOnNew.getInfectionType());
+	}
+
+	public void testDelete() throws Exception {
+		Treatment previous = getActivity().view.getSingleEditView().getModel();
+		solo.clickInList(1);
+
+		Treatment toDelete = timeoutGetSingleEditViewModelChangesFrom(previous);
+
+		solo.clickOnView(solo.getView(R.id.deleteBTN));
+
+		boolean contains;
+		setStart();
+		do {
+			Map<UUID, Treatment> treatmentsFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
+
+			contains = treatmentsFromFile.containsKey(toDelete.getUUID());
+
+			setElapsed();
+		} while(contains && notYetTimeout());
+		assertFalse("Saved data contains deleted treatment", contains);
+
+
+		setStart();
+		do {
+			setElapsed();
+		} while(adapterContains(toDelete) && notYetTimeout());
+		assertFalse("Adapter contains deleted treatment", adapterContains(toDelete));
+
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		boolean condition;
+		setStart();
+		do {
+			condition = startTV.getText() == null || startTV.getText().length() == 0;
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		assertTrue("Date field should be empty", startTV.getText() == null || startTV.getText().length() == 0);
+
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		setStart();
+		do {
+			condition = numDaysEdit.getText() == null || numDaysEdit.getText().length() == 0;
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		assertTrue("Num days field should be empty.  Was: " + numDaysEdit.getText(), numDaysEdit.getText() == null || numDaysEdit.getText().length() == 0);
+
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		setStart();
+		do {
+			condition = medicineEdit.getText() == null || medicineEdit.getText().length() == 0;
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		assertTrue("Medicine field should be empty", medicineEdit.getText() == null || medicineEdit.getText().length() == 0);
+
+		EditText infTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		setStart();
+		do {
+			condition = infTypeEdit.getText() == null || infTypeEdit.getText().length() == 0;
+			setElapsed();
+		} while (!condition && notYetTimeout());
+		assertTrue("Infection type field should be empty", infTypeEdit.getText() == null || infTypeEdit.getText().length() == 0);
+}
+
+	private boolean adapterContains(Treatment treatment) {
+		ListAdapter adapter = getListAdapter();
+		for(int i = 0; i < adapter.getCount(); i++) {
+			Treatment inAdapter = (Treatment) adapter.getItem(i);
+
+			if(inAdapter.equals(treatment)) return true;
+		}
+		return false;
 	}
 
 	private void assertBothNullOrBothEqual(String message, Object expected, Object actual) {

@@ -22,7 +22,7 @@ public class TreatmentActivityTest_NoTestData extends ActivityTestWithSolo<Treat
 
 	public void testEnterNewTreatmentFromEmpty() throws Exception {
 		DateTime startDate = DateTime.now().withMillisOfDay(0);
-		int numDays = 100;
+		Integer numDays = 100;
 		String infectionType = "INFTYPE";
 		String medicine = "MEDICINE";
 

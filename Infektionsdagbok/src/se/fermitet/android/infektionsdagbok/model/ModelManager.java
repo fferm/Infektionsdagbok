@@ -112,14 +112,23 @@ public class ModelManager {
 
 	public void saveTreatment(Treatment t) throws Exception {
 		Map<UUID, Treatment> treatmentMap = getAllTreatments();
-		
+
 		treatmentMap.put(t.getUUID(), t);
-		
+
 		storage.saveTreatments(treatmentMap.values());
 	}
 
 	public void saveTreatments(Collection<Treatment> toSave) throws Exception {
 		storage.saveTreatments(toSave);
+	}
+
+	public void delete(Treatment toDelete) throws Exception {
+		Map<UUID, Treatment> treatmentMap = getAllTreatments();
+
+		treatmentMap.remove(toDelete.getUUID());
+
+		storage.saveTreatments(treatmentMap.values());
+
 	}
 
 }
