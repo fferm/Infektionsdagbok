@@ -17,27 +17,38 @@
         android:text="Behandlingar"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <include
-        android:id="@+id/header"
+    <se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView
+        android:id="@+id/treatmentEdit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        layout="@layout/treatment_item"
-        android:paddingBottom="10dp" />
-
-    <ListView
-        android:id="@+id/treatmentListView"
+        android:layout_marginBottom="10dp"
+ />
+    
+    <RelativeLayout
+        android:id="@+id/listViewLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/treatmentEdit"
-        android:layout_below="@id/header"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/background" />
+                android:layout_alignParentBottom="true"
+                android:layout_below="@id/treatmentEdit"
+       >
 
-    <se.fermitet.android.infektionsdagbok.views.TreatmentSingleEditView
-        android:id="@id/treatmentEdit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        <include
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/treatment_item"
+            android:paddingBottom="10dp" />
+
+        <ListView
+            android:id="@+id/treatmentListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:background="@drawable/background"
+                        android:paddingBottom="20dp"
+             />
+    </RelativeLayout>
+
 
 </se.fermitet.android.infektionsdagbok.views.TreatmentView>

@@ -42,7 +42,8 @@
         <activity
             android:name="se.fermitet.android.infektionsdagbok.activity.TreatmentActivity"
             android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.Questionnaire" 
-            android:screenOrientation="userPortrait" >
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
     </application>
 
