@@ -98,6 +98,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		assertNotNull("Save button", solo.getView(R.id.saveBTN));
 		assertNotNull("New button", solo.getView(R.id.newBTN));
+		assertNotNull("Delete button", solo.getView(R.id.deleteBTN));
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -214,7 +215,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		solo.clickInList(1);
 
 		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
-		
+
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
 
@@ -233,13 +234,13 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
 		solo.clickOnButton("StŠll in");
-		
+
 		String startTVText = null;
 		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate());
 		setStart();
 		do {
 			startTVText = startTV.getText().toString();
-			
+
 			setElapsed();
 		} while (!expected.equals(startTVText) && notYetTimeout());
 
@@ -256,7 +257,7 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		Treatment previous = getActivity().view.getSingleEditView().getModel();
 
 		solo.clickInList(1);
-		
+
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
 		int newNumDays = 1000;
@@ -281,11 +282,11 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
 		Treatment treatment = null;
-		
+
 		setStart();
 		do {
 			treatment = getActivity().view.getSingleEditView().getModel();
-			
+
 			setElapsed();
 		} while (treatment.equals(previous) && notYetTimeout());
 		assertTrue("Timeout", notYetTimeout());
@@ -303,32 +304,32 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 
 		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
 		UUID uuid = treatmentFromList.getUUID();
-		
+
 		String oldMedicineInList = treatmentFromList.getMedicine();
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
 		solo.enterText(medicineEdit, newMedicine);
-		
+
 		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
-		
+
 		solo.clickOnView(solo.getView(R.id.saveBTN));
-		
+
 		String medicineOnFile = null;
 		ModelManager modelManager = getActivity().getLocalApplication().getModelManager();
 		setStart();
 		do {
 			Map<UUID, Treatment> allTreatmentsFromFile = modelManager.getAllTreatments();
 			Treatment savedTreatment = allTreatmentsFromFile.get(uuid);
-			
+
 			if (savedTreatment != null) {
 				medicineOnFile = savedTreatment.getMedicine();
 			}
-			
+
 			setElapsed();
 		} while ((medicineOnFile == null || !medicineOnFile.equals(newMedicine)) && notYetTimeout());
-		
+
 		assertEquals("Medicine changed on file", newMedicine, medicineOnFile);
-		
+
 		Treatment newTreatmentFromList = null;
 		setStart();
 		do {
@@ -337,19 +338,19 @@ public class TreatmentActivityTest extends ActivityTestWithSolo<TreatmentActivit
 		} while (!newMedicine.equals(newTreatmentFromList.getMedicine()) && notYetTimeout());
 		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
 	}
-	
+
 	public void testClickingNewButtonClearsSingleEditView() throws Exception {
 		Treatment previous = getActivity().view.getSingleEditView().getModel();
 		solo.clickInList(1);
-		
+
 		Treatment afterClickInList = timeoutGetSingleEditViewModelChangesFrom(previous);
-		
+
 		solo.clickOnView(solo.getView(R.id.newBTN));
-		
+
 		Treatment afterClickOnNew = timeoutGetSingleEditViewModelChangesFrom(afterClickInList);
-		
+
 		Treatment compare = new Treatment();
-		
+
 		assertBothNullOrBothEqual("Starting date", compare.getStartingDate(), afterClickOnNew.getStartingDate());
 		assertBothNullOrBothEqual("num days", compare.getNumDays(), afterClickOnNew.getNumDays());
 		assertBothNullOrBothEqual("medicine", compare.getMedicine(), afterClickOnNew.getMedicine());
