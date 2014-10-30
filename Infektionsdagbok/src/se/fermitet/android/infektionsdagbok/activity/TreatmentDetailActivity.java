@@ -31,6 +31,15 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 					view.handleException(e);
 				}
 			}
+
+			@Override
+			public void onCancelPressed() throws Exception {
+				try {
+					finish();
+				} catch (Exception e) {
+					view.handleException(e);
+				}
+			}
 		});
 	}
 

@@ -30,6 +30,9 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 
 		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
+
+		assertNotNull("Save button", solo.getView(R.id.saveBTN));
+		assertNotNull("Cancel button", solo.getView(R.id.cancelBTN));
 	}
 
 	private void checkHeaderTextView(int id, String text) {

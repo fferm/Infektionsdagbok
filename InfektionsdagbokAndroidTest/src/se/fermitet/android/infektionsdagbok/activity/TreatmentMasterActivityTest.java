@@ -67,7 +67,7 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		assertNotNull("New button", newBTN);
 		assertTrue("New button enabled", newBTN.isEnabled());
 
-/*		assertNotNull("Save button", solo.getView(R.id.saveBTN));
+/*
 		assertNotNull("New button", solo.getView(R.id.newBTN));
 		assertNotNull("Delete button", solo.getView(R.id.deleteBTN));*/
 	}

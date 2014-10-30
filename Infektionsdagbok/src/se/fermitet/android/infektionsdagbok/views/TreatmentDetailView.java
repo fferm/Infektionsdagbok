@@ -23,8 +23,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
 	private ImageButton saveBTN;
-/*	private ImageButton newBTN;
-	private ImageButton deleteBTN;*/
+	private ImageButton cancelBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
@@ -53,8 +52,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
-/*		newBTN = (ImageButton) findViewById(R.id.newBTN);
-		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);*/
+		cancelBTN = (ImageButton) findViewById(R.id.cancelBTN);
 	}
 
 	private void setupWidgets() throws Exception {
@@ -63,8 +61,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		setupInfectionTypeEdit();
 		setupNumDaysEdit();
 		setupSaveBTN();
-/*		setupNewBTN();
-		setupDeleteBTN();*/
+		setupCancelBTN();
 	}
 
 	private void setupStartTV() throws Exception {
@@ -159,12 +156,12 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		});
 	}
 
-/*	private void setupNewBTN() throws Exception {
-		newBTN.setOnClickListener(new OnClickListener() {
+	private void setupCancelBTN() throws Exception {
+		cancelBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentDetailView.this.selectTreatment(new Treatment());
+					TreatmentDetailView.this.onButtonPressedListener.onCancelPressed();
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -172,7 +169,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		});
 	}
 
-	private void setupDeleteBTN() throws Exception{
+
+/*	private void setupDeleteBTN() throws Exception{
 		deleteBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -193,10 +191,10 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		syncUIWithModel();
 	}
 
-	private void reset() throws Exception {
+/*	private void reset() throws Exception {
 		this.model = new Treatment();
 		syncUIWithModel();
-	}
+	}*/
 
 	private void syncUIWithModel() throws Exception {
 		if (model.getStartingDate() == null) {
@@ -254,6 +252,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 
 	public interface OnButtonPressedListener {
 		public void onSavePressed(Treatment treatment) throws Exception;
+		public void onCancelPressed() throws Exception;
 	}
 
 	public void setOnButtonPressedListener(OnButtonPressedListener listener) {

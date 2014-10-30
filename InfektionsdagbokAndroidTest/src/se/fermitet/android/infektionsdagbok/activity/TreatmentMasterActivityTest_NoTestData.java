@@ -31,29 +31,8 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 
 		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
 
-		// Click new
-		solo.clickOnView(solo.getView(R.id.newBTN));
-		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
-
-		// Enter data
-		TextView startTV = (TextView) solo.getView(R.id.startTV);
-		solo.clickOnView(startTV);
-		solo.waitForDialogToOpen();
-
-		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
-		DatePicker picker = dialog.getDatePicker();
-
-		solo.setDatePicker(picker, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
-		solo.clickOnButton("Ställ in");
-
-		solo.clearEditText((EditText)solo.getView(R.id.numDaysEdit));
-		solo.enterText((EditText) solo.getView(R.id.numDaysEdit), "" + numDays);
-		solo.enterText((EditText) solo.getView(R.id.medicineEdit), medicine);
-		solo.enterText((EditText) solo.getView(R.id.infectionTypeEdit), infectionType);
-
-		// Click save
-		solo.clickOnView(solo.getView(R.id.saveBTN));
-		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
+		Treatment treatmentWithData = new Treatment(startDate, numDays, infectionType, medicine);
+		clickNewEnterDataPressButtonAndWaitToGoBack(treatmentWithData, R.id.saveBTN);
 
 		// Check saved data
 		Map<UUID, Treatment> allFromFile = null;
@@ -91,6 +70,57 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		assertEquals("Medicine", medicine, inAdapter.getMedicine());
 		assertEquals("InfectionType", infectionType, inAdapter.getInfectionType());
 		assertEquals("UUID", fromFile.getUUID(), inAdapter.getUUID());
+	}
+
+	public void testNewWithCancel() throws Exception {
+		DateTime startDate = DateTime.now().withMillisOfDay(0);
+		Integer numDays = 100;
+		String infectionType = "INFTYPE";
+		String medicine = "MEDICINE";
+
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
+
+		Treatment treatmentWithData = new Treatment(startDate, numDays, infectionType, medicine);
+		clickNewEnterDataPressButtonAndWaitToGoBack(treatmentWithData, R.id.cancelBTN);
+
+		// Check saved data
+		Map<UUID, Treatment> allFromFile = null;
+		setStart();
+		do {
+			allFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
+
+			setElapsed();
+		} while (allFromFile.size() != sizeBefore  && notYetTimeout());
+		assertEquals("Size after save", sizeBefore, allFromFile.size());
+	}
+
+
+
+	protected void clickNewEnterDataPressButtonAndWaitToGoBack(Treatment treatmentWithData, int finishButtonId) throws Exception {
+		// Click new
+		solo.clickOnView(solo.getView(R.id.newBTN));
+		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
+
+		// Enter data
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		solo.clickOnView(startTV);
+		solo.waitForDialogToOpen();
+
+		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
+		DatePicker picker = dialog.getDatePicker();
+
+		DateTime startDate = treatmentWithData.getStartingDate();
+		solo.setDatePicker(picker, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
+		solo.clickOnButton("Ställ in");
+
+		solo.clearEditText((EditText)solo.getView(R.id.numDaysEdit));
+		solo.enterText((EditText) solo.getView(R.id.numDaysEdit), treatmentWithData.getNumDays().toString());
+		solo.enterText((EditText) solo.getView(R.id.medicineEdit), treatmentWithData.getMedicine());
+		solo.enterText((EditText) solo.getView(R.id.infectionTypeEdit), treatmentWithData.getInfectionType());
+
+		// Click save
+		solo.clickOnView(solo.getView(finishButtonId));
+		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 	}
 
 	private Activity timeoutGetCurrentActivity(Class<?> expectedActivityClass) throws Exception {
