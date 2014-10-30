@@ -12,8 +12,10 @@ import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
+import android.app.DatePickerDialog;
 import android.text.Editable;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -355,78 +357,90 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 		// Cancel to go back
 		solo.clickOnView(solo.getView(R.id.cancelBTN));
 		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
-
 	}
 
-/*	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
-		Treatment treatment = null;
+	public void testEditAndSave() throws Exception {
+		DateTime newStart = DateTime.now().withMillisOfDay(0).minusMonths(2);
+		Integer newNumDays = 1000;
+		String newMedicine = "Doxyferm";
+		String newInfectionType = "Förkylning";
 
-		setStart();
-		do {
-			treatment = getActivity().view.getSingleEditView().getModel();
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
 
-			setElapsed();
-		} while (treatment.equals(previous) && notYetTimeout());
-		assertTrue("Timeout", notYetTimeout());
-
-		return treatment;
-	}
-
-	public void testChangingFieldsInSingleEditViewAffectsOtherModelsOnlyWhenSavePressed() throws Exception {
-		Treatment previous = getActivity().view.getSingleEditView().getModel();
-
-		String newMedicine = "NEW MEDICINE";
 		solo.clickInList(1);
+		timeoutCheckAdapterSelected(1);
 
-		timeoutGetSingleEditViewModelChangesFrom(previous); // Wait for the model to be set, i e the effect of the click to happen
+		TreatmentAdapter adapter = getListAdapter();
+		Treatment toEdit = adapter.getItem(0);
+		UUID uuid = toEdit.getUUID();
 
-		Treatment treatmentFromList = (Treatment) getListAdapter().getItem(0);
-		UUID uuid = treatmentFromList.getUUID();
+		solo.clickOnView(solo.getView(R.id.editBTN));
+		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
 
-		String oldMedicineInList = treatmentFromList.getMedicine();
+		// Start editing
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		solo.clickOnView(startTV);
+		solo.waitForDialogToOpen();
+		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
+		DatePicker picker = dialog.getDatePicker();
+
+		solo.setDatePicker(picker, newStart.getYear(), newStart.getMonthOfYear() - 1, newStart.getDayOfMonth());
+		solo.clickOnButton("Ställ in");
+
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		solo.clearEditText(numDaysEdit);
+		solo.enterText(numDaysEdit, newNumDays.toString());
+
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);
 		solo.enterText(medicineEdit, newMedicine);
 
-		assertEquals("No change in list model", oldMedicineInList, treatmentFromList.getMedicine());
+		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		solo.clearEditText(infectionTypeEdit);
+		solo.enterText(infectionTypeEdit, newInfectionType);
 
 		solo.clickOnView(solo.getView(R.id.saveBTN));
+		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 
-		String medicineOnFile = null;
-		ModelManager modelManager = getActivity().getLocalApplication().getModelManager();
+
+		// Check file
+		Map<UUID, Treatment> treatmentsFromFile = null;
+		boolean condition;
 		setStart();
 		do {
-			Map<UUID, Treatment> allTreatmentsFromFile = modelManager.getAllTreatments();
-			Treatment savedTreatment = allTreatmentsFromFile.get(uuid);
+			treatmentsFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
+			Treatment fromFile = treatmentsFromFile.get(uuid);
 
-			if (savedTreatment != null) {
-				medicineOnFile = savedTreatment.getMedicine();
+			condition = (newStart.withMillisOfDay(0).equals(fromFile.getStartingDate().withMillisOfDay(0))) &&
+						(newNumDays.equals(fromFile.getNumDays())) &&
+						(newMedicine.equals(fromFile.getMedicine())) &&
+						(newInfectionType.equals(fromFile.getInfectionType()));
+
+			setElapsed();
+		} while(!condition && notYetTimeout());
+		assertTrue("Found in file", condition);
+		assertEquals("Number of treatments on file", sizeBefore, treatmentsFromFile.size());
+
+		// Check adapter
+		setStart();
+		do {
+			adapter = getListAdapter();
+			for (int i = 0; i < adapter.getCount(); i++) {
+				Treatment inAdapter = adapter.getItem(i);
+
+				condition = (newStart.withMillisOfDay(0).equals(inAdapter.getStartingDate().withMillisOfDay(0))) &&
+						(newNumDays.equals(inAdapter.getNumDays())) &&
+						(newMedicine.equals(inAdapter.getMedicine())) &&
+						(newInfectionType.equals(inAdapter.getInfectionType()));
+
+				if (condition) break;
 			}
 
 			setElapsed();
-		} while ((medicineOnFile == null || !medicineOnFile.equals(newMedicine)) && notYetTimeout());
-
-		assertEquals("Medicine changed on file", newMedicine, medicineOnFile);
-
-		Treatment newTreatmentFromList = null;
-		setStart();
-		do {
-			newTreatmentFromList = (Treatment) getListAdapter().getItem(0);
-			setElapsed();
-		} while (!newMedicine.equals(newTreatmentFromList.getMedicine()) && notYetTimeout());
-		assertEquals("List model after save", newMedicine, newTreatmentFromList.getMedicine());
+		} while(!condition && notYetTimeout());
+		assertTrue("Found in adapter", condition);
+		assertEquals("Number of treatments in adapter", sizeBefore, adapter.getCount());
 	}
-
-
-	private void assertBothNullOrBothEqual(String message, Object expected, Object actual) {
-		if (expected == null) assertNull(message, actual);
-		else assertEquals(message, expected, actual);
-	}
-
-	private void assertBothNullOrBothEqual(String message, String expected, String actual) {
-		if (expected == null || expected.length() == 0) assertTrue(message, actual == null || actual.length() == 0);
-		else assertEquals(message, expected, actual);
-	}*/
 
 	private void saveTestData() throws Exception {
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
