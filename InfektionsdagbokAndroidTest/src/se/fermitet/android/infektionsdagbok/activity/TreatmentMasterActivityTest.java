@@ -10,7 +10,9 @@ import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
+import android.text.Editable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -187,6 +189,7 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 	public void testClickingOnNewOpensEmptyTreatmentDetailActivityPlusBackNavigation() throws Exception {
 		solo.clickOnView(solo.getView(R.id.newBTN));
 
+		// Check that new activity is started
 		boolean condition;
 		setStart();
 		do {
@@ -195,8 +198,35 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		} while (!condition && notYetTimeout());
 		assertEquals("Should start new activity", TreatmentDetailActivity.class, solo.getCurrentActivity().getClass());
 
-		// TODO: Check empty
-		// TODO: Check back navigation
+		// Check empty
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		CharSequence startText = startTV.getText();
+		assertTrue("Start date empty", startText == null || startText.length() == 0);
+
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		Editable numDaysText = numDaysEdit.getText();
+		assertTrue("NumDays empty", numDaysText == null || numDaysText.length() == 0);
+
+		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		Editable infectionTypeText = infectionTypeEdit.getText();
+		assertTrue("infection type empty", infectionTypeText == null || infectionTypeText.length() == 0);
+
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		Editable medicineText = medicineEdit.getText();
+		assertTrue("medicine empty", medicineText == null || medicineText.length() == 0);
+
+		// Check back navigation
+		solo.clickOnActionBarHomeButton();
+
+		Class<?> activityClass = null;
+		setStart();
+		do {
+			activityClass = solo.getCurrentActivity().getClass();
+
+			setElapsed();
+		} while (!TreatmentMasterActivity.class.equals(activityClass) && notYetTimeout());
+
+		assertEquals("Should be back to TreatmentMaster after back click", TreatmentMasterActivity.class,  solo.getCurrentActivity().getClass());
 	}
 
 /*	public void testClickingOnListViewFillsEditors() throws Exception {
@@ -260,49 +290,6 @@ public class TreatmentMasterActivityTest extends ActivityTestWithSolo<TreatmentM
 		} else {
 			assertEquals("Infection type text for treatment " + treatment, treatment.getInfectionType(), infectionTypeTextFromUI);
 		}
-
-	}
-
-	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
-		Treatment previous = getActivity().view.getSingleEditView().getModel();
-		solo.clickInList(1);
-
-		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
-
-		TextView startTV = (TextView) solo.getView(R.id.startTV);
-		solo.clickOnView(startTV);
-
-		assertTrue("Open date dialog", solo.waitForDialogToOpen());
-
-		DatePickerDialog dialog = getActivity().view.getSingleEditView().getDatePickerDialog();
-		assertNotNull("not null dialog", dialog);
-
-		DatePicker picker = dialog.getDatePicker();
-
-		assertEquals("year", treatment.getStartingDate().getYear(), picker.getYear());
-		assertEquals("month", treatment.getStartingDate().getMonthOfYear(), picker.getMonth() + 1);  // picker is 0 based in month
-		assertEquals("day", treatment.getStartingDate().getDayOfMonth(), picker.getDayOfMonth());
-
-		DateTime newDate = new DateTime(2012, 1, 1, 1, 1);
-
-		solo.setDatePicker(picker, newDate.getYear(), newDate.getMonthOfYear() - 1, newDate.getDayOfMonth());
-		solo.clickOnButton("StŠll in");
-
-		String startTVText = null;
-		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate());
-		setStart();
-		do {
-			startTVText = startTV.getText().toString();
-
-			setElapsed();
-		} while (!expected.equals(startTVText) && notYetTimeout());
-
-		assertEquals("Start date field text", expected, startTV.getText());
-
-		DateTime newDateFromView = getActivity().view.getSingleEditView().getModel().getStartingDate();
-		assertEquals("view model date value (year)", newDate.year(), newDateFromView.year());
-		assertEquals("view model date value (month)", newDate.monthOfYear(), newDateFromView.monthOfYear());
-		assertEquals("view model date value (day)", newDate.dayOfMonth(), newDateFromView.dayOfMonth());
 
 	}
 

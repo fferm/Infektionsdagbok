@@ -18,6 +18,8 @@ import android.os.Bundle;
 
 public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentMasterView> {
 
+	protected static final int REQUEST_CODE_NEW = 0;
+
 	public TreatmentMasterActivity() {
 		super(R.layout.treatment_master_view);
 	}
@@ -42,10 +44,21 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 			view.setOnButtonsPressedListener(new OnButtonsPressedListener() {
 				@Override
 				public void onNewPressed() throws Exception {
-					startActivity(new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class));
+					Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
+					startActivityForResult(newIntent, REQUEST_CODE_NEW);
 				}
 			});
 
+			syncListViewDataWithStored();
+		} catch (Exception e) {
+			view.handleException(e);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		try {
 			syncListViewDataWithStored();
 		} catch (Exception e) {
 			view.handleException(e);

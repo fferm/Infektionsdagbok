@@ -1,5 +1,21 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.util.Map;
+import java.util.UUID;
+
+import org.joda.time.DateTime;
+
+import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 
 public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo<TreatmentMasterActivity>{
 
@@ -7,7 +23,7 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		super(TreatmentMasterActivity.class);
 	}
 
-/*	public void testEnterNewTreatmentFromEmpty() throws Exception {
+	public void testEnterNewTreatmentFromEmpty() throws Exception {
 		DateTime startDate = DateTime.now().withMillisOfDay(0);
 		Integer numDays = 100;
 		String infectionType = "INFTYPE";
@@ -15,12 +31,16 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 
 		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
 
+		// Click new
+		solo.clickOnView(solo.getView(R.id.newBTN));
+		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
+
 		// Enter data
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
 		solo.waitForDialogToOpen();
 
-		DatePickerDialog dialog = getActivity().view.getSingleEditView().getDatePickerDialog();
+		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
 		DatePicker picker = dialog.getDatePicker();
 
 		solo.setDatePicker(picker, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
@@ -33,6 +53,7 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 
 		// Click save
 		solo.clickOnView(solo.getView(R.id.saveBTN));
+		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 
 		// Check saved data
 		Map<UUID, Treatment> allFromFile = null;
@@ -52,7 +73,7 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		assertEquals("InfectionType", infectionType, fromFile.getInfectionType());
 
 		// Check in adapter
-		ListAdapter adapter = getListAdapter();
+		TreatmentAdapter adapter = getListAdapter();
 
 		int count;
 		setStart();
@@ -63,7 +84,7 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		} while (count != 1 && notYetTimeout());
 		assertEquals("adapter size",  1, count);
 
-		Treatment inAdapter = (Treatment) adapter.getItem(0);
+		Treatment inAdapter = adapter.getItem(0);
 
 		assertEquals("Start", startDate, inAdapter.getStartingDate());
 		assertEquals("Num days", numDays, inAdapter.getNumDays());
@@ -72,12 +93,24 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		assertEquals("UUID", fromFile.getUUID(), inAdapter.getUUID());
 	}
 
-	private ListAdapter getListAdapter() {
+	private Activity timeoutGetCurrentActivity(Class<?> expectedActivityClass) throws Exception {
+		Activity currentActivity = null;
+		setStart();
+		do {
+			currentActivity = solo.getCurrentActivity();
+			setElapsed();
+		} while (!currentActivity.getClass().equals(expectedActivityClass) && notYetTimeout());
+		assertEquals("Wrong activity class", expectedActivityClass, currentActivity.getClass());
+
+		return currentActivity;
+	}
+
+	private TreatmentAdapter getListAdapter() throws Exception {
 		TreatmentMasterActivity activity = getActivity();
 		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
 		ListAdapter adapter = listView.getAdapter();
-		return adapter;
-	}*/
+		return (TreatmentAdapter) adapter;
+	}
 
 
 }

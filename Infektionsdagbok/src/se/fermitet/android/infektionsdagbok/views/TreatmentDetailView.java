@@ -4,14 +4,12 @@ import org.joda.time.DateTime;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,13 +23,13 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
 	private ImageButton saveBTN;
-	private ImageButton newBTN;
-	private ImageButton deleteBTN;
+/*	private ImageButton newBTN;
+	private ImageButton deleteBTN;*/
 	private DatePickerDialog dp;
 
 	private Treatment model;
 
-	private OnButtonsPressedListener onButtonsPressedListener;
+	private OnButtonPressedListener onButtonPressedListener;
 
 	public TreatmentDetailView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -40,13 +38,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 
 	@Override
 	protected void onFinishInflate() {
+		super.onFinishInflate();
 		try {
-			super.onFinishInflate();
-
-			Activity ctx = (Activity) getContext();
-			LayoutInflater inflater = ctx.getLayoutInflater();
-			inflater.inflate(R.layout.treatment_detail_view, this);
-
 			attachWidgets();
 			setupWidgets();
 		} catch (Exception e) {
@@ -60,8 +53,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
-		newBTN = (ImageButton) findViewById(R.id.newBTN);
-		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
+/*		newBTN = (ImageButton) findViewById(R.id.newBTN);
+		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);*/
 	}
 
 	private void setupWidgets() throws Exception {
@@ -70,8 +63,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		setupInfectionTypeEdit();
 		setupNumDaysEdit();
 		setupSaveBTN();
-		setupNewBTN();
-		setupDeleteBTN();
+/*		setupNewBTN();
+		setupDeleteBTN();*/
 	}
 
 	private void setupStartTV() throws Exception {
@@ -158,7 +151,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentDetailView.this.onButtonsPressedListener.onSavePressed(getModel());
+					TreatmentDetailView.this.onButtonPressedListener.onSavePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -166,7 +159,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		});
 	}
 
-	private void setupNewBTN() throws Exception {
+/*	private void setupNewBTN() throws Exception {
 		newBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -191,7 +184,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 				}
 			}
 		});
-	}
+	}*/
 
 
 	public void selectTreatment(Treatment treatment) throws Exception {
@@ -259,13 +252,12 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		}
 	}
 
-	public interface OnButtonsPressedListener {
+	public interface OnButtonPressedListener {
 		public void onSavePressed(Treatment treatment) throws Exception;
-		public void onDeletePressed(Treatment treatment) throws Exception;
 	}
 
-	public void setOnButtonsPressedListener(OnButtonsPressedListener listener) {
-		this.onButtonsPressedListener = listener;
+	public void setOnButtonPressedListener(OnButtonPressedListener listener) {
+		this.onButtonPressedListener = listener;
 	}
 
 }
