@@ -1,6 +1,7 @@
 package se.fermitet.android.infektionsdagbok.views;
 
 import se.fermitet.android.infektionsdagbok.R;
+import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -61,6 +62,18 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 		editBTN.setEnabled(false);
 
 		deleteBTN.setEnabled(false);
+		deleteBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
+					Treatment selected = adapter.getSelectedTreatment();
+					TreatmentMasterView.this.onButtonsPressedListener.onDeletePressed(selected);
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
 
 		newBTN.setOnClickListener(new OnClickListener() {
 			@Override
@@ -133,9 +146,6 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 
 	public interface OnButtonsPressedListener {
 		public void onNewPressed() throws Exception;
+		public void onDeletePressed(Treatment treatment) throws Exception;
 	}
-
-/*	public TreatmentDetailView getSingleEditView() {
-		return this.treatmentSingleEditView;
-	}*/
 }

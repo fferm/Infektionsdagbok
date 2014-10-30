@@ -71,7 +71,7 @@ public class TreatmentAdapter extends ArrayAdapter<Treatment> {
 	private void highlightChildren(int position, ViewGroup viewGroup) {
 		for (int i = 0; i < viewGroup.getChildCount(); i++) {
 			View child = viewGroup.getChildAt(i);
-			
+
 			highlightItemIfSelected(position, child);
 		}
 	}
@@ -79,9 +79,18 @@ public class TreatmentAdapter extends ArrayAdapter<Treatment> {
 	public void setSelectedPosition(Integer selectedPosition) {
 		this.selectedPosition = selectedPosition;
 	}
-	
+
 	public Integer getSelectedPosition() {
 		return this.selectedPosition;
+	}
+
+	public Treatment getSelectedTreatment() {
+		Integer position = getSelectedPosition();
+		if (position == null) {
+			return null;
+		} else {
+			return getItem(position);
+		}
 	}
 
 

@@ -61,7 +61,7 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 
 		app.getModelManager().reset();
 
-		getActivity().finish();
+		solo.finishOpenedActivities();
 		app.clear();
 
 		super.tearDown();
@@ -78,6 +78,20 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 	protected boolean notYetTimeout() {
 		return elapsed < TIMEOUT;
 	}
+
+	protected Activity timeoutGetCurrentActivity(Class<?> expectedActivityClass) throws Exception {
+		Activity currentActivity = null;
+		setStart();
+		do {
+			currentActivity = solo.getCurrentActivity();
+			setElapsed();
+		} while (!currentActivity.getClass().equals(expectedActivityClass) && notYetTimeout());
+		assertEquals("Wrong activity class", expectedActivityClass, currentActivity.getClass());
+
+		return currentActivity;
+	}
+
+
 
 
 }

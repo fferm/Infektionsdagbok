@@ -41,18 +41,37 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 				}
 			});*/
 
-			view.setOnButtonsPressedListener(new OnButtonsPressedListener() {
-				@Override
-				public void onNewPressed() throws Exception {
-					Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
-					startActivityForResult(newIntent, REQUEST_CODE_NEW);
-				}
-			});
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
 			view.handleException(e);
 		}
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+		view.setOnButtonsPressedListener(new OnButtonsPressedListener() {
+			@Override
+			public void onNewPressed() throws Exception {
+				Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
+				startActivityForResult(newIntent, REQUEST_CODE_NEW);
+			}
+
+			@Override
+			public void onDeletePressed(Treatment treatment) throws Exception {
+				getLocalApplication().getModelManager().delete(treatment);
+				syncListViewDataWithStored();
+			}
+		});
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		view.setOnButtonsPressedListener(null);
 	}
 
 	@Override
@@ -76,12 +95,8 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 /*	private void savePressed(Treatment treatment) throws Exception {
 		getLocalApplication().getModelManager().saveTreatment(treatment);
 		syncListViewDataWithStored();
-	}
-
-	private void deletePressed(Treatment treatment) throws Exception {
-		getLocalApplication().getModelManager().delete(treatment);
-		syncListViewDataWithStored();
 	}*/
+
 
 	private List<Treatment> sortedListOfTreatments(Collection<Treatment> unsorted) {
 		List<Treatment> list = new ArrayList<Treatment>(unsorted);

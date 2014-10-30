@@ -8,19 +8,16 @@ import org.joda.time.DateTime;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo<TreatmentMasterActivity>{
+public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActivityTest{
 
 	public TreatmentMasterActivityTest_NoTestData() {
-		super(TreatmentMasterActivity.class);
+		super();
 	}
 
 	public void testEnterNewTreatmentFromEmpty() throws Exception {
@@ -122,25 +119,4 @@ public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo
 		solo.clickOnView(solo.getView(finishButtonId));
 		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 	}
-
-	private Activity timeoutGetCurrentActivity(Class<?> expectedActivityClass) throws Exception {
-		Activity currentActivity = null;
-		setStart();
-		do {
-			currentActivity = solo.getCurrentActivity();
-			setElapsed();
-		} while (!currentActivity.getClass().equals(expectedActivityClass) && notYetTimeout());
-		assertEquals("Wrong activity class", expectedActivityClass, currentActivity.getClass());
-
-		return currentActivity;
-	}
-
-	private TreatmentAdapter getListAdapter() throws Exception {
-		TreatmentMasterActivity activity = getActivity();
-		ListView listView = (ListView) activity.view.findViewById(R.id.treatmentListView);
-		ListAdapter adapter = listView.getAdapter();
-		return (TreatmentAdapter) adapter;
-	}
-
-
 }
