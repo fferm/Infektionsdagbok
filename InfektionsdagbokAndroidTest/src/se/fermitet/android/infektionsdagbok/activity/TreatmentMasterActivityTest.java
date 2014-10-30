@@ -29,6 +29,16 @@ public abstract class TreatmentMasterActivityTest extends ActivityTestWithSolo<T
 		return false;
 	}
 
+	protected int indexOfTreatmentInAdapter(Treatment treatment) {
+		ListAdapter adapter = getListAdapter();
+		for(int i = 0; i < adapter.getCount(); i++) {
+			Treatment inAdapter = (Treatment) adapter.getItem(i);
+
+			if(inAdapter.equals(treatment)) return i;
+		}
+		return -1;
+	}
+
 
 
 }

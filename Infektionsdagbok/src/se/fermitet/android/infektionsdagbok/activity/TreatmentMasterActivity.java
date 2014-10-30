@@ -18,7 +18,9 @@ import android.os.Bundle;
 
 public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentMasterView> {
 
-	protected static final int REQUEST_CODE_NEW = 0;
+	public static final int REQUEST_CODE_NEW = 0;
+	public static final int REQUEST_CODE_EDIT = 1;
+	public static final String EXTRA_NAME_TREATMENT = "TREATMENT";
 
 	public TreatmentMasterActivity() {
 		super(R.layout.treatment_master_view);
@@ -29,18 +31,6 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 		super.onCreate(savedInstanceState);
 		try {
 //			fillWithTestData();
-
-/*			view.getSingleEditView().setOnButtonsPressedListener(new OnButtonsPressedListener() {
-				@Override
-				public void onSavePressed(Treatment treatment) throws Exception {
-					TreatmentMasterActivity.this.savePressed(treatment);
-				}
-				@Override
-				public void onDeletePressed(Treatment treatment) throws Exception {
-					TreatmentMasterActivity.this.deletePressed(treatment);
-				}
-			});*/
-
 
 			syncListViewDataWithStored();
 		} catch (Exception e) {
@@ -63,6 +53,13 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 			public void onDeletePressed(Treatment treatment) throws Exception {
 				getLocalApplication().getModelManager().delete(treatment);
 				syncListViewDataWithStored();
+			}
+
+			@Override
+			public void onEditPressed(Treatment treatment) throws Exception {
+				Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
+				newIntent.putExtra(EXTRA_NAME_TREATMENT, treatment);
+				startActivityForResult(newIntent, REQUEST_CODE_EDIT);
 			}
 		});
 	}

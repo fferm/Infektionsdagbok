@@ -8,6 +8,8 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentDetailActivity> {
@@ -31,8 +33,17 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 
-		assertNotNull("Save button", solo.getView(R.id.saveBTN));
-		assertNotNull("Cancel button", solo.getView(R.id.cancelBTN));
+		ImageButton saveBTN = (ImageButton) solo.getView(R.id.saveBTN);
+		assertNotNull("Save button", saveBTN);
+		assertTrue("save button enabled", saveBTN.isEnabled());
+
+		ImageButton cancelBTN = (ImageButton) solo.getView(R.id.cancelBTN);
+		assertNotNull("Cancel button", cancelBTN);
+		assertTrue("cancel button enabled", cancelBTN.isEnabled());
+
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		assertNotNull("Delete button", deleteBTN);
+		assertFalse("Delete button enabled", deleteBTN.isEnabled());
 	}
 
 	private void checkHeaderTextView(int id, String text) {
@@ -41,7 +52,7 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		assertEquals(text + " header text", text, headerView.getText());
 	}
 
-	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesField() throws Exception {
+	public void testClickDateFieldOpensDatePickerAndChangingPickerChangesFieldAndModel() throws Exception {
 		Treatment treatment = getActivity().view.getModel();
 		assertNull("start date should be null when starting this test to make the test work", treatment.getStartingDate());
 
@@ -86,9 +97,28 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		assertEquals(messagePrefix + ": " + "view model date value (year)", setTo.year(), newDateFromView.year());
 		assertEquals(messagePrefix + ": " + "view model date value (month)", setTo.monthOfYear(), newDateFromView.monthOfYear());
 		assertEquals(messagePrefix + ": " + "view model date value (day)", setTo.dayOfMonth(), newDateFromView.dayOfMonth());
-
 	}
 
+	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
+		Treatment model = getActivity().view.getModel();
 
+		String newMedicine = "NEW MEDICINE";
+		String newInfectionType = "NEW INFECTION TYPE";
+		Integer newNumDays = 1000;
 
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		solo.clearEditText(medicineEdit);
+		solo.enterText(medicineEdit, newMedicine);
+		assertEquals("Medicine", newMedicine, model.getMedicine());
+
+		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		solo.clearEditText(infectionTypeEdit);
+		solo.enterText(infectionTypeEdit, newInfectionType);
+		assertEquals("Infection type", newInfectionType, model.getInfectionType());
+
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		solo.clearEditText(numDaysEdit);
+		solo.enterText(numDaysEdit, newNumDays.toString());
+		assertEquals("Num days", newNumDays, model.getNumDays());
+	}
 }

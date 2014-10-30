@@ -1,11 +1,14 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
 
-public class Treatment {
+public class Treatment implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private DateTime startingDate;
 	private Integer numDays;

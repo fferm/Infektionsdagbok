@@ -24,6 +24,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	private EditText infectionTypeEdit;
 	private ImageButton saveBTN;
 	private ImageButton cancelBTN;
+	private ImageButton deleteBTN;
 	private DatePickerDialog dp;
 
 	private Treatment model;
@@ -53,6 +54,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
 		cancelBTN = (ImageButton) findViewById(R.id.cancelBTN);
+		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
 	}
 
 	private void setupWidgets() throws Exception {
@@ -62,6 +64,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		setupNumDaysEdit();
 		setupSaveBTN();
 		setupCancelBTN();
+		setupDeleteBTN();
 	}
 
 	private void setupStartTV() throws Exception {
@@ -170,31 +173,27 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	}
 
 
-/*	private void setupDeleteBTN() throws Exception{
+	private void setupDeleteBTN() throws Exception{
+		deleteBTN.setEnabled(false);
 		deleteBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
-					TreatmentDetailView.this.onButtonsPressedListener.onDeletePressed(getModel());
-					reset();
+					TreatmentDetailView.this.onButtonPressedListener.onDeletePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}
 			}
 		});
-	}*/
+	}
 
 
 	public void selectTreatment(Treatment treatment) throws Exception {
 		this.model = treatment;
+		deleteBTN.setEnabled(true);
 
 		syncUIWithModel();
 	}
-
-/*	private void reset() throws Exception {
-		this.model = new Treatment();
-		syncUIWithModel();
-	}*/
 
 	private void syncUIWithModel() throws Exception {
 		if (model.getStartingDate() == null) {
@@ -253,6 +252,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	public interface OnButtonPressedListener {
 		public void onSavePressed(Treatment treatment) throws Exception;
 		public void onCancelPressed() throws Exception;
+		public void onDeletePressed(Treatment treatment) throws Exception;
 	}
 
 	public void setOnButtonPressedListener(OnButtonPressedListener listener) {

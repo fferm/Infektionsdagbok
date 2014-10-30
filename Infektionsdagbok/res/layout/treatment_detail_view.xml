@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
@@ -28,10 +29,19 @@
         android:id="@+id/cancelBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/saveBTN"
         android:layout_below="@id/title"
         android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@id/saveBTN"
         android:src="@drawable/ic_action_cancel" />
+
+    <ImageButton
+        android:id="@+id/deleteBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/saveBTN"
+        android:src="@drawable/ic_action_discard" />
 
     <TextView
         android:id="@+id/startTV"

@@ -67,10 +67,6 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 		ImageButton newBTN = (ImageButton) solo.getView(R.id.newBTN);
 		assertNotNull("New button", newBTN);
 		assertTrue("New button enabled", newBTN.isEnabled());
-
-/*
-		assertNotNull("New button", solo.getView(R.id.newBTN));
-		assertNotNull("Delete button", solo.getView(R.id.deleteBTN));*/
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -216,6 +212,10 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 		Editable medicineText = medicineEdit.getText();
 		assertTrue("medicine empty", medicineText == null || medicineText.length() == 0);
 
+		// Check delete button disabled
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		assertFalse("delete button enabled", deleteBTN.isEnabled());
+
 		// Check back navigation
 		solo.clickOnActionBarHomeButton();
 
@@ -261,42 +261,65 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 	}
 
 	public void testDelete_fromDetail() throws Exception {
-		// TODO
-		fail("TODO");
+		solo.clickInList(1);
+		timeoutCheckAdapterSelected(1);
+
+		TreatmentAdapter adapter = getListAdapter();
+		Treatment toDelete = adapter.getItem(0);
+
+		solo.clickOnView(solo.getView(R.id.editBTN));
+		timeoutGetCurrentActivity(TreatmentDetailActivity.class);
+
+		// Check delete button enabled
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		assertTrue("delete button enabled", deleteBTN.isEnabled());
+
+		solo.clickOnView(solo.getView(R.id.deleteBTN));
+		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
+
+		// Check file
+		boolean contains;
+		setStart();
+		do {
+			Map<UUID, Treatment> treatmentsFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
+
+			contains = treatmentsFromFile.containsKey(toDelete.getUUID());
+
+			setElapsed();
+		} while(contains && notYetTimeout());
+		assertFalse("Saved data contains deleted treatment", contains);
+
+		// Check adapter
+		setStart();
+		do {
+			setElapsed();
+		} while(adapterContains(toDelete) && notYetTimeout());
+		assertFalse("Adapter contains deleted treatment", adapterContains(toDelete));
 	}
 
 
 
-/*	public void testClickingOnListViewFillsEditors() throws Exception {
+	public void testClickingOnListViewFillsEditors() throws Exception {
 		ListAdapter adapter = getListAdapter();
 
 		// Regular
-		clickOnItemInListAndCheckEditorContents((Treatment) adapter.getItem(0));
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack((Treatment) adapter.getItem(0));
 
 		// Nulls
-		clickOnItemInListAndCheckEditorContents(nullStartingDate);
-		clickOnItemInListAndCheckEditorContents(nullMedicine);
-		clickOnItemInListAndCheckEditorContents(nullInfection);
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullStartingDate);
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullMedicine);
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullInfection);
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullNumDays);
 	}
 
-	private void clickOnItemInListAndCheckEditorContents(Treatment treatment) throws Exception {
-		ListAdapter adapter = getListAdapter();
+	private void clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(Treatment treatment) throws Exception {
+		assertTrue("Adapter must contain treatment: " + treatment, adapterContains(treatment));
+		int i = indexOfTreatmentInAdapter(treatment);
 
-		boolean found = false;
-		int i = 0;
-		for ( ; i < adapter.getCount(); i++) {
-			Treatment fromList = (Treatment) adapter.getItem(i);
-			if (fromList.equals(treatment)) {
-				found = true;
-				break;
-			}
-		}
-		assertTrue("Didn't find treatment " + treatment, found);
-
-		solo.waitForText("" + treatment.getNumDays(), 1, 500, true);
-		solo.clickOnText("" + treatment.getNumDays());
-//		solo.clickInList(i + 1);
+		solo.clickInList(i + 1);
 		Thread.sleep(100);
+		solo.clickOnView(solo.getView(R.id.editBTN));
+		timeoutGetCurrentActivity(TreatmentDetailActivity.class);
 
 		CharSequence dateTextFromUI = ((TextView) solo.getView(R.id.startTV)).getText();
 		if (treatment.getStartingDate() == null) {
@@ -329,36 +352,13 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 			assertEquals("Infection type text for treatment " + treatment, treatment.getInfectionType(), infectionTypeTextFromUI);
 		}
 
+		// Cancel to go back
+		solo.clickOnView(solo.getView(R.id.cancelBTN));
+		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
+
 	}
 
-	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
-		Treatment previous = getActivity().view.getSingleEditView().getModel();
-
-		solo.clickInList(1);
-
-		String newMedicine = "NEW MEDICINE";
-		String newInfectionType = "NEW INFECTION TYPE";
-		Integer newNumDays = 1000;
-
-		Treatment treatment = timeoutGetSingleEditViewModelChangesFrom(previous);
-
-		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
-		solo.clearEditText(medicineEdit);
-		solo.enterText(medicineEdit, newMedicine);
-		assertEquals("Medicine", newMedicine, treatment.getMedicine());
-
-		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
-		solo.clearEditText(infectionTypeEdit);
-		solo.enterText(infectionTypeEdit, newInfectionType);
-		assertEquals("Infection type", newInfectionType, treatment.getInfectionType());
-
-		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
-		solo.clearEditText(numDaysEdit);
-		solo.enterText(numDaysEdit, "" + newNumDays);
-		assertEquals("Num days", newNumDays, treatment.getNumDays());
-	}
-
-	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
+/*	protected Treatment timeoutGetSingleEditViewModelChangesFrom(Treatment previous) throws Exception {
 		Treatment treatment = null;
 
 		setStart();

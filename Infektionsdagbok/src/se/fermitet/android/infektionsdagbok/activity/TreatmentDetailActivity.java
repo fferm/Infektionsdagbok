@@ -4,6 +4,7 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentDetailView;
 import se.fermitet.android.infektionsdagbok.views.TreatmentDetailView.OnButtonPressedListener;
+import android.content.Intent;
 import android.os.Bundle;
 
 public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentDetailView>{
@@ -14,7 +15,17 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		try {
+			super.onCreate(savedInstanceState);
+
+			Intent intent = getIntent();
+			Treatment toEdit = (Treatment) intent.getSerializableExtra(TreatmentMasterActivity.EXTRA_NAME_TREATMENT);
+			if (toEdit != null) {
+				view.selectTreatment(toEdit);
+			}
+		} catch (Exception e) {
+			view.handleException(e);
+		}
 	}
 
 	@Override
@@ -24,21 +35,19 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 		view.setOnButtonPressedListener(new OnButtonPressedListener() {
 			@Override
 			public void onSavePressed(Treatment treatment) throws Exception {
-				try {
-					getLocalApplication().getModelManager().saveTreatment(treatment);
-					finish();
-				} catch (Exception e) {
-					view.handleException(e);
-				}
+				getLocalApplication().getModelManager().saveTreatment(treatment);
+				finish();
 			}
 
 			@Override
 			public void onCancelPressed() throws Exception {
-				try {
-					finish();
-				} catch (Exception e) {
-					view.handleException(e);
-				}
+				finish();
+			}
+
+			@Override
+			public void onDeletePressed(Treatment treatment) throws Exception {
+				getLocalApplication().getModelManager().delete(treatment);
+				finish();
 			}
 		});
 	}

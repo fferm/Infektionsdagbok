@@ -22,8 +22,6 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 	private ImageButton newBTN;
 	private OnButtonsPressedListener onButtonsPressedListener;
 
-//	private TreatmentDetailView treatmentSingleEditView;
-
 	public TreatmentMasterView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -48,19 +46,32 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 		editBTN = (ImageButton) findViewById(R.id.editBTN);
 		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
 		newBTN = (ImageButton) findViewById(R.id.newBTN);
-
-//		treatmentSingleEditView = (TreatmentDetailView) findViewById(R.id.treatmentEdit);
 	}
 
 	private void setupWidgets() throws Exception {
-		startListHeader.setText("Start");
-		startListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
+		setupEditBTN();
+		setupDeleteBTN();
+		setupNewBTN();
+		setupListView();
+	}
 
-		numDaysListHeader.setText("Dgr");
-		numDaysListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
-
+	protected void setupEditBTN() {
 		editBTN.setEnabled(false);
+		editBTN.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
+					Treatment selected = adapter.getSelectedTreatment();
+					TreatmentMasterView.this.onButtonsPressedListener.onEditPressed(selected);
+				} catch (Exception e) {
+					handleException(e);
+				}
+			}
+		});
+	}
 
+	protected void setupDeleteBTN() {
 		deleteBTN.setEnabled(false);
 		deleteBTN.setOnClickListener(new OnClickListener() {
 			@Override
@@ -74,7 +85,9 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 				}
 			}
 		});
+	}
 
+	protected void setupNewBTN() {
 		newBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -85,6 +98,14 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 				}
 			}
 		});
+	}
+
+	protected void setupListView() {
+		startListHeader.setText("Start");
+		startListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
+
+		numDaysListHeader.setText("Dgr");
+		numDaysListHeader.setBackground(getResources().getDrawable(R.drawable.background_header));
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -108,8 +129,8 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 			deselect(position);
 			handleButtonsEnablement(false);
 		}
-//		Treatment treatment = (Treatment) parent.getItemAtPosition(position);
-//		TreatmentMasterView.this.treatmentSingleEditView.selectTreatment(new Treatment(treatment));
+		//		Treatment treatment = (Treatment) parent.getItemAtPosition(position);
+		//		TreatmentMasterView.this.treatmentSingleEditView.selectTreatment(new Treatment(treatment));
 	}
 
 	private boolean wasSelectedBefore(int position) throws Exception {
@@ -147,5 +168,6 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 	public interface OnButtonsPressedListener {
 		public void onNewPressed() throws Exception;
 		public void onDeletePressed(Treatment treatment) throws Exception;
+		public void onEditPressed(Treatment treatment) throws Exception;
 	}
 }
