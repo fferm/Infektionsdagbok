@@ -51,6 +51,12 @@
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="stateHidden" >
         </activity>
+        <activity
+            android:name="se.fermitet.android.infektionsdagbok.activity.SickDayMasterActivity"
+            android:parentActivityName="se.fermitet.android.infektionsdagbok.activity.Questionnaire"
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
     </application>
 
 </manifest>

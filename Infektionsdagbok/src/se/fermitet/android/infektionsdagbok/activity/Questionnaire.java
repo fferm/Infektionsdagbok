@@ -64,22 +64,17 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.actionExport:
-			handleActionExport();
+			startActivity(new Intent(this, ExportActivity.class));
 			return true;
 		case R.id.actionTreatment:
-			handleActionTreatment();
+			startActivity(new Intent(this, TreatmentMasterActivity.class));
+			return true;
+		case R.id.actionSickDay:
+			startActivity(new Intent(this, SickDayMasterActivity.class));
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	private void handleActionExport() {
-		startActivity(new Intent(this, ExportActivity.class));
-	}
-
-	private void handleActionTreatment() {
-		startActivity(new Intent(this, TreatmentMasterActivity.class));
 	}
 
 	@Override
