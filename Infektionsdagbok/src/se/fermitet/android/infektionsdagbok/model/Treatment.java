@@ -1,12 +1,10 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import java.io.Serializable;
 import java.text.DateFormat;
-import java.util.UUID;
 
 import org.joda.time.DateTime;
 
-public class Treatment implements Serializable {
+public class Treatment extends ModelObjectBase {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,16 +14,12 @@ public class Treatment implements Serializable {
 	private String medicine;
 	private static DateFormat df;
 
-	private UUID uuid;
-
 	static {
 		df = DateFormat.getDateInstance(DateFormat.SHORT);
 	}
 
 	public Treatment() {
 		super();
-
-		this.uuid = UUID.randomUUID();
 	}
 
 	public Treatment(DateTime startingDate, Integer numDays, String infectionType, String medicine) {
@@ -40,15 +34,7 @@ public class Treatment implements Serializable {
 	public Treatment(Treatment original) {
 		this(original.getStartingDate(), original.getNumDays(), original.getInfectionType(), original.getMedicine());
 
-		this.uuid = original.uuid;
-	}
-
-	public UUID getUUID() {
-		return this.uuid;
-	}
-
-	public void setUUID(UUID uuid) {
-		this.uuid = uuid;
+		setUUID(original.getUUID());
 	}
 
 	public DateTime getStartingDate() {
@@ -100,15 +86,19 @@ public class Treatment implements Serializable {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
+		result = prime
+				* result
+				+ ((this.infectionType == null) ? 0 : this.infectionType
+						.hashCode());
 		result = prime * result
-				+ ((infectionType == null) ? 0 : infectionType.hashCode());
+				+ ((this.medicine == null) ? 0 : this.medicine.hashCode());
 		result = prime * result
-				+ ((medicine == null) ? 0 : medicine.hashCode());
-		result = prime * result + numDays;
-		result = prime * result
-				+ ((startingDate == null) ? 0 : startingDate.hashCode());
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+				+ ((this.numDays == null) ? 0 : this.numDays.hashCode());
+		result = prime
+				* result
+				+ ((this.startingDate == null) ? 0 : this.startingDate
+						.hashCode());
 		return result;
 	}
 
@@ -116,32 +106,30 @@ public class Treatment implements Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Treatment other = (Treatment) obj;
-		if (infectionType == null) {
+		if (this.infectionType == null) {
 			if (other.infectionType != null)
 				return false;
-		} else if (!infectionType.equals(other.infectionType))
+		} else if (!this.infectionType.equals(other.infectionType))
 			return false;
-		if (medicine == null) {
+		if (this.medicine == null) {
 			if (other.medicine != null)
 				return false;
-		} else if (!medicine.equals(other.medicine))
+		} else if (!this.medicine.equals(other.medicine))
 			return false;
-		if (numDays != other.numDays)
+		if (this.numDays == null) {
+			if (other.numDays != null)
+				return false;
+		} else if (!this.numDays.equals(other.numDays))
 			return false;
-		if (startingDate == null) {
+		if (this.startingDate == null) {
 			if (other.startingDate != null)
 				return false;
-		} else if (!startingDate.equals(other.startingDate))
-			return false;
-		if (uuid == null) {
-			if (other.uuid != null)
-				return false;
-		} else if (!uuid.equals(other.uuid))
+		} else if (!this.startingDate.equals(other.startingDate))
 			return false;
 		return true;
 	}

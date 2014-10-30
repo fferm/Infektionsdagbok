@@ -12,6 +12,7 @@ public class TreatmentTest extends TestCase {
 	public void testStartingValues() throws Exception {
 		Treatment treatment = new Treatment();
 
+		assertNotNull("Not null uuid", treatment.getUUID());
 		assertNull("Null InfectionType", treatment.getInfectionType());
 		assertNull("Null Medicine", treatment.getMedicine());
 		assertNull("Null startingDate", treatment.getStartingDate());
@@ -120,7 +121,6 @@ public class TreatmentTest extends TestCase {
 		Treatment diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
 		Treatment diffStartingDate = new Treatment(new DateTime(2012,1,1,1,1), origNumDays, origInfectionType, origMedicine);
 		Treatment diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
-
 
 		Treatment diffStartingDateButSameDay = new Treatment(original);
 		diffStartingDateButSameDay.setStartingDate(diffStartingDateButSameDay.getStartingDate().plusSeconds(1));
