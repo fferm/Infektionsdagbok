@@ -3,7 +3,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
@@ -21,7 +21,7 @@ public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActiv
 	}
 
 	public void testEnterNewTreatmentFromEmpty() throws Exception {
-		DateTime startDate = DateTime.now().withMillisOfDay(0);
+		LocalDate startDate = LocalDate.now();
 		Integer numDays = 100;
 		String infectionType = "INFTYPE";
 		String medicine = "MEDICINE";
@@ -70,7 +70,7 @@ public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActiv
 	}
 
 	public void testNewWithCancel() throws Exception {
-		DateTime startDate = DateTime.now().withMillisOfDay(0);
+		LocalDate startDate = LocalDate.now();
 		Integer numDays = 100;
 		String infectionType = "INFTYPE";
 		String medicine = "MEDICINE";
@@ -106,7 +106,7 @@ public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActiv
 		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
 		DatePicker picker = dialog.getDatePicker();
 
-		DateTime startDate = treatmentWithData.getStartingDate();
+		LocalDate startDate = treatmentWithData.getStartingDate();
 		solo.setDatePicker(picker, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		solo.clickOnButton("Ställ in");
 

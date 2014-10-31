@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
@@ -101,14 +101,11 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 		Collections.sort(list, new Comparator<Treatment>() {
 			@Override
 			public int compare(Treatment lhs, Treatment rhs) {
-				DateTime lhsDate = lhs.getStartingDate();
-				DateTime rhsDate = rhs.getStartingDate();
+				LocalDate lhsDate = lhs.getStartingDate();
+				LocalDate rhsDate = rhs.getStartingDate();
 
 				if (lhsDate == null) return 1;
 				if (rhsDate == null) return -1;
-
-				lhsDate = lhsDate.withMillisOfDay(0);
-				rhsDate = rhsDate.withMillisOfDay(0);
 
 				if (lhsDate.isBefore(rhsDate)) return 1;
 				else if (lhsDate.equals(rhsDate)) return 0;
@@ -127,11 +124,11 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
-			DateTime date;
-			if (i % 4 == 0) date = DateTime.now().minusDays(i);
-			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
-			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
-			else date = DateTime.now().minusYears(i);
+			LocalDate date;
+			if (i % 4 == 0) date = LocalDate.now().minusDays(i);
+			else if (i % 4 == 1) date = LocalDate.now().minusWeeks(i);
+			else if (i % 4 == 2) date = LocalDate.now().minusMonths(i);
+			else date = LocalDate.now().minusYears(i);
 
 			testData.add(
 					new Treatment(
@@ -141,8 +138,8 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 							"MEDICINE_NAME" + i));
 		}
 
-		Treatment nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
-		Treatment nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
+		Treatment nullMedicine = new Treatment(LocalDate.now().minusDays(100), 100, "INFECTION", null);
+		Treatment nullInfection = new Treatment(LocalDate.now().minusDays(101), 101, null, "MEDICINE");
 		Treatment nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
 
 		testData.add(nullMedicine);

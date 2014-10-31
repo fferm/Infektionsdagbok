@@ -1,6 +1,6 @@
 package se.fermitet.android.infektionsdagbok.views;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
@@ -222,8 +222,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	}
 
 	private void dateClicked() throws Exception {
-		DateTime startDate = model.getStartingDate();
-		if (startDate == null) startDate = DateTime.now();
+		LocalDate startDate = model.getStartingDate();
+		if (startDate == null) startDate = LocalDate.now();
 
 		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
 		dp.show();
@@ -240,7 +240,7 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 		try {
-			DateTime newDate = DateTime.now().withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
+			LocalDate newDate = LocalDate.now().withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
 			model.setStartingDate(newDate);
 
 			syncUIWithModel();

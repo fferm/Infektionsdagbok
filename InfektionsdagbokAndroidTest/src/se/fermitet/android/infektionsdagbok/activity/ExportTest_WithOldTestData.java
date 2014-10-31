@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
@@ -48,14 +49,14 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 	private void addOldTestData() throws Exception {
 		int firstYear = 2012;
-		int currentYear = DateTime.now().year().get();
+		int currentYear = LocalDate.now().year().get();
 		this.desiredYears = new int[currentYear - firstYear + 1];
 		for (int i = 0; i < desiredYears.length; i++) {
 			int yearToWrite = currentYear - i;
 			desiredYears[i] = yearToWrite;
 		}
 
-		WeekAnswers waFirst = new WeekAnswers(new Week(new DateTime(firstYear, 2, 1, 1, 1))); // February to avoid 2011-52
+		WeekAnswers waFirst = new WeekAnswers(new Week(new LocalDate(firstYear, 2, 1))); // February to avoid 2011-52
 
 		Collection<WeekAnswers> collection = new ArrayList<WeekAnswers>();
 		collection.add(waFirst);
@@ -81,7 +82,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 	public void testSpinnerShouldShowCurrentYearWhenStarted() throws Exception {
 		Spinner yearSpinner = (Spinner) solo.getView(R.id.yearSpinner);
 
-		assertEquals(DateTime.now().weekyear().get(), yearSpinner.getSelectedItem());
+		assertEquals(LocalDate.now().weekyear().get(), yearSpinner.getSelectedItem());
 	}
 
 	public void testExportCreatesFileAndCallsEmailHandler() throws Exception {
@@ -93,7 +94,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		solo.clickOnView(solo.getView(R.id.exportBTN));
 
 		File foundFile = timeoutSearchForFileWithName(expectedFileName);
-		
+
 		DateTime lastModified = new DateTime(foundFile.lastModified());
 		Duration duration = new Duration(lastModified, DateTime.now());
 
@@ -104,7 +105,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		EmailHandler mockedEmailHandler = getActivity().getLocalApplication().getEmailHandler();
 		verify(mockedEmailHandler, timeout((int) TIMEOUT)).sendEmail(foundFile, getActivity());
 	}
-	
+
 	private void removeOldFile(String expectedFileName) {
 		File oldFile = getFileFromStorage(expectedFileName);
 		if (oldFile != null) {
@@ -114,7 +115,7 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 	private File timeoutSearchForFileWithName(String expectedFileName) {
 		File foundFile = null;
-		
+
 		setStart();
 		do {
 			foundFile = getFileFromStorage(expectedFileName);
@@ -143,12 +144,12 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 
 
 	public void testGetSelectedYear() throws Exception {
-		assertEquals("Before setting, should be current", DateTime.now().weekyear().get(), getActivity().getView().getSelectedYear());
+		assertEquals("Before setting, should be current", LocalDate.now().weekyear().get(), getActivity().getView().getSelectedYear());
 
 		int changedYear = 2013;
 		setYearSpinnerToDesiredYear(changedYear);
 
-		assertEquals("After setting, should be changed", DateTime.now().weekyear().get(), getActivity().getView().getSelectedYear());
+		assertEquals("After setting, should be changed", LocalDate.now().weekyear().get(), getActivity().getView().getSelectedYear());
 
 	}
 
@@ -163,13 +164,13 @@ public class ExportTest_WithOldTestData extends ActivityTestWithSolo<ExportActiv
 		solo.enterText(ssnEdit, testSSN);
 
 		solo.clickOnView(solo.getView(R.id.exportBTN));
-		
+
 		Workbook wb;
-		
+
 		setStart();
 		do {
 			wb = getActivity().wb;
-			
+
 			setElapsed();
 		} while (wb == null && notYetTimeout());
 		assertNotNull("Workbook null", wb);

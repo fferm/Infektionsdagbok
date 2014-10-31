@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.test.AndroidTestCase;
@@ -33,7 +33,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		Map<UUID, Treatment> initial = modelManager.getAllTreatments();
 		assertEquals("initial size", 0, initial.size());
 
-		Treatment t1 = new Treatment(DateTime.now(), 1, "INF1", "MED1");
+		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
 		modelManager.saveTreatment(t1);
 
 		Map<UUID, Treatment> afterFirstSave = modelManager.getAllTreatments();
@@ -53,9 +53,9 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 	}
 
 	public void testSaveTreatments() throws Exception {
-		Treatment t1 = new Treatment(DateTime.now().plusSeconds(1), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(DateTime.now().plusSeconds(2), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(DateTime.now().plusSeconds(3), 3, "INF3", "MED3");
+		Treatment t1 = new Treatment(LocalDate.now().plusDays(1), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(LocalDate.now().plusDays(2), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(LocalDate.now().plusDays(3), 3, "INF3", "MED3");
 
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 		toSave.add(t1);
@@ -71,9 +71,9 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 	}
 
 	public void testDeleteTreatment() throws Exception {
-		Treatment t1 = new Treatment(DateTime.now().plusSeconds(1), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(DateTime.now().plusSeconds(2), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(DateTime.now().plusSeconds(3), 3, "INF3", "MED3");
+		Treatment t1 = new Treatment(LocalDate.now().plusDays(1), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(LocalDate.now().plusDays(2), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(LocalDate.now().plusDays(3), 3, "INF3", "MED3");
 
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 		toSave.add(t1);

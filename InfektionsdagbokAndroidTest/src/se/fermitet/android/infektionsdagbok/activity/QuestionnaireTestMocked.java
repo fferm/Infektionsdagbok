@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.Factory;
@@ -44,22 +45,22 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 	public void testClickingAnswersChangesModel() throws Exception {
 		WeekAnswers model = getActivity().model;
-		
+
 		for (Integer idObj : WeekAnswers.questionIds) {
 			int id = idObj.intValue();
 			boolean before = model.getAnswer(id);
 
 			clickOnQuestionWithId(id);
-			
+
 			boolean after;
 
 			setStart();
 			do {
 				after = model.getAnswer(id);
-				
+
 				setElapsed();
 			} while (after == before && notYetTimeout());
-			
+
 			assertTrue(NameFromIdHelper.getNameFromId(id) + " after", before != model.getAnswer(id));
 		}
 	}
@@ -115,7 +116,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 		solo.clickOnView(solo.getView(R.id.previousWeek));
 		Thread.sleep(1000);
 
-		verify(storage, timeout((int) TIMEOUT)).getAnswersForWeek(new Week(new DateTime()));
+		verify(storage, timeout((int) TIMEOUT)).getAnswersForWeek(new Week(new LocalDate()));
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {

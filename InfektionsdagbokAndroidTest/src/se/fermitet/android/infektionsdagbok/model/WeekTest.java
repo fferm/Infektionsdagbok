@@ -2,12 +2,12 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class WeekTest extends TestCase {
 
 	public void testTextualRepresentation() {
-		DateTime dt = new DateTime();
+		LocalDate dt = new LocalDate();
 
 		Week w = new Week(dt);
 
@@ -15,7 +15,7 @@ public class WeekTest extends TestCase {
 	}
 
 	public void testConstructorFromToString() {
-		DateTime dt = new DateTime(2012,2,4,12,3,1); // Not std time
+		LocalDate dt = new LocalDate(2012,2,4); // Not std time
 		Week original = new Week(dt);
 
 		Week retrieved = new Week(original.toString());
@@ -27,17 +27,17 @@ public class WeekTest extends TestCase {
 		int year = 2013;
 		int weeknum = 4;
 
-		Week original = new Week(new DateTime().withYear(year).withWeekOfWeekyear(weeknum));
+		Week original = new Week(new LocalDate().withYear(year).withWeekOfWeekyear(weeknum));
 		Week retrieved = new Week(year, weeknum);
 
 		assertEquals(original, retrieved);
 	}
 
 	public void testYearEndSpecials() throws Exception {
-		assertEquals("late in year with number on next", new Week("2013-01"), new Week(new DateTime(2012 ,12, 31, 1, 1)));
-		assertEquals("early in year with number on previous", new Week("2011-52"), new Week(new DateTime(2012, 1, 1, 1, 1)));
-		assertEquals("week 53 - previous year", new Week("2009-53"), new Week(new DateTime(2009, 12, 28, 1, 1)));
-		assertEquals("week 53 - next year", new Week("2009-53"), new Week(new DateTime(2010, 1, 1, 1, 1)));
+		assertEquals("late in year with number on next", new Week("2013-01"), new Week(new LocalDate(2012 ,12, 31)));
+		assertEquals("early in year with number on previous", new Week("2011-52"), new Week(new LocalDate(2012, 1, 1)));
+		assertEquals("week 53 - previous year", new Week("2009-53"), new Week(new LocalDate(2009, 12, 28)));
+		assertEquals("week 53 - next year", new Week("2009-53"), new Week(new LocalDate(2010, 1, 1)));
 	}
 
 	public void testAccessors() throws Exception {
@@ -53,13 +53,13 @@ public class WeekTest extends TestCase {
 	}
 
 	public void testValueObject() throws Exception {
-		DateTime mondayMorning = new DateTime(2014, 1, 20, 0, 0, 1);
-		DateTime sundayEvening = new DateTime(2014, 1, 26, 23, 59, 59);
-		DateTime nextMonday = new DateTime(2014, 1, 27, 0, 0, 1);
+		LocalDate monday = new LocalDate(2014, 1, 20);
+		LocalDate sunday = new LocalDate(2014, 1, 26);
+		LocalDate nextMonday = new LocalDate(2014, 1, 27);
 
-		Week mon1 = new Week(mondayMorning);
-		Week mon2 = new Week(mondayMorning);
-		Week sun = new Week(sundayEvening);
+		Week mon1 = new Week(monday);
+		Week mon2 = new Week(monday);
+		Week sun = new Week(sunday);
 		Week nxt = new Week(nextMonday);
 
 		assertTrue("Equal to itself", mon1.equals(mon1));
@@ -74,8 +74,8 @@ public class WeekTest extends TestCase {
 	}
 
 	public void testPreviousWeek() throws Exception {
-		DateTime initialDt = new DateTime();
-		DateTime previousDt = initialDt.minusWeeks(1);
+		LocalDate initialDt = new LocalDate();
+		LocalDate previousDt = initialDt.minusWeeks(1);
 
 		Week initialWeek = new Week(initialDt);
 		Week previousWeekFromMethod = initialWeek.previous();
@@ -85,8 +85,8 @@ public class WeekTest extends TestCase {
 	}
 
 	public void testNextWeek() throws Exception {
-		DateTime initialDt = new DateTime();
-		DateTime nextDt = initialDt.plusWeeks(1);
+		LocalDate initialDt = new LocalDate();
+		LocalDate nextDt = initialDt.plusWeeks(1);
 
 		Week initialWeek = new Week(initialDt);
 		Week nextWeekFromMethod = initialWeek.next();
@@ -96,11 +96,11 @@ public class WeekTest extends TestCase {
 	}
 
 	public void testIsBeforeAndAfter() throws Exception {
-		Week initial = new Week(new DateTime(2014, 1, 1, 1, 1));
-		Week sameWeek1 = new Week(new DateTime(2014, 1, 2, 1, 1));
-		Week sameWeek2 = new Week(new DateTime(2013, 12, 31, 1, 1));
-		Week weekAfter = new Week(new DateTime(2014, 1, 8, 1, 1));
-		Week weekBefore = new Week(new DateTime(2013, 12, 25, 1, 1));
+		Week initial = new Week(new LocalDate(2014, 1, 1));
+		Week sameWeek1 = new Week(new LocalDate(2014, 1, 2));
+		Week sameWeek2 = new Week(new LocalDate(2013, 12, 31));
+		Week weekAfter = new Week(new LocalDate(2014, 1, 8));
+		Week weekBefore = new Week(new LocalDate(2013, 12, 25));
 
 		assertTrue("initial before next week", initial.isBefore(weekAfter));
 		assertFalse("initial after next week", initial.isAfter(weekAfter));

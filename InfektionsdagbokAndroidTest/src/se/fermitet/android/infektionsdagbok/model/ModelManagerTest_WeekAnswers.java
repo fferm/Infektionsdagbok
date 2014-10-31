@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
@@ -34,7 +34,7 @@ public class ModelManagerTest_WeekAnswers extends AndroidTestCase {
 	public void testInitialWeekAnswers() throws Exception {
 		WeekAnswers initial = modelManager.getInitialWeekAnswers();
 
-		assertEquals("Week in initial WeekAnswers should be current week", new Week(new DateTime()), initial.week);
+		assertEquals("Week in initial WeekAnswers should be current week", new Week(new LocalDate()), initial.week);
 	}
 
 	public void testPreviousWeekWeekAnswers() throws Exception {
@@ -112,10 +112,10 @@ public class ModelManagerTest_WeekAnswers extends AndroidTestCase {
 	}
 
 	public void testGetEarliestWeekAnswers() throws Exception {
-		WeekAnswers wa1 = new WeekAnswers(new Week(new DateTime(2013, 1, 1, 1, 1, 1)));
-		WeekAnswers wa2 = new WeekAnswers(new Week(new DateTime(2013, 2, 1, 1, 1, 1)));
-		WeekAnswers wa3 = new WeekAnswers(new Week(new DateTime(2014, 1, 1, 1, 1, 1)));
-		WeekAnswers wa4 = new WeekAnswers(new Week(new DateTime(2013, 1, 8, 1, 1, 1)));
+		WeekAnswers wa1 = new WeekAnswers(new Week(new LocalDate(2013, 1, 1)));
+		WeekAnswers wa2 = new WeekAnswers(new Week(new LocalDate(2013, 2, 1)));
+		WeekAnswers wa3 = new WeekAnswers(new Week(new LocalDate(2014, 1, 1)));
+		WeekAnswers wa4 = new WeekAnswers(new Week(new LocalDate(2013, 1, 8)));
 
 		List<WeekAnswers> weekAnswers = new ArrayList<WeekAnswers>();
 		weekAnswers.add(wa4);
@@ -149,11 +149,11 @@ public class ModelManagerTest_WeekAnswers extends AndroidTestCase {
 
 		return toSave;
 	}
-	
+
 	public void testSaveTreatmentForUpdate() throws Exception {
-		
+
 	}
-	
+
 	public void testSaveTreatmentForInsert() throws Exception {
 		// TODO
 	}

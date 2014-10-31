@@ -1,8 +1,10 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.util.UUID;
+
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class SickDayTest extends TestCase {
 
@@ -15,18 +17,18 @@ public class SickDayTest extends TestCase {
 	}
 
 	public void testConstructorWithValues() throws Exception {
-		DateTime start = DateTime.now().minusDays(2);
-		DateTime end = DateTime.now();
+		LocalDate start = LocalDate.now().minusDays(2);
+		LocalDate end = LocalDate.now();
 
 		SickDay sickDay = new SickDay(start, end);
 
-		assertEquals("Start", start.withMillisOfDay(0), sickDay.getStart());
-		assertEquals("End", end.withMillisOfDay(0), sickDay.getEnd());
+		assertEquals("Start", start, sickDay.getStart());
+		assertEquals("End", end, sickDay.getEnd());
 	}
 
 	public void testCopyConstructor() throws Exception {
-		DateTime start = DateTime.now().minusDays(2);
-		DateTime end = DateTime.now();
+		LocalDate start = LocalDate.now().minusDays(2);
+		LocalDate end = LocalDate.now();
 
 		SickDay original = new SickDay(start, end);
 		SickDay copy = new SickDay(original);
@@ -36,12 +38,22 @@ public class SickDayTest extends TestCase {
 	}
 
 	public void testGettersAndSetter() throws Exception {
-		// TODO
-		fail("TODO");
+		SickDay sickDay = new SickDay();
+
+		UUID testUUID = UUID.randomUUID();
+		sickDay.setUUID(testUUID);
+		assertEquals("UUID", testUUID, sickDay.getUUID());
+
+		LocalDate testStart = LocalDate.now().minusDays(10);
+		sickDay.setStart(testStart);
+		assertEquals("Start", testStart, sickDay.getStart());
+
+		LocalDate testEnd = LocalDate.now().plusDays(10);
+		sickDay.setEnd(testEnd);
+		assertEquals("End", testEnd, sickDay.getEnd());
 	}
 
 	public void testToString() throws Exception {
-		// TODO
 		fail("TODO");
 	}
 
@@ -51,8 +63,8 @@ public class SickDayTest extends TestCase {
 	}
 
 	public void testValueObject() throws Exception {
-		DateTime origStart = DateTime.now().minusDays(2);
-		DateTime origEnd = DateTime.now();
+		LocalDate origStart = LocalDate.now().minusDays(2);
+		LocalDate origEnd = LocalDate.now();
 
 		SickDay original = new SickDay(origStart, origEnd);
 		SickDay equal = new SickDay(original);
@@ -62,19 +74,10 @@ public class SickDayTest extends TestCase {
 		SickDay nullStart = new SickDay(null, origEnd);
 		SickDay nullEnd = new SickDay(origStart, null);
 
-		SickDay diffStart = new SickDay(DateTime.now().minusMonths(10), origEnd);
-		SickDay diffEnd = new SickDay(origStart, DateTime.now().plusDays(10));
-
-		SickDay diffStartButSameDay = new SickDay(original);
-		diffStartButSameDay.setStart(diffStartButSameDay.getStart().plusSeconds(1));
-
-		SickDay diffEndButSameDay = new SickDay(original);
-		diffEndButSameDay.setEnd(diffEndButSameDay.getEnd().plusSeconds(1));
-
+		SickDay diffStart = new SickDay(LocalDate.now().minusMonths(10), origEnd);
+		SickDay diffEnd = new SickDay(origStart, LocalDate.now().plusDays(10));
 
 		assertTrue("Equal to equal", original.equals(equal));
-		assertTrue("Equal to same start but same day", original.equals(diffStartButSameDay));
-		assertTrue("Equal to same end but same day", original.equals(diffEndButSameDay));
 
 		assertFalse("Not equal to sameValuesDifferentUUID", original.equals(sameValuesDifferentUUID));
 		assertFalse("Not equal to nullStart", original.equals(nullStart));

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
@@ -84,7 +84,7 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 				TextView startTv = (TextView) treatmentView.findViewById(R.id.dateValueField);
 				TextView numDaysTV = (TextView) treatmentView.findViewById(R.id.numDaysValueField);
 
-				DateTime startingDate = treatment.getStartingDate();
+				LocalDate startingDate = treatment.getStartingDate();
 				if (startingDate == null) {
 					assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
 				} else {
@@ -109,11 +109,11 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
 		ListAdapter adapter = getListAdapter();
 
-		DateTime previousStartingDate = null;
+		LocalDate previousStartingDate = null;
 		for (int i = 0; i < adapter.getCount(); i++) {
 			Treatment treatment = (Treatment) adapter.getItem(i);
 
-			DateTime currentStartingDate = treatment.getStartingDate();
+			LocalDate currentStartingDate = treatment.getStartingDate();
 
 			boolean condition = (previousStartingDate == null) || (currentStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
 
@@ -360,7 +360,7 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 	}
 
 	public void testEditAndSave() throws Exception {
-		DateTime newStart = DateTime.now().withMillisOfDay(0).minusMonths(2);
+		LocalDate newStart = LocalDate.now().minusMonths(2);
 		Integer newNumDays = 1000;
 		String newMedicine = "Doxyferm";
 		String newInfectionType = "Fšrkylning";
@@ -411,7 +411,7 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 			treatmentsFromFile = getActivity().getLocalApplication().getModelManager().getAllTreatments();
 			Treatment fromFile = treatmentsFromFile.get(uuid);
 
-			condition = (newStart.withMillisOfDay(0).equals(fromFile.getStartingDate().withMillisOfDay(0))) &&
+			condition = (newStart.equals(fromFile.getStartingDate())) &&
 						(newNumDays.equals(fromFile.getNumDays())) &&
 						(newMedicine.equals(fromFile.getMedicine())) &&
 						(newInfectionType.equals(fromFile.getInfectionType()));
@@ -428,7 +428,7 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 			for (int i = 0; i < adapter.getCount(); i++) {
 				Treatment inAdapter = adapter.getItem(i);
 
-				condition = (newStart.withMillisOfDay(0).equals(inAdapter.getStartingDate().withMillisOfDay(0))) &&
+				condition = (newStart.equals(inAdapter.getStartingDate())) &&
 						(newNumDays.equals(inAdapter.getNumDays())) &&
 						(newMedicine.equals(inAdapter.getMedicine())) &&
 						(newInfectionType.equals(inAdapter.getInfectionType()));
@@ -446,11 +446,11 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
-			DateTime date;
-			if (i % 4 == 0) date = DateTime.now().minusDays(i);
-			else if (i % 4 == 1) date = DateTime.now().minusWeeks(i);
-			else if (i % 4 == 2) date = DateTime.now().minusMonths(i);
-			else date = DateTime.now().minusYears(i);
+			LocalDate date;
+			if (i % 4 == 0) date = LocalDate.now().minusDays(i);
+			else if (i % 4 == 1) date = LocalDate.now().minusWeeks(i);
+			else if (i % 4 == 2) date = LocalDate.now().minusMonths(i);
+			else date = LocalDate.now().minusYears(i);
 
 			testData.add(
 					new Treatment(
@@ -460,10 +460,10 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 							"MEDICINE_NAME" + i));
 		}
 
-		nullMedicine = new Treatment(DateTime.now().minusDays(100), 100, "INFECTION", null);
-		nullInfection = new Treatment(DateTime.now().minusDays(101), 101, null, "MEDICINE");
+		nullMedicine = new Treatment(LocalDate.now().minusDays(100), 100, "INFECTION", null);
+		nullInfection = new Treatment(LocalDate.now().minusDays(101), 101, null, "MEDICINE");
 		nullStartingDate = new Treatment(null, 102, "INFECT102", "MEDICINE102");
-		nullNumDays = new Treatment(DateTime.now().minusDays(103), null, "INFECT103", "MEDICINE103");
+		nullNumDays = new Treatment(LocalDate.now().minusDays(103), null, "INFECT103", "MEDICINE103");
 
 		testData.add(nullMedicine);
 		testData.add(nullInfection);

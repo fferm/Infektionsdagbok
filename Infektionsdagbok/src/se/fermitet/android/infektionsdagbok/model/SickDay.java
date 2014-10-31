@@ -1,18 +1,18 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class SickDay extends ModelObjectBase {
 
 	private static final long serialVersionUID = 1L;
-	private DateTime start;
-	private DateTime end;
+	private LocalDate start;
+	private LocalDate end;
 
 	public SickDay() {
 		super();
 	}
 
-	public SickDay(DateTime start, DateTime end) {
+	public SickDay(LocalDate start, LocalDate end) {
 		this();
 
 		this.setStart(start);
@@ -25,28 +25,20 @@ public class SickDay extends ModelObjectBase {
 		this.uuid = original.getUUID();
 	}
 
-	public DateTime getStart() {
+	public LocalDate getStart() {
 		return this.start;
 	}
 
-	public void setStart(DateTime start) {
-		if (start == null) {
-			this.start = null;
-		} else {
-			this.start = start.withMillisOfDay(0);
-		}
+	public void setStart(LocalDate start) {
+		this.start = start;
 	}
 
-	public DateTime getEnd() {
+	public LocalDate getEnd() {
 		return this.end;
 	}
 
-	public void setEnd(DateTime end) {
-		if (end == null) {
-			this.end = null;
-		} else {
-			this.end = end.withMillisOfDay(0);
-		}
+	public void setEnd(LocalDate end) {
+		this.end = end;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
@@ -14,7 +14,7 @@ public class WeekAnswersTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 	}
 
 	public void testDefaultConstructor() throws Exception {
@@ -22,7 +22,7 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testWeekConstructor() throws Exception {
-		Week myWeek = new Week(new DateTime().plusWeeks(2));
+		Week myWeek = new Week(new LocalDate().plusWeeks(2));
 		WeekAnswers wa = new WeekAnswers(myWeek);
 
 		assertEquals(myWeek, wa.week);
@@ -37,7 +37,7 @@ public class WeekAnswersTest extends TestCase {
 			}
 		}
 
-		assertEquals("week", new Week(new DateTime()), wa.week);
+		assertEquals("week", new Week(new LocalDate()), wa.week);
 	}
 
 	public void testGettersAndSetters() throws Exception {
@@ -53,19 +53,19 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testValueObject() throws Exception {
-		Week otherWeek = new Week(new DateTime().plusMonths(1));
+		Week otherWeek = new Week(new LocalDate().plusMonths(1));
 
-		WeekAnswers orig = new WeekAnswers(new Week(new DateTime()));
-		WeekAnswers nonModified = new WeekAnswers(new Week(new DateTime()));
+		WeekAnswers orig = new WeekAnswers(new Week(new LocalDate()));
+		WeekAnswers nonModified = new WeekAnswers(new Week(new LocalDate()));
 
-		WeekAnswers modWeek = new WeekAnswers(new Week(new DateTime()));
+		WeekAnswers modWeek = new WeekAnswers(new Week(new LocalDate()));
 		modWeek.week = otherWeek;
 
-		WeekAnswers modAnswer = new WeekAnswers(new Week(new DateTime()));
+		WeekAnswers modAnswer = new WeekAnswers(new Week(new LocalDate()));
 		modAnswer.setAnswer(R.id.fever, !modAnswer.getFever());
 		modAnswer.setAnswer(R.id.malaise, !modAnswer.getMalaise());
-		
-		WeekAnswers modGenerallyWell = new WeekAnswers(new Week(DateTime.now()));
+
+		WeekAnswers modGenerallyWell = new WeekAnswers(new Week(LocalDate.now()));
 		modGenerallyWell.setAnswer(R.id.generallyWell, !modGenerallyWell.getGenerallyWell());
 
 		assertTrue("Equal to itself", orig.equals(orig));
@@ -97,52 +97,52 @@ public class WeekAnswersTest extends TestCase {
 	}
 
 	public void testQuestionAccessors() throws Exception {
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("Malaise before", wa.getMalaise());
 		wa.setAnswer(R.id.malaise, true);
 		assertTrue("Malaise after", wa.getMalaise());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("Fever before", wa.getFever());
 		wa.setAnswer(R.id.fever, true);
 		assertTrue("Fever after", wa.getFever());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("EarAche before", wa.getEarAche());
 		wa.setAnswer(R.id.earAche, true);
 		assertTrue("EarAche after", wa.getEarAche());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("SoreThroat before", wa.getSoreThroat());
 		wa.setAnswer(R.id.soreThroat, true);
 		assertTrue("SoreThroat after", wa.getSoreThroat());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("RunnyNose before", wa.getRunnyNose());
 		wa.setAnswer(R.id.runnyNose, true);
 		assertTrue("RunnyNose after", wa.getRunnyNose());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("StommacAche before", wa.getStommacAche());
 		wa.setAnswer(R.id.stommacAche, true);
 		assertTrue("StommacAche after", wa.getStommacAche());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("DryCough before", wa.getDryCough());
 		wa.setAnswer(R.id.dryCough, true);
 		assertTrue("DryCough after", wa.getDryCough());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("WetCough before", wa.getWetCough());
 		wa.setAnswer(R.id.wetCough, true);
 		assertTrue("WetCough after", wa.getWetCough());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertFalse("MorningCough before", wa.getMorningCough());
 		wa.setAnswer(R.id.morningCough, true);
 		assertTrue("MorningCough after", wa.getMorningCough());
 
-		wa = new WeekAnswers(new Week(new DateTime()));
+		wa = new WeekAnswers(new Week(new LocalDate()));
 		assertTrue("GenerallyWell before", wa.getGenerallyWell());
 		wa.setAnswer(R.id.generallyWell, false);
 		assertFalse("GenerallyWell after", wa.getGenerallyWell());

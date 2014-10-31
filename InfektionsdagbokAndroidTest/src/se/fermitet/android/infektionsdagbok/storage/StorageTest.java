@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
@@ -32,13 +32,13 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testNoExistingAnswerShouldGiveNullAnswer() throws Exception {
-		Week week = new Week(new DateTime());
+		Week week = new Week(new LocalDate());
 
 		assertNull(storage.getAnswersForWeek(week));
 	}
 
 	public void testSaveAndRetrieveGivesEqualResponse() throws Exception {
-		Week week = new Week(new DateTime());
+		Week week = new Week(new LocalDate());
 		WeekAnswers original = new WeekAnswers(week);
 
 		storage.saveAnswers(original);
@@ -49,7 +49,7 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testClearForWeekAnswers() throws Exception {
-		Week week = new Week(new DateTime());
+		Week week = new Week(new LocalDate());
 		WeekAnswers original = new WeekAnswers(week);
 
 		storage.saveAnswers(original);
@@ -60,10 +60,10 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testGetAllAnswers() throws Exception {
-		WeekAnswers wa1 = new WeekAnswers(new Week(new DateTime(2013, 1, 1, 1, 1, 1)));
-		WeekAnswers wa2 = new WeekAnswers(new Week(new DateTime(2013, 2, 1, 1, 1, 1)));
-		WeekAnswers wa3 = new WeekAnswers(new Week(new DateTime(2014, 1, 1, 1, 1, 1)));
-		WeekAnswers wa4 = new WeekAnswers(new Week(new DateTime(2013, 1, 8, 1, 1, 1)));
+		WeekAnswers wa1 = new WeekAnswers(new Week(new LocalDate(2013, 1, 1)));
+		WeekAnswers wa2 = new WeekAnswers(new Week(new LocalDate(2013, 2, 1)));
+		WeekAnswers wa3 = new WeekAnswers(new Week(new LocalDate(2014, 1, 1)));
+		WeekAnswers wa4 = new WeekAnswers(new Week(new LocalDate(2013, 1, 8)));
 
 		List<WeekAnswers> saved = new ArrayList<WeekAnswers>();
 		saved.add(wa4);
@@ -93,10 +93,10 @@ public class StorageTest extends AndroidTestCase {
 	public void testSaveAndRetrieveTreatments() throws Exception {
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 
-		Treatment t1 = new Treatment(DateTime.now(), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(DateTime.now(), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(DateTime.now(), 3, "INF3", "MED3");
-		Treatment t4 = new Treatment(DateTime.now(), 4, "INF4", "MED4");
+		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(LocalDate.now(), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(LocalDate.now(), 3, "INF3", "MED3");
+		Treatment t4 = new Treatment(LocalDate.now(), 4, "INF4", "MED4");
 
 		toSave.add(t1);
 		toSave.add(t2);
@@ -112,7 +112,7 @@ public class StorageTest extends AndroidTestCase {
 		assertTrue("Contains t2", received.values().contains(t2));
 		assertTrue("Contains t3", received.values().contains(t3));
 		assertTrue("Contains t4", received.values().contains(t4));
-		
+
 		for (UUID uuid : received.keySet()) {
 			Treatment treatment = received.get(uuid);
 			assertEquals("Key for treatment", uuid, treatment.getUUID());
@@ -122,10 +122,10 @@ public class StorageTest extends AndroidTestCase {
 	public void testClearForTreatment() throws Exception {
 		Collection<Treatment> toSave = new ArrayList<Treatment>();
 
-		Treatment t1 = new Treatment(DateTime.now(), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(DateTime.now(), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(DateTime.now(), 3, "INF3", "MED3");
-		Treatment t4 = new Treatment(DateTime.now(), 4, "INF4", "MED4");
+		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
+		Treatment t2 = new Treatment(LocalDate.now(), 2, "INF2", "MED2");
+		Treatment t3 = new Treatment(LocalDate.now(), 3, "INF3", "MED3");
+		Treatment t4 = new Treatment(LocalDate.now(), 4, "INF4", "MED4");
 
 		toSave.add(t1);
 		toSave.add(t2);

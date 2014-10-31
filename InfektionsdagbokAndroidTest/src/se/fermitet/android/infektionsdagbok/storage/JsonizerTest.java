@@ -2,7 +2,7 @@ package se.fermitet.android.infektionsdagbok.storage;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
@@ -12,7 +12,7 @@ import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 public class JsonizerTest extends TestCase {
 
 	public void testToFromWeekAnswers() throws Exception {
-		WeekAnswers wa = new WeekAnswers(new Week(DateTime.now()));
+		WeekAnswers wa = new WeekAnswers(new Week(LocalDate.now()));
 
 		for (int id : WeekAnswers.questionIds) {
 			wa.setAnswer(id, ! wa.getAnswer(id));
@@ -24,7 +24,7 @@ public class JsonizerTest extends TestCase {
 	public void testToFromTreatment() throws Exception {
 		String origInfectionType = "INFTYPE";
 		String origMedicine = "MEDICINE";
-		DateTime origStartingDate = DateTime.now();
+		LocalDate origStartingDate = LocalDate.now();
 		int origNumDays = 5;
 
 		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);

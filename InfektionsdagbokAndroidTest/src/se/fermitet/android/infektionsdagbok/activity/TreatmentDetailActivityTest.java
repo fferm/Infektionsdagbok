@@ -2,7 +2,7 @@ package se.fermitet.android.infektionsdagbok.activity;
 
 import java.text.DateFormat;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
@@ -56,15 +56,15 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		Treatment treatment = getActivity().view.getModel();
 		assertNull("start date should be null when starting this test to make the test work", treatment.getStartingDate());
 
-		DateTime firstExpected = DateTime.now().withMillisOfDay(0);
-		DateTime firstSet = new DateTime(2012, 1, 1, 1, 1);
-		DateTime secondSet = new DateTime(2013, 10, 2, 1, 1);
+		LocalDate firstExpected = LocalDate.now();
+		LocalDate firstSet = new LocalDate(2012, 1, 1);
+		LocalDate secondSet = new LocalDate(2013, 10, 2);
 
 		testDatePicker("Null start", firstExpected, firstSet);
 		testDatePicker("Value start", firstSet, secondSet);
 	}
 
-	private void testDatePicker(String messagePrefix, DateTime expectedWhenOpeningPicker, DateTime setTo) throws Exception {
+	private void testDatePicker(String messagePrefix, LocalDate expectedWhenOpeningPicker, LocalDate setTo) throws Exception {
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
 
@@ -93,7 +93,7 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 
 		assertEquals(messagePrefix + ": " + "Start date field text", expected, startTV.getText());
 
-		DateTime newDateFromView = getActivity().view.getModel().getStartingDate();
+		LocalDate newDateFromView = getActivity().view.getModel().getStartingDate();
 		assertEquals(messagePrefix + ": " + "view model date value (year)", setTo.year(), newDateFromView.year());
 		assertEquals(messagePrefix + ": " + "view model date value (month)", setTo.monthOfYear(), newDateFromView.monthOfYear());
 		assertEquals(messagePrefix + ": " + "view model date value (day)", setTo.dayOfMonth(), newDateFromView.dayOfMonth());

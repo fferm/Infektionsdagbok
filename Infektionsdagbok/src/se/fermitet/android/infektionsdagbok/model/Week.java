@@ -2,7 +2,7 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import java.util.StringTokenizer;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class Week {
 
@@ -11,11 +11,11 @@ public class Week {
 	private int year;
 	private int weeknum;
 
-	public Week(DateTime dateTime) {
+	public Week(LocalDate date) {
 		super();
 
-		this.year = dateTime.weekyear().get();
-		this.weeknum = dateTime.weekOfWeekyear().get();
+		this.year = date.weekyear().get();
+		this.weeknum = date.weekOfWeekyear().get();
 	}
 
 	public Week(String stringFromToStringOfWeek) {
@@ -44,8 +44,8 @@ public class Week {
 		}
 	}
 
-	private DateTime getDayInWeek(int year, int weeknum) {
-		return new DateTime().withWeekyear(year).withWeekOfWeekyear(weeknum);
+	private LocalDate getDayInWeek(int year, int weeknum) {
+		return new LocalDate().withWeekyear(year).withWeekOfWeekyear(weeknum);
 	}
 
 	public Week previous() {

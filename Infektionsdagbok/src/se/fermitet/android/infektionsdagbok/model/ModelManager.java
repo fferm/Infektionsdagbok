@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 
@@ -30,7 +30,7 @@ public class ModelManager {
 	}
 
 	public WeekAnswers getInitialWeekAnswers() throws Exception {
-		Week weekToUse = new Week(new DateTime());
+		Week weekToUse = new Week(new LocalDate());
 		return getWeekAnswersForWeekCreateIfNeeded(weekToUse);
 	}
 

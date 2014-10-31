@@ -2,13 +2,13 @@ package se.fermitet.android.infektionsdagbok.model;
 
 import java.text.DateFormat;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class Treatment extends ModelObjectBase {
 
 	private static final long serialVersionUID = 1L;
 
-	private DateTime startingDate;
+	private LocalDate startingDate;
 	private Integer numDays;
 	private String infectionType;
 	private String medicine;
@@ -22,7 +22,7 @@ public class Treatment extends ModelObjectBase {
 		super();
 	}
 
-	public Treatment(DateTime startingDate, Integer numDays, String infectionType, String medicine) {
+	public Treatment(LocalDate startingDate, Integer numDays, String infectionType, String medicine) {
 		this();
 
 		this.setStartingDate(startingDate);
@@ -37,12 +37,12 @@ public class Treatment extends ModelObjectBase {
 		setUUID(original.getUUID());
 	}
 
-	public DateTime getStartingDate() {
+	public LocalDate getStartingDate() {
 		return startingDate;
 	}
 
 	public String getStartingDateString() {
-		DateTime date = getStartingDate();
+		LocalDate date = getStartingDate();
 
 		if (date == null) {
 			return null;
@@ -51,12 +51,8 @@ public class Treatment extends ModelObjectBase {
 		}
 	}
 
-	public void setStartingDate(DateTime startingDate) {
-		if (startingDate == null) {
-			this.startingDate = null;
-		} else {
-			this.startingDate = startingDate.withMillisOfDay(0);
-		}
+	public void setStartingDate(LocalDate startingDate) {
+		this.startingDate = startingDate;
 	}
 
 	public Integer getNumDays() {

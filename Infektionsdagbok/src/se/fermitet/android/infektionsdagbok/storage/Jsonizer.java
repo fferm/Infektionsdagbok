@@ -2,7 +2,7 @@ package se.fermitet.android.infektionsdagbok.storage;
 
 import java.util.UUID;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,15 +48,15 @@ public class Jsonizer {
 
 		return ret;
 	}
-	
+
 	public static String treatmentToJSON(Treatment treatment) throws JSONException {
 		JSONObject treatmentJson = new JSONObject();
-		
+
 		treatmentJson.put(TREATMENT_UUID, treatment.getUUID().toString());
 		treatmentJson.put(TREATMENT_INFECTION_TYPE, treatment.getInfectionType());
 		treatmentJson.put(TREATMENT_MEDICINE, treatment.getMedicine());
 		if (treatment.getStartingDate() != null) {
-			treatmentJson.put(TREATMENT_STARTING_DATE, getJsonObjectForDateWithoutTime(treatment.getStartingDate()));
+			treatmentJson.put(TREATMENT_STARTING_DATE, getJsonObjectForDate(treatment.getStartingDate()));
 		}
 		treatmentJson.put(TREATMENT_NUM_DAYS, treatment.getNumDays());
 
@@ -66,31 +66,31 @@ public class Jsonizer {
 	public static Treatment treatmentFromJSON(String treatmentJson) throws JSONException {
 		JSONObject json = new JSONObject(treatmentJson);
 		Treatment treatment = new Treatment();
-		
+
 		if (! json.isNull(TREATMENT_UUID)) treatment.setUUID(UUID.fromString(json.getString(TREATMENT_UUID)));
 		if (! json.isNull(TREATMENT_INFECTION_TYPE)) treatment.setInfectionType(json.getString(TREATMENT_INFECTION_TYPE));
 		if (! json.isNull(TREATMENT_MEDICINE)) treatment.setMedicine(json.getString(TREATMENT_MEDICINE));
-		if (! json.isNull(TREATMENT_STARTING_DATE)) treatment.setStartingDate(getDateWithoutTimeFromJsonObject(json.getJSONObject(TREATMENT_STARTING_DATE)));
+		if (! json.isNull(TREATMENT_STARTING_DATE)) treatment.setStartingDate(getDateFromJsonObject(json.getJSONObject(TREATMENT_STARTING_DATE)));
 		if (! json.isNull(TREATMENT_NUM_DAYS)) treatment.setNumDays(json.getInt(TREATMENT_NUM_DAYS));
-		
+
 		return treatment;
 	}
-	
-	private static DateTime getDateWithoutTimeFromJsonObject(JSONObject json) throws JSONException {
+
+	private static LocalDate getDateFromJsonObject(JSONObject json) throws JSONException {
 		int year = json.getInt(DATE_YEAR);
 		int month = json.getInt(DATE_MONTH);
 		int day = json.getInt(DATE_DAY);
-		
-		return new DateTime(year, month, day, 0, 0).withMillisOfDay(0);
+
+		return new LocalDate(year, month, day);
 	}
 
-	private static JSONObject getJsonObjectForDateWithoutTime(DateTime date) throws JSONException {
+	private static JSONObject getJsonObjectForDate(LocalDate date) throws JSONException {
 		JSONObject ret = new JSONObject();
-		
+
 		ret.put(DATE_YEAR, date.year().get());
 		ret.put(DATE_MONTH, date.monthOfYear().get());
 		ret.put(DATE_DAY, date.dayOfMonth().get());
-		
+
 		return ret;
 	}
 

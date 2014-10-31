@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class TreatmentTest extends TestCase {
 
@@ -22,21 +22,21 @@ public class TreatmentTest extends TestCase {
 	public void testConstructorWithValues() throws Exception {
 		String infectionType ="TESTINFECTIONTYPE";
 		String medicine = "MEDICINE";
-		DateTime startingDate = DateTime.now();
+		LocalDate startingDate = LocalDate.now();
 		Integer numDays = 5;
 
 		Treatment treatment = new Treatment(startingDate, numDays, infectionType, medicine);
 
 		assertEquals("Infection type", infectionType, treatment.getInfectionType());
 		assertEquals("Medicine", medicine, treatment.getMedicine());
-		assertEquals("Starting date", startingDate.withMillisOfDay(0), treatment.getStartingDate());
+		assertEquals("Starting date", startingDate, treatment.getStartingDate());
 		assertEquals("num days", numDays, treatment.getNumDays());
 	}
 
 	public void testCopyConstructor() throws Exception {
 		String infectionType ="TESTINFECTIONTYPE";
 		String medicine = "MEDICINE";
-		DateTime startingDate = DateTime.now();
+		LocalDate startingDate = LocalDate.now();
 		int numDays = 5;
 
 		Treatment original = new Treatment(startingDate, numDays, infectionType, medicine);
@@ -61,9 +61,9 @@ public class TreatmentTest extends TestCase {
 		treatment.setMedicine(testMedicine);
 		assertEquals("Medicine", testMedicine, treatment.getMedicine());
 
-		DateTime testStartingDate = DateTime.now();
+		LocalDate testStartingDate = LocalDate.now();
 		treatment.setStartingDate(testStartingDate);
-		assertEquals("Starting Date", testStartingDate.withMillisOfDay(0), treatment.getStartingDate());
+		assertEquals("Starting Date", testStartingDate, treatment.getStartingDate());
 
 		Integer testNumDays = 1000;
 		treatment.setNumDays(testNumDays);
@@ -71,7 +71,7 @@ public class TreatmentTest extends TestCase {
 	}
 
 	public void testToString() throws Exception {
-		DateTime start = DateTime.now();
+		LocalDate start = LocalDate.now();
 		int numDays = 1;
 		String medicine = "MEDICINE";
 		String infectionType = "INFECTION_TYPE";
@@ -92,7 +92,7 @@ public class TreatmentTest extends TestCase {
 	public void testStartingDateString() throws Exception {
 		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-		DateTime start = DateTime.now();
+		LocalDate start = LocalDate.now();
 
 		Treatment normal = new Treatment(start, 0, null, null);
 		Treatment nullStart = new Treatment(null, 0, null, null);
@@ -104,7 +104,7 @@ public class TreatmentTest extends TestCase {
 	public void testValueObject() throws Exception {
 		String origInfectionType = "INFTYPE";
 		String origMedicine = "MEDICINE";
-		DateTime origStartingDate = DateTime.now();
+		LocalDate origStartingDate = LocalDate.now();
 		int origNumDays = 5;
 
 		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
@@ -119,14 +119,10 @@ public class TreatmentTest extends TestCase {
 
 		Treatment diffInfectionType = new Treatment(origStartingDate, origNumDays, "DIFFERENT", origMedicine);
 		Treatment diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
-		Treatment diffStartingDate = new Treatment(new DateTime(2012,1,1,1,1), origNumDays, origInfectionType, origMedicine);
+		Treatment diffStartingDate = new Treatment(new LocalDate(2012,1,1), origNumDays, origInfectionType, origMedicine);
 		Treatment diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
 
-		Treatment diffStartingDateButSameDay = new Treatment(original);
-		diffStartingDateButSameDay.setStartingDate(diffStartingDateButSameDay.getStartingDate().plusSeconds(1));
-
 		assertTrue("Equal to equal", original.equals(equal));
-		assertTrue("Equal to same starting date but same day", original.equals(diffStartingDateButSameDay));
 
 		assertFalse("Not equal to sameValuesDifferentUUID", original.equals(sameValuesDifferentUUID));
 		assertFalse("Not equal to nullInfectionType", original.equals(nullInfectionType));
@@ -138,7 +134,7 @@ public class TreatmentTest extends TestCase {
 		assertFalse("Not equal to diffStartingDate", original.equals(diffStartingDate));
 		assertFalse("Not equal to diffNumDays", original.equals(diffNumDays));
 
-		assertTrue("Hash code same for equal objects", original.hashCode() == diffStartingDateButSameDay.hashCode());
+		assertTrue("Hash code same for equal objects", original.hashCode() == equal.hashCode());
 
 		assertFalse("Not equal to null", original.equals(null));
 		assertFalse("Not equal to object of different class", original.equals("TEST"));
