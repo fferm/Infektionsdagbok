@@ -38,7 +38,7 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 	}
 
 	private void attachWidgets() throws Exception {
-		this.listView = (ListView) findViewById(R.id.treatmentListView);
+		this.listView = (ListView) findViewById(R.id.itemListView);
 
 		ViewGroup headerRow = (ViewGroup) findViewById(R.id.header);
 		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
@@ -62,7 +62,7 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 			public void onClick(View v) {
 				try {
 					TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
-					Treatment selected = adapter.getSelectedTreatment();
+					Treatment selected = adapter.getSelectedItem();
 					TreatmentMasterView.this.onButtonsPressedListener.onEditPressed(selected);
 				} catch (Exception e) {
 					handleException(e);
@@ -78,7 +78,7 @@ public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
 			public void onClick(View v) {
 				try {
 					TreatmentAdapter adapter = (TreatmentAdapter) listView.getAdapter();
-					Treatment selected = adapter.getSelectedTreatment();
+					Treatment selected = adapter.getSelectedItem();
 					TreatmentMasterView.this.onButtonsPressedListener.onDeletePressed(selected);
 				} catch (Exception e) {
 					handleException(e);

@@ -11,13 +11,14 @@ import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActivityTest{
+public class TreatmentMasterActivityTest_NoTestData extends ActivityTestWithSolo<TreatmentMasterActivity> {
 
 	public TreatmentMasterActivityTest_NoTestData() {
-		super();
+		super(TreatmentMasterActivity.class);
 	}
 
 	public void testEnterNewTreatmentFromEmpty() throws Exception {
@@ -93,7 +94,7 @@ public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActiv
 
 
 
-	protected void clickNewEnterDataPressButtonAndWaitToGoBack(Treatment treatmentWithData, int finishButtonId) throws Exception {
+	private void clickNewEnterDataPressButtonAndWaitToGoBack(Treatment treatmentWithData, int finishButtonId) throws Exception {
 		// Click new
 		solo.clickOnView(solo.getView(R.id.newBTN));
 		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
@@ -119,4 +120,12 @@ public class TreatmentMasterActivityTest_NoTestData extends TreatmentMasterActiv
 		solo.clickOnView(solo.getView(finishButtonId));
 		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 	}
+
+	private TreatmentAdapter getListAdapter() {
+		TreatmentMasterActivity activity = getActivity();
+		ListView listView = (ListView) activity.view.findViewById(R.id.itemListView);
+		return (TreatmentAdapter) listView.getAdapter();
+	}
+
+
 }

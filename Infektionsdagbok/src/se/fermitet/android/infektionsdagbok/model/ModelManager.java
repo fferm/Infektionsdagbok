@@ -115,7 +115,7 @@ public class ModelManager {
 		return (Map<UUID, SickDay>) getAllOfCorrectClass(SickDay.class);
 	}
 
-	private Map<UUID, ? extends ModelObjectBase> getAllOfCorrectClass(Class<? extends ModelObjectBase> clz) throws Exception {
+	public Map<UUID, ? extends ModelObjectBase> getAllOfCorrectClass(Class<? extends ModelObjectBase> clz) throws Exception {
 		if (clz.equals(Treatment.class))
 			return storage.getAllTreatments();
 		else if (clz.equals(SickDay.class))

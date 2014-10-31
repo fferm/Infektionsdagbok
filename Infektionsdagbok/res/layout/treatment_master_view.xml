@@ -61,7 +61,7 @@
             layout="@layout/treatment_item" />
 
         <ListView
-            android:id="@+id/treatmentListView"
+            android:id="@+id/itemListView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@id/header"
