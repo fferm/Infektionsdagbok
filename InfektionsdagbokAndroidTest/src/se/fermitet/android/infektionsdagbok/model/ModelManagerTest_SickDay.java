@@ -61,7 +61,7 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		toSave.add(obj2);
 		toSave.add(obj3);
 
-		modelManager.saveSickDays(toSave);
+		modelManager.saveAll(toSave);
 
 		Collection<SickDay> fromFile = modelManager.getAllSickDays().values();
 
@@ -79,7 +79,7 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		toSave.add(obj2);
 		toSave.add(obj3);
 
-		modelManager.saveSickDays(toSave);
+		modelManager.saveAll(toSave);
 
 		modelManager.delete(obj1);
 
