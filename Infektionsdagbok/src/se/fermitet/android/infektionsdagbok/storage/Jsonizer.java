@@ -57,17 +57,34 @@ public class Jsonizer {
 		return ret;
 	}
 
-	public static String treatmentToJSON(Treatment obj) throws JSONException {
+	public static String modelObjectToJSON(ModelObjectBase obj) throws JSONException {
 		JSONObject json = new JSONObject();
 
-		addModelObjectBaseItemsToJSON(obj, json);
+		json.put(MODEL_OBJECT_BASE_UUID, obj.getUUID().toString());
 
+		if (obj instanceof Treatment) {
+			addTreatmentItemsToJSON((Treatment) obj, json);
+		} else if (obj instanceof SickDay) {
+			addSickDayItemsToJSON((SickDay) obj, json);
+		}
+
+		return json.toString();
+	}
+
+/*	public static ModelObjectBase modelObjectFromJSON(String jsonTxt) throws JSONException {
+		JSONObject json = new JSONObject(jsonTxt);
+	}*/
+
+	private static void addTreatmentItemsToJSON(Treatment obj, JSONObject json) throws JSONException {
 		json.put(TREATMENT_INFECTION_TYPE, obj.getInfectionType());
 		json.put(TREATMENT_MEDICINE, obj.getMedicine());
 		json.put(TREATMENT_STARTING_DATE, getJsonObjectForDate(obj.getStartingDate()));
 		json.put(TREATMENT_NUM_DAYS, obj.getNumDays());
+	}
 
-		return json.toString();
+	private static void addSickDayItemsToJSON(SickDay obj, JSONObject json) throws JSONException {
+		json.put(SICK_DAY_START, getJsonObjectForDate(obj.getStart()));
+		json.put(SICK_DAY_END, getJsonObjectForDate(obj.getEnd()));
 	}
 
 	public static Treatment treatmentFromJSON(String jsonTxt) throws JSONException {
@@ -82,17 +99,6 @@ public class Jsonizer {
 		if (! json.isNull(TREATMENT_NUM_DAYS)) obj.setNumDays(json.getInt(TREATMENT_NUM_DAYS));
 
 		return obj;
-	}
-
-	public static String sickDayToJSON(SickDay obj) throws JSONException {
-		JSONObject json = new JSONObject();
-
-		addModelObjectBaseItemsToJSON(obj, json);
-
-		json.put(SICK_DAY_START, getJsonObjectForDate(obj.getStart()));
-		json.put(SICK_DAY_END, getJsonObjectForDate(obj.getEnd()));
-
-		return json.toString();
 	}
 
 	public static SickDay sickDayFromJSON(String jsonTxt) throws JSONException {
@@ -127,10 +133,6 @@ public class Jsonizer {
 		return ret;
 	}
 
-
-	private static void addModelObjectBaseItemsToJSON(ModelObjectBase obj, JSONObject json) throws JSONException {
-		json.put(MODEL_OBJECT_BASE_UUID, obj.getUUID().toString());
-	}
 
 	private static void setModelObjectBaseValuesFromJSON(ModelObjectBase obj, JSONObject json) throws JSONException {
 		if (! json.isNull(MODEL_OBJECT_BASE_UUID)) obj.setUUID(UUID.fromString(json.getString(MODEL_OBJECT_BASE_UUID)));

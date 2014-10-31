@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.json.JSONException;
 
+import se.fermitet.android.infektionsdagbok.model.ModelObjectBase;
+import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -22,7 +25,8 @@ import android.content.Context;
 public class Storage {
 
 	private static final String ANSWER_FILE_EXTENSION = "answer";
-	private static final String TREAMENT_FILE_NAME = "treatments.json";
+	private static final String TREATMENT_FILE_NAME = "treatments.json";
+	private static final String SICK_DAY_FILE_NAME = "sickDays.json";
 	private Context context;
 
 	public Storage(Context context) {
@@ -121,15 +125,79 @@ public class Storage {
 	}
 
 	public Map<UUID, Treatment> getAllTreatments() throws Exception {
-		BufferedReader br = null;
 		Map<UUID, Treatment> ret = new HashMap<UUID, Treatment>();
+
+		Map<UUID, ModelObjectBase> fromRead = performRead(TREATMENT_FILE_NAME, new JSONCaller<Treatment>() {
+			@Override
+			public Treatment objectFromJSON(String jsonTxt) throws JSONException {
+				return Jsonizer.treatmentFromJSON(jsonTxt);
+			}
+		});
+
+		for (UUID key : fromRead.keySet()) {
+			ret.put(key, (Treatment) fromRead.get(key));
+		}
+
+		return ret;
+	}
+
+	public void saveTreatments(Collection<Treatment> treatments) throws Exception {
+		performSave(treatments, TREATMENT_FILE_NAME);
+	}
+
+	public Map<UUID, SickDay> getAllSickDays() throws Exception {
+		Map<UUID, SickDay> ret = new HashMap<UUID, SickDay>();
+
+		Map<UUID, ModelObjectBase> fromRead = performRead(SICK_DAY_FILE_NAME, new JSONCaller<SickDay>() {
+			@Override
+			public SickDay objectFromJSON(String jsonTxt) throws JSONException {
+				return Jsonizer.sickDayFromJSON(jsonTxt);
+			}
+		});
+
+		for (UUID key : fromRead.keySet()) {
+			ret.put(key, (SickDay) fromRead.get(key));
+		}
+
+		return ret;
+	}
+
+	public void saveSickDays(Collection<SickDay> toSave) throws Exception {
+		performSave(toSave, SICK_DAY_FILE_NAME);
+	}
+
+	private void performSave(Collection<? extends ModelObjectBase> objs, String fileName) throws Exception {
+		PrintWriter pw = null;
 		try {
-			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(TREAMENT_FILE_NAME)));
+			pw = new PrintWriter(this.context.openFileOutput(fileName, Context.MODE_PRIVATE));
+
+			for (ModelObjectBase obj : objs) {
+				pw.println(Jsonizer.modelObjectToJSON(obj));
+			}
+
+		} finally {
+			if (pw != null) {
+				pw.flush();
+				pw.close();
+			}
+		}
+	}
+
+	private interface JSONCaller<T extends ModelObjectBase> {
+		public T objectFromJSON(String jsonTxt) throws JSONException;
+	}
+
+
+	public Map<UUID, ModelObjectBase> performRead(String fileName, JSONCaller<? extends ModelObjectBase> caller) throws Exception {
+		Map<UUID, ModelObjectBase> ret = new HashMap<UUID, ModelObjectBase>();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new InputStreamReader(this.context.openFileInput(fileName)));
 
 			String json;
 			while ((json = br.readLine()) != null) {
-				Treatment treatment = Jsonizer.treatmentFromJSON(json);
-				ret.put(treatment.getUUID(), treatment);
+				ModelObjectBase obj = caller.objectFromJSON(json);
+				ret.put(obj.getUUID(), obj);
 			}
 
 			return ret;
@@ -141,20 +209,7 @@ public class Storage {
 		}
 	}
 
-	public void saveTreatments(Collection<Treatment> treatments) throws Exception {
-		PrintWriter pw = null;
-		try {
-			pw = new PrintWriter(this.context.openFileOutput(TREAMENT_FILE_NAME, Context.MODE_PRIVATE));
 
-			for (Treatment treatment : treatments) {
-				pw.println(Jsonizer.treatmentToJSON(treatment));
-			}
 
-		} finally {
-			if (pw != null) {
-				pw.flush();
-				pw.close();
-			}
-		}
-	}
+
 }

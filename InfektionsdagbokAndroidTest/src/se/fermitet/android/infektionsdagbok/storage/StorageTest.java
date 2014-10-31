@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.joda.time.LocalDate;
 
+import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -91,27 +92,16 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testSaveAndRetrieveTreatments() throws Exception {
-		Collection<Treatment> toSave = new ArrayList<Treatment>();
-
-		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(LocalDate.now(), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(LocalDate.now(), 3, "INF3", "MED3");
-		Treatment t4 = new Treatment(LocalDate.now(), 4, "INF4", "MED4");
-
-		toSave.add(t1);
-		toSave.add(t2);
-		toSave.add(t3);
-		toSave.add(t4);
+		Collection<Treatment> toSave = createTreatmentTestData();
 
 		storage.saveTreatments(toSave);
 
 		Map<UUID, Treatment> received = storage.getAllTreatments();
 
-		assertEquals("Size after work", 4, received.size());
-		assertTrue("Contains t1", received.values().contains(t1));
-		assertTrue("Contains t2", received.values().contains(t2));
-		assertTrue("Contains t3", received.values().contains(t3));
-		assertTrue("Contains t4", received.values().contains(t4));
+		assertEquals("Size after work", toSave.size(), received.size());
+		for (Treatment t :  toSave) {
+			assertTrue("Contains " + t, received.values().contains(t));
+		}
 
 		for (UUID uuid : received.keySet()) {
 			Treatment treatment = received.get(uuid);
@@ -120,17 +110,7 @@ public class StorageTest extends AndroidTestCase {
 	}
 
 	public void testClearForTreatment() throws Exception {
-		Collection<Treatment> toSave = new ArrayList<Treatment>();
-
-		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
-		Treatment t2 = new Treatment(LocalDate.now(), 2, "INF2", "MED2");
-		Treatment t3 = new Treatment(LocalDate.now(), 3, "INF3", "MED3");
-		Treatment t4 = new Treatment(LocalDate.now(), 4, "INF4", "MED4");
-
-		toSave.add(t1);
-		toSave.add(t2);
-		toSave.add(t3);
-		toSave.add(t4);
+		Collection<Treatment> toSave = createTreatmentTestData();
 
 		storage.saveTreatments(toSave);
 
@@ -140,4 +120,53 @@ public class StorageTest extends AndroidTestCase {
 
 		assertEquals("Empty after clear", 0, received.size());
 	}
+
+	private Collection<Treatment> createTreatmentTestData() {
+		Collection<Treatment> toSave = new ArrayList<Treatment>();
+
+		toSave.add(new Treatment(LocalDate.now(), 1, "INF1", "MED1"));
+		toSave.add(new Treatment(null, 2, "INF2", "MED2"));
+		toSave.add(new Treatment(LocalDate.now(), null, "INF3", "MED3"));
+		toSave.add(new Treatment(LocalDate.now(), 4, null, "MED4"));
+		toSave.add(new Treatment(LocalDate.now(), 5, "INF5", null));
+		return toSave;
+	}
+
+	public void testSaveAndRetrieveSickDays() throws Exception {
+		Collection<SickDay> toSave = createSickDaysTestData();
+		storage.saveSickDays(toSave);
+
+		Map<UUID, SickDay> received = storage.getAllSickDays();
+
+		assertEquals("Size after work", toSave.size(), received.size());
+		for (SickDay obj :  toSave) {
+			assertTrue("Contains " + obj, received.values().contains(obj));
+		}
+
+		for (UUID uuid : received.keySet()) {
+			SickDay obj = received.get(uuid);
+			assertEquals("Key", uuid, obj.getUUID());
+		}
+	}
+
+	public void testClearForSickDays() throws Exception {
+		Collection<SickDay> toSave = createSickDaysTestData();
+		storage.saveSickDays(toSave);
+
+		storage.clear();
+
+		Map<UUID, SickDay> received = storage.getAllSickDays();
+
+		assertEquals("Empty after clear", 0, received.size());
+	}
+
+	private Collection<SickDay> createSickDaysTestData() {
+		Collection<SickDay> toSave = new ArrayList<SickDay>();
+
+		toSave.add(new SickDay(LocalDate.now().minusDays(1),	LocalDate.now().plusDays(1)));
+		toSave.add(new SickDay(null, 							LocalDate.now().plusDays(2)));
+		toSave.add(new SickDay(LocalDate.now().minusDays(1), 	null));
+		return toSave;
+	}
+
 }

@@ -35,11 +35,11 @@ public class JsonizerTest extends TestCase {
 		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
 		Treatment nullNumDays = new Treatment(origStartingDate, null, origInfectionType, origMedicine);
 
-		assertEquals("Original", original, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(original)));
-		assertEquals("nullInfectionType", nullInfectionType, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullInfectionType)));
-		assertEquals("nullMedicine", nullMedicine, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullMedicine)));
-		assertEquals("nullStartingDate", nullStartingDate, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullStartingDate)));
-		assertEquals("nullNumDays", nullNumDays, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullNumDays)));
+		assertEquals("Original", original, Jsonizer.treatmentFromJSON(Jsonizer.modelObjectToJSON(original)));
+		assertEquals("nullInfectionType", nullInfectionType, Jsonizer.treatmentFromJSON(Jsonizer.modelObjectToJSON(nullInfectionType)));
+		assertEquals("nullMedicine", nullMedicine, Jsonizer.treatmentFromJSON(Jsonizer.modelObjectToJSON(nullMedicine)));
+		assertEquals("nullStartingDate", nullStartingDate, Jsonizer.treatmentFromJSON(Jsonizer.modelObjectToJSON(nullStartingDate)));
+		assertEquals("nullNumDays", nullNumDays, Jsonizer.treatmentFromJSON(Jsonizer.modelObjectToJSON(nullNumDays)));
 	}
 
 	public void testToFromSickDay() throws Exception {
@@ -50,9 +50,9 @@ public class JsonizerTest extends TestCase {
 		SickDay nullStart = new SickDay(null, end);
 		SickDay nullEnd = new SickDay(start, null);
 
-		assertEquals("original", original, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(original)));
-		assertEquals("nullStart", nullStart, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(nullStart)));
-		assertEquals("nullEnd", nullEnd, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(nullEnd)));
+		assertEquals("original", original, Jsonizer.sickDayFromJSON(Jsonizer.modelObjectToJSON(original)));
+		assertEquals("nullStart", nullStart, Jsonizer.sickDayFromJSON(Jsonizer.modelObjectToJSON(nullStart)));
+		assertEquals("nullEnd", nullEnd, Jsonizer.sickDayFromJSON(Jsonizer.modelObjectToJSON(nullEnd)));
 
 	}
 }
