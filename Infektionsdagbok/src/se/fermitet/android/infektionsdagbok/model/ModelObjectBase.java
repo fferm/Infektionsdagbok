@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.joda.time.LocalDate;
 
-abstract class ModelObjectBase implements Serializable {
+public abstract class ModelObjectBase implements Serializable {
 
 	/**
 	 *

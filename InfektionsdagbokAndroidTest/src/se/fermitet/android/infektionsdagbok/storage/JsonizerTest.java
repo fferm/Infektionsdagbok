@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.helper.NameFromIdHelper;
+import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
@@ -39,5 +40,19 @@ public class JsonizerTest extends TestCase {
 		assertEquals("nullMedicine", nullMedicine, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullMedicine)));
 		assertEquals("nullStartingDate", nullStartingDate, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullStartingDate)));
 		assertEquals("nullNumDays", nullNumDays, Jsonizer.treatmentFromJSON(Jsonizer.treatmentToJSON(nullNumDays)));
+	}
+
+	public void testToFromSickDay() throws Exception {
+		LocalDate start = LocalDate.now().minusWeeks(2);
+		LocalDate end = LocalDate.now();
+
+		SickDay original = new SickDay(start, end);
+		SickDay nullStart = new SickDay(null, end);
+		SickDay nullEnd = new SickDay(start, null);
+
+		assertEquals("original", original, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(original)));
+		assertEquals("nullStart", nullStart, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(nullStart)));
+		assertEquals("nullEnd", nullEnd, Jsonizer.sickDayFromJSON(Jsonizer.sickDayToJSON(nullEnd)));
+
 	}
 }
