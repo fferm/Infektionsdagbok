@@ -110,47 +110,9 @@ public class ModelManager {
 		return (Map<UUID, Treatment>) getAllOfCorrectClass(Treatment.class);
 	}
 
-	public void saveTreatments(Collection<Treatment> toSave) throws Exception {
-		storage.saveTreatments(toSave);
-	}
-
 	@SuppressWarnings("unchecked")
 	public Map<UUID, SickDay> getAllSickDays() throws Exception {
 		return (Map<UUID, SickDay>) getAllOfCorrectClass(SickDay.class);
-	}
-
-	public void saveAll(Collection<ModelObjectBase> toSave) throws Exception {
-		Map<Class<? extends ModelObjectBase>, Collection<? extends ModelObjectBase>> classSplitMap = new HashMap<Class<? extends ModelObjectBase>, Collection<? extends ModelObjectBase>>();
-
-		for (ModelObjectBase obj : toSave) {
-			// TODO
-			if (classSplitMap.containsKey(toSave.getClass())) {
-
-			} else {
-				Collection<ModelObjectBase> classCollection = new ArrayList<ModelObjectBase>();
-				classSplitMap.put((Class<? extends ModelObjectBase>) toSave.getClass(), classCollection);
-			}
-		}
-		storage.saveSickDays(toSave);
-	}
-
-	public void save(ModelObjectBase obj) throws Exception {
-		@SuppressWarnings("unchecked")
-		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
-
-		alreadySaved.put(obj.getUUID(), obj);
-
-		saveAll(alreadySaved.values(), obj.getClass());
-	}
-
-
-	public void delete(ModelObjectBase obj) throws Exception {
-		@SuppressWarnings("unchecked")
-		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
-
-		alreadySaved.remove(obj.getUUID());
-
-		saveAll(alreadySaved.values(), obj.getClass());
 	}
 
 	private Map<UUID, ? extends ModelObjectBase> getAllOfCorrectClass(Class<? extends ModelObjectBase> clz) throws Exception {
@@ -161,12 +123,57 @@ public class ModelManager {
 		else throw new IllegalArgumentException("Class needs to be a subclass of ModelObjectBase.  Was: " + clz.getName());
 	}
 
+	public void saveAll(Collection<? extends ModelObjectBase> toSave) throws Exception {
+		Map<Class<? extends ModelObjectBase>, Collection<ModelObjectBase>> classSplitMap = new HashMap<Class<? extends ModelObjectBase>, Collection<ModelObjectBase>>();
+
+		for (ModelObjectBase obj : toSave) {
+			Collection<ModelObjectBase> classCollection = null;
+			Class<? extends ModelObjectBase> key = obj.getClass();
+
+			if (classSplitMap.containsKey(key)) {
+				classCollection = classSplitMap.get(key);
+			} else {
+				classCollection = new ArrayList<ModelObjectBase>();
+				classSplitMap.put(key, classCollection);
+			}
+			classCollection.add(obj);
+		}
+
+		for (Class<? extends ModelObjectBase> clz : classSplitMap.keySet()) {
+			saveAllForClass(classSplitMap.get(clz), clz);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
-	private void saveAll(Collection<? extends ModelObjectBase> collection, Class<? extends ModelObjectBase> clz) throws Exception {
-		if (clz.equals(Treatment.class)) saveTreatments((Collection<Treatment>) collection);
-		else if (clz.equals(SickDay.class)) saveAll((Collection<SickDay>) collection);
+	private void saveAllForClass(Collection<? extends ModelObjectBase> collection, Class<? extends ModelObjectBase> clz) throws Exception {
+		if (clz.equals(Treatment.class)) {
+			storage.saveTreatments((Collection<Treatment>) collection);
+		} else if (clz.equals(SickDay.class)) {
+			storage.saveSickDays((Collection<SickDay>) collection);
+		}
 
 		else throw new IllegalArgumentException("Unknown class: " + clz);
 	}
+
+
+	public void save(ModelObjectBase obj) throws Exception {
+		@SuppressWarnings("unchecked")
+		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
+
+		alreadySaved.put(obj.getUUID(), obj);
+
+		saveAllForClass(alreadySaved.values(), obj.getClass());
+	}
+
+
+	public void delete(ModelObjectBase obj) throws Exception {
+		@SuppressWarnings("unchecked")
+		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
+
+		alreadySaved.remove(obj.getUUID());
+
+		saveAllForClass(alreadySaved.values(), obj.getClass());
+	}
+
 
 }

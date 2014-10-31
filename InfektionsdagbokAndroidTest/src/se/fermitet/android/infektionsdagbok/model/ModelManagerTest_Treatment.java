@@ -62,7 +62,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		toSave.add(t2);
 		toSave.add(t3);
 
-		modelManager.saveTreatments(toSave);
+		modelManager.saveAll(toSave);
 
 		Collection<Treatment> fromFile = modelManager.getAllTreatments().values();
 
@@ -80,7 +80,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		toSave.add(t2);
 		toSave.add(t3);
 
-		modelManager.saveTreatments(toSave);
+		modelManager.saveAll(toSave);
 
 		modelManager.delete(t1);
 

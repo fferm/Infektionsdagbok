@@ -146,7 +146,7 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 		testData.add(nullInfection);
 		testData.add(nullStartingDate);
 
-		mm.saveTreatments(testData);
+		mm.saveAll(testData);
 	}
 }
 

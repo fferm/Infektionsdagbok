@@ -470,7 +470,7 @@ public class TreatmentMasterActivityTest_TestData extends TreatmentMasterActivit
 		testData.add(nullStartingDate);
 		testData.add(nullNumDays);
 
-		mm.saveTreatments(testData);
+		mm.saveAll(testData);
 	}
 
 }
