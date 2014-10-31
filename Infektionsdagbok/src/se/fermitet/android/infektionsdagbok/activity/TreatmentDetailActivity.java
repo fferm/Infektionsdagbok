@@ -35,7 +35,7 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 		view.setOnButtonPressedListener(new OnButtonPressedListener() {
 			@Override
 			public void onSavePressed(Treatment treatment) throws Exception {
-				getLocalApplication().getModelManager().saveTreatment(treatment);
+				getLocalApplication().getModelManager().save(treatment);
 				finish();
 			}
 

@@ -29,12 +29,12 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		super.tearDown();
 	}
 
-	public void testSaveTreatmentForInsertAndUpdate() throws Exception {
+	public void testSaveSingleForInsertAndUpdate() throws Exception {
 		Map<UUID, Treatment> initial = modelManager.getAllTreatments();
 		assertEquals("initial size", 0, initial.size());
 
 		Treatment t1 = new Treatment(LocalDate.now(), 1, "INF1", "MED1");
-		modelManager.saveTreatment(t1);
+		modelManager.save(t1);
 
 		Map<UUID, Treatment> afterFirstSave = modelManager.getAllTreatments();
 
@@ -42,7 +42,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		assertTrue("Contains t1", afterFirstSave.values().contains(t1));
 
 		t1.setNumDays(2);
-		modelManager.saveTreatment(t1);
+		modelManager.save(t1);
 
 		Map<UUID, Treatment> afterSecondSave = modelManager.getAllTreatments();
 
@@ -52,7 +52,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		assertEquals("Changed value", t1.getNumDays(), fromFile.getNumDays());
 	}
 
-	public void testSaveTreatments() throws Exception {
+	public void testSaveAll() throws Exception {
 		Treatment t1 = new Treatment(LocalDate.now().plusDays(1), 1, "INF1", "MED1");
 		Treatment t2 = new Treatment(LocalDate.now().plusDays(2), 2, "INF2", "MED2");
 		Treatment t3 = new Treatment(LocalDate.now().plusDays(3), 3, "INF3", "MED3");
@@ -70,7 +70,7 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		assertTrue("Contains all", fromFile.containsAll(toSave));
 	}
 
-	public void testDeleteTreatment() throws Exception {
+	public void testDelete() throws Exception {
 		Treatment t1 = new Treatment(LocalDate.now().plusDays(1), 1, "INF1", "MED1");
 		Treatment t2 = new Treatment(LocalDate.now().plusDays(2), 2, "INF2", "MED2");
 		Treatment t3 = new Treatment(LocalDate.now().plusDays(3), 3, "INF3", "MED3");
@@ -88,8 +88,6 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 
 		assertEquals("size", toSave.size() - 1, fromFile.size());
 		assertFalse("Contains", fromFile.contains(t1));
-
-
 	}
 
 }

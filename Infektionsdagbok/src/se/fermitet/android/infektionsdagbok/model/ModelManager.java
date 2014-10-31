@@ -110,12 +110,12 @@ public class ModelManager {
 		return storage.getAllTreatments();
 	}
 
-	public void saveTreatment(Treatment t) throws Exception {
-		Map<UUID, Treatment> treatmentMap = getAllTreatments();
+	public void save(Treatment t) throws Exception {
+		Map<UUID, Treatment> alreadySaved = getAllTreatments();
 
-		treatmentMap.put(t.getUUID(), t);
+		alreadySaved.put(t.getUUID(), t);
 
-		storage.saveTreatments(treatmentMap.values());
+		storage.saveTreatments(alreadySaved.values());
 	}
 
 	public void saveTreatments(Collection<Treatment> toSave) throws Exception {
@@ -123,12 +123,51 @@ public class ModelManager {
 	}
 
 	public void delete(Treatment toDelete) throws Exception {
-		Map<UUID, Treatment> treatmentMap = getAllTreatments();
+		Map<UUID, Treatment> alreadySaved = getAllTreatments();
 
-		treatmentMap.remove(toDelete.getUUID());
+		alreadySaved.remove(toDelete.getUUID());
 
-		storage.saveTreatments(treatmentMap.values());
+		storage.saveTreatments(alreadySaved.values());
+	}
 
+	public Map<UUID, SickDay> getAllSickDays() throws Exception {
+		return storage.getAllSickDays();
+	}
+
+	public void save(SickDay obj) throws Exception {
+		@SuppressWarnings("unchecked")
+		Map<UUID, SickDay> alreadySaved = (Map<UUID, SickDay>) getAllOfCorrectClass(obj.getClass());
+
+		alreadySaved.put(obj.getUUID(), obj);
+
+		saveAll(alreadySaved.values(), obj.getClass());
+	}
+
+	public void saveSickDays(Collection<SickDay> toSave) throws Exception {
+		storage.saveSickDays(toSave);
+
+	}
+
+	public void delete(SickDay obj) throws Exception {
+		Map<UUID, SickDay> alreadySaved = getAllSickDays();
+
+		alreadySaved.remove(obj.getUUID());
+
+		storage.saveSickDays(alreadySaved.values());
+	}
+
+	private Map<UUID, ? extends ModelObjectBase> getAllOfCorrectClass(Class<? extends ModelObjectBase> clz) throws Exception {
+		if (clz.equals(Treatment.class)) return getAllTreatments();
+		else if (clz.equals(SickDay.class)) return getAllSickDays();
+		else return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void saveAll(Collection<? extends ModelObjectBase> collection, Class<? extends ModelObjectBase> clz) throws Exception {
+		if (clz.equals(Treatment.class)) saveTreatments((Collection<Treatment>) collection);
+		else if (clz.equals(SickDay.class)) saveSickDays((Collection<SickDay>) collection);
+
+		else throw new IllegalArgumentException("Unknown class: " + clz);
 	}
 
 }
