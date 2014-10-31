@@ -1,11 +1,25 @@
 package se.fermitet.android.infektionsdagbok.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.UUID;
 
-public abstract class ModelObjectBase implements Serializable {
+import org.joda.time.LocalDate;
 
+abstract class ModelObjectBase implements Serializable {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private static DateFormat df;
 	protected UUID uuid;
+
+	static {
+		df = DateFormat.getDateInstance(DateFormat.SHORT);
+	}
+
 
 	public ModelObjectBase() {
 		super();
@@ -19,6 +33,11 @@ public abstract class ModelObjectBase implements Serializable {
 
 	public void setUUID(UUID uuid) {
 		this.uuid = uuid;
+	}
+
+	protected String formatDate(LocalDate date) {
+		if (date == null) return null;
+		else return df.format(date.toDate());
 	}
 
 	@Override

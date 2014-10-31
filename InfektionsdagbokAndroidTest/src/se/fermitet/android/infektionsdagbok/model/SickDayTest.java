@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.text.DateFormat;
 import java.util.UUID;
 
 import junit.framework.TestCase;
@@ -44,22 +45,34 @@ public class SickDayTest extends TestCase {
 		sickDay.setUUID(testUUID);
 		assertEquals("UUID", testUUID, sickDay.getUUID());
 
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
 		LocalDate testStart = LocalDate.now().minusDays(10);
 		sickDay.setStart(testStart);
 		assertEquals("Start", testStart, sickDay.getStart());
+		assertEquals("Start text", df.format(testStart.toDate()), sickDay.getStartString());
 
 		LocalDate testEnd = LocalDate.now().plusDays(10);
 		sickDay.setEnd(testEnd);
 		assertEquals("End", testEnd, sickDay.getEnd());
+		assertEquals("End text", df.format(testEnd.toDate()), sickDay.getEndString());
 	}
 
 	public void testToString() throws Exception {
-		fail("TODO");
-	}
+		LocalDate start = new LocalDate(2014,10,31);
+		LocalDate end = new LocalDate(2015,1,1);
 
-	public void testStartingDateString() throws Exception {
-		// TODO
-		fail("TODO");
+		SickDay normal = new SickDay(start, end);
+		SickDay nullStart = new SickDay(null, end);
+		SickDay nullEnd = new SickDay(start, null);
+
+		String expectedNormal		= "SickDay{uuid: " + normal.getUUID().toString()	+ ", start: 2014-10-31, end: 2015-01-01}";
+		String expectedNullStart	= "SickDay{uuid: " + nullStart.getUUID().toString()	+ ", start: null, end: 2015-01-01}";
+		String expectedNullEnd		= "SickDay{uuid: " + nullEnd.getUUID().toString() 	+ ", start: 2014-10-31, end: null}";
+
+		assertEquals("normal", expectedNormal, normal.toString());
+		assertEquals("nullStart", expectedNullStart, nullStart.toString());
+		assertEquals("nullEnd", expectedNullEnd, nullEnd.toString());
 	}
 
 	public void testValueObject() throws Exception {
@@ -90,10 +103,4 @@ public class SickDayTest extends TestCase {
 		assertFalse("Not equal to null", original.equals(null));
 		assertFalse("Not equal to object of different class", original.equals("TEST"));
 	}
-
-
-
-
-
-
 }

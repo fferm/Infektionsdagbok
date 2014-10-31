@@ -40,7 +40,7 @@ public class TreatmentTest extends TestCase {
 		int numDays = 5;
 
 		Treatment original = new Treatment(startingDate, numDays, infectionType, medicine);
-		Treatment copy = new Treatment(original);
+		ModelObjectBase copy = new Treatment(original);
 
 		assertEquals("Equal", original, copy);
 		assertFalse("Not same", original == copy);
@@ -108,19 +108,19 @@ public class TreatmentTest extends TestCase {
 		int origNumDays = 5;
 
 		Treatment original = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
-		Treatment equal = new Treatment(original);
+		ModelObjectBase equal = new Treatment(original);
 
-		Treatment sameValuesDifferentUUID = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
+		ModelObjectBase sameValuesDifferentUUID = new Treatment(origStartingDate, origNumDays, origInfectionType, origMedicine);
 
-		Treatment nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
-		Treatment nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
-		Treatment nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
-		Treatment nullNumDays = new Treatment(origStartingDate, null, origInfectionType, origMedicine);
+		ModelObjectBase nullInfectionType = new Treatment(origStartingDate, origNumDays, null, origMedicine);
+		ModelObjectBase nullMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, null);
+		ModelObjectBase nullStartingDate = new Treatment(null, origNumDays, origInfectionType, origMedicine);
+		ModelObjectBase nullNumDays = new Treatment(origStartingDate, null, origInfectionType, origMedicine);
 
-		Treatment diffInfectionType = new Treatment(origStartingDate, origNumDays, "DIFFERENT", origMedicine);
-		Treatment diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
-		Treatment diffStartingDate = new Treatment(new LocalDate(2012,1,1), origNumDays, origInfectionType, origMedicine);
-		Treatment diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
+		ModelObjectBase diffInfectionType = new Treatment(origStartingDate, origNumDays, "DIFFERENT", origMedicine);
+		ModelObjectBase diffMedicine = new Treatment(origStartingDate, origNumDays, origInfectionType, "DIFFERENT");
+		ModelObjectBase diffStartingDate = new Treatment(new LocalDate(2012,1,1), origNumDays, origInfectionType, origMedicine);
+		ModelObjectBase diffNumDays = new Treatment(origStartingDate, 20, origInfectionType, origMedicine);
 
 		assertTrue("Equal to equal", original.equals(equal));
 

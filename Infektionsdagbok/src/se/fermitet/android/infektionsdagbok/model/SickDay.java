@@ -29,12 +29,20 @@ public class SickDay extends ModelObjectBase {
 		return this.start;
 	}
 
+	public String getStartString() {
+		return formatDate(getStart());
+	}
+
 	public void setStart(LocalDate start) {
 		this.start = start;
 	}
 
 	public LocalDate getEnd() {
 		return this.end;
+	}
+
+	public String getEndString() {
+		return formatDate(getEnd());
 	}
 
 	public void setEnd(LocalDate end) {
@@ -74,6 +82,29 @@ public class SickDay extends ModelObjectBase {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
 
+		buf.append("SickDay{uuid: ").append(getUUID().toString());
+
+		buf.append(", start: ");
+		if (getStart() == null) {
+			buf.append("null");
+		} else {
+			buf.append(getStartString());
+		}
+
+		buf.append(", end: ");
+		if (getEnd() == null) {
+			buf.append("null");
+		} else {
+			buf.append(getEndString());
+		}
+
+		buf.append("}");
+
+		return buf.toString();
+	}
 
 }

@@ -1,7 +1,5 @@
 package se.fermitet.android.infektionsdagbok.model;
 
-import java.text.DateFormat;
-
 import org.joda.time.LocalDate;
 
 public class Treatment extends ModelObjectBase {
@@ -12,11 +10,6 @@ public class Treatment extends ModelObjectBase {
 	private Integer numDays;
 	private String infectionType;
 	private String medicine;
-	private static DateFormat df;
-
-	static {
-		df = DateFormat.getDateInstance(DateFormat.SHORT);
-	}
 
 	public Treatment() {
 		super();
@@ -42,13 +35,7 @@ public class Treatment extends ModelObjectBase {
 	}
 
 	public String getStartingDateString() {
-		LocalDate date = getStartingDate();
-
-		if (date == null) {
-			return null;
-		} else {
-			return df.format(date.toDate());
-		}
+		return formatDate(getStartingDate());
 	}
 
 	public void setStartingDate(LocalDate startingDate) {
