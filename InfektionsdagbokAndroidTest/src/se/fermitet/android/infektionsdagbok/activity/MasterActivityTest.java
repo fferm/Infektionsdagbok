@@ -3,43 +3,40 @@ package se.fermitet.android.infektionsdagbok.activity;
 import java.util.Map;
 import java.util.UUID;
 
-import org.joda.time.LocalDate;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.ModelObjectBase;
-import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokListAdapter;
-import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokView;
-import android.app.DatePickerDialog;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-public abstract class MasterActivityTest_TestData
+@SuppressWarnings("rawtypes")
+public abstract class MasterActivityTest
 	<ITEM extends ModelObjectBase,
-	VIEW extends View & InfektionsdagbokView,
-	ACTIVITY extends InfektionsdagbokActivity<VIEW>,
+	ACTIVITY extends InfektionsdagbokActivity,
 	ADAPTER extends InfektionsdagbokListAdapter<ITEM>> extends ActivityTestWithSolo<ACTIVITY>{
 
 	protected ModelManager mm;
-	private Class<ITEM> itemClass;
-	private Class<ACTIVITY> masterActivityClass;
-	@SuppressWarnings("rawtypes")
-	private Class<? extends InfektionsdagbokActivity> detailActivityClass;
+	protected Class<ACTIVITY> masterActivityClass;
+	protected Class<? extends InfektionsdagbokActivity> detailActivityClass;
+	protected Class<ITEM> itemClass;
 
-	@SuppressWarnings("rawtypes")
-	public MasterActivityTest_TestData(Class<ACTIVITY> masterActivityClass, Class<? extends InfektionsdagbokActivity> detailActivityClass, Class<ITEM> itemClass) {
+	protected abstract void saveTestData() throws Exception;
+	protected abstract String getHeaderText() throws Exception;
+	protected abstract void checkSubInitials() throws Exception;
+	protected abstract void checkDetailEditorsEmpty();
+	protected abstract ITEM getTestItem() throws Exception;
+	protected abstract void editUIBasedOnItem(ITEM itemWithNewValues) throws Exception;
+
+	public MasterActivityTest(Class<ACTIVITY> masterActivityClass, Class<? extends InfektionsdagbokActivity> detailActivityClass, Class<ITEM> itemClass) {
 		super(masterActivityClass);
 
 		this.masterActivityClass = masterActivityClass;
 		this.detailActivityClass = detailActivityClass;
 		this.itemClass = itemClass;
+
 	}
 
 	@Override
@@ -51,9 +48,9 @@ public abstract class MasterActivityTest_TestData
 		saveTestData();
 	}
 
-	abstract void saveTestData() throws Exception;
+	public void testInitials() throws Exception {
+		assertTrue("Header text", solo.waitForText(getHeaderText()));
 
-	public void testSuperInitials() throws Exception {
 		assertNotNull("List view", solo.getView(R.id.itemListView));
 
 		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
@@ -67,6 +64,8 @@ public abstract class MasterActivityTest_TestData
 		ImageButton newBTN = (ImageButton) solo.getView(R.id.newBTN);
 		assertNotNull("New button", newBTN);
 		assertTrue("New button enabled", newBTN.isEnabled());
+
+		checkSubInitials();
 	}
 
 	public void testClickingOnItemHighlightsItAndAffectsButtonsEnabledState() throws Exception {
@@ -181,8 +180,6 @@ public abstract class MasterActivityTest_TestData
 		timeoutGetCurrentActivity(masterActivityClass);
 	}
 
-	protected abstract void checkDetailEditorsEmpty();
-
 	private void checkItemIsDeleted(ITEM toDelete) throws Exception {
 		// Check file
 		boolean contains;
@@ -205,6 +202,7 @@ public abstract class MasterActivityTest_TestData
 		assertFalse("Adapter contains deleted item", adapterContains(toDelete));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testEditAndSave() throws Exception {
 		int sizeBefore = mm.getAllTreatments().size();
 
@@ -214,53 +212,31 @@ public abstract class MasterActivityTest_TestData
 		ADAPTER adapter = getListAdapter();
 		ITEM toEdit = adapter.getItem(0);
 		UUID uuid = toEdit.getUUID();
-		ITEM withNewValues = getEditTestItem();
+		ITEM withNewValues = getTestItem();
 		withNewValues.setUUID(uuid);
 
 		solo.clickOnView(solo.getView(R.id.editBTN));
-		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) timeoutGetCurrentActivity(TreatmentDetailActivity.class);
+		timeoutGetCurrentActivity(detailActivityClass);
 
-		// Start editing
-		TextView startTV = (TextView) solo.getView(R.id.startTV);
-		solo.clickOnView(startTV);
-		solo.waitForDialogToOpen();
-		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
-		DatePicker picker = dialog.getDatePicker();
-
-		LocalDate start = withNewValues.getStartingDate();
-		solo.setDatePicker(picker, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth());
-		solo.clickOnButton("Ställ in");
-
-		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
-		solo.clearEditText(numDaysEdit);
-		solo.enterText(numDaysEdit, withNewValues.getNumDays().toString());
-
-		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
-		solo.clearEditText(medicineEdit);
-		solo.enterText(medicineEdit, withNewValues.getMedicine());
-
-		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
-		solo.clearEditText(infectionTypeEdit);
-		solo.enterText(infectionTypeEdit, withNewValues.getInfectionType());
+		editUIBasedOnItem(withNewValues);
 
 		solo.clickOnView(solo.getView(R.id.saveBTN));
 		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
 
-
 		// Check file
-		Map<UUID, Treatment> treatmentsFromFile = null;
+		Map<UUID, ITEM> allFromFile = null;
 		boolean condition;
 		setStart();
 		do {
-			treatmentsFromFile = mm.getAllTreatments();
-			Treatment fromFile = treatmentsFromFile.get(uuid);
+			allFromFile = (Map<UUID, ITEM>) mm.getAllOfCorrectClass(itemClass);
+			ITEM fromFile = allFromFile.get(uuid);
 
 			condition = withNewValues.equals(fromFile);
 
 			setElapsed();
 		} while(!condition && notYetTimeout());
 		assertTrue("Found in file", condition);
-		assertEquals("Number of items on file", sizeBefore, treatmentsFromFile.size());
+		assertEquals("Number of items on file", sizeBefore, allFromFile.size());
 
 		// Check adapter
 		setStart();
@@ -274,10 +250,77 @@ public abstract class MasterActivityTest_TestData
 		assertEquals("Number of items in adapter", sizeBefore, adapter.getCount());
 	}
 
-	protected abstract ITEM getEditTestItem();
+	@SuppressWarnings("unchecked")
+	public void testNewWithCancel() throws Exception {
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
+
+		ITEM testItem = getTestItem();
+
+		// Click new
+		solo.clickOnView(solo.getView(R.id.newBTN));
+		timeoutGetCurrentActivity(detailActivityClass);
+
+		editUIBasedOnItem(testItem);
+
+		// Click save
+		solo.clickOnView(solo.getView(R.id.cancelBTN));
+		timeoutGetCurrentActivity(masterActivityClass);
 
 
+		// Check saved data
+		Map<UUID, ITEM> allFromFile = null;
+		setStart();
+		do {
+			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllOfCorrectClass(itemClass);
 
+			setElapsed();
+		} while (allFromFile.size() != sizeBefore  && notYetTimeout());
+		assertEquals("Size after save", sizeBefore, allFromFile.size());
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public void testEnterNewTreatment() throws Exception {
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
+
+		ITEM testItem = getTestItem();
+
+		// Click new
+		solo.clickOnView(solo.getView(R.id.newBTN));
+		timeoutGetCurrentActivity(detailActivityClass);
+
+		editUIBasedOnItem(testItem);
+
+		// Click save
+		solo.clickOnView(solo.getView(R.id.saveBTN));
+		timeoutGetCurrentActivity(masterActivityClass);
+
+		// Check saved data
+		Map<UUID, ITEM> allFromFile = null;
+		setStart();
+		do {
+			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllOfCorrectClass(itemClass);
+
+			setElapsed();
+		} while (allFromFile.size() != sizeBefore + 1 && notYetTimeout());
+		assertEquals("Size after save", sizeBefore + 1, allFromFile.size());
+		ITEM fromFile = allFromFile.values().iterator().next();
+		testItem.setUUID(fromFile.getUUID());
+		assertEquals("Equals with saved data (Except UUID)", testItem, fromFile);
+
+		// Check in adapter
+		ADAPTER adapter = getListAdapter();
+
+		int count;
+		setStart();
+		do {
+			count = adapter.getCount();
+
+			setElapsed();
+		} while (count != 1 && notYetTimeout());
+		assertEquals("adapter size",  sizeBefore + 1, count);
+		assertEquals("Equals with adapter object", testItem, adapter.getItem(0));
+	}
 
 	@SuppressWarnings("unchecked")
 	protected ADAPTER getListAdapter() {
@@ -307,9 +350,5 @@ public abstract class MasterActivityTest_TestData
 		}
 		return -1;
 	}
-
-
-
-
 
 }

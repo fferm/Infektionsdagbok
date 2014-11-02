@@ -8,28 +8,28 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
-import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
+import android.app.DatePickerDialog;
 import android.text.Editable;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class TreatmentMasterActivityTest_TestData extends MasterActivityTest_TestData<
-Treatment, TreatmentMasterView, TreatmentMasterActivity, TreatmentAdapter> {
+public class TreatmentMasterActivityTest extends MasterActivityTest<
+Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 
 	private Treatment nullMedicine;
 	private Treatment nullInfection;
 	private Treatment nullStartingDate;
 	private Treatment nullNumDays;
 
-	public TreatmentMasterActivityTest_TestData() {
+	public TreatmentMasterActivityTest() {
 		super(TreatmentMasterActivity.class, TreatmentDetailActivity.class, Treatment.class);
 	}
 
-	public void testInitials() throws Exception {
-		assertTrue("Header text", solo.waitForText("Behandlingar"));
-
+	@Override
+	protected void checkSubInitials() throws Exception {
 		assertTrue("Date list header", solo.waitForText("Start"));
 		assertTrue("numDays list header", solo.waitForText("Dgr"));
 
@@ -42,6 +42,11 @@ Treatment, TreatmentMasterView, TreatmentMasterActivity, TreatmentAdapter> {
 		searchForTreatmentInListAndCheckDisplayedValues(nullInfection);
 		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
 		searchForTreatmentInListAndCheckDisplayedValues(nullNumDays);
+	}
+
+	@Override
+	protected String getHeaderText() throws Exception {
+		return "Behandlingar";
 	}
 
 	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
@@ -151,7 +156,7 @@ Treatment, TreatmentMasterView, TreatmentMasterActivity, TreatmentAdapter> {
 	}
 
 	@Override
-	void saveTestData() throws Exception {
+	protected void saveTestData() throws Exception {
 		ArrayList<Treatment> testData = new ArrayList<Treatment>();
 
 		for (int i = 1; i <= 5; i++) {
@@ -203,10 +208,35 @@ Treatment, TreatmentMasterView, TreatmentMasterActivity, TreatmentAdapter> {
 	}
 
 	@Override
-	protected Treatment getEditTestItem() {
+	protected Treatment getTestItem() {
 		return new Treatment(LocalDate.now().minusMonths(2), 1000, "Förkylning", "Doxyferm");
 	}
 
+	@Override
+	protected void editUIBasedOnItem(Treatment itemWithNewValues) throws Exception {
+		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) solo.getCurrentActivity();
 
+		// Start editing
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		solo.clickOnView(startTV);
+		solo.waitForDialogToOpen();
+		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
+		DatePicker picker = dialog.getDatePicker();
 
+		LocalDate start = itemWithNewValues.getStartingDate();
+		solo.setDatePicker(picker, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth());
+		solo.clickOnButton("Ställ in");
+
+		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
+		solo.clearEditText(numDaysEdit);
+		solo.enterText(numDaysEdit, itemWithNewValues.getNumDays().toString());
+
+		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
+		solo.clearEditText(medicineEdit);
+		solo.enterText(medicineEdit, itemWithNewValues.getMedicine());
+
+		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
+		solo.clearEditText(infectionTypeEdit);
+		solo.enterText(infectionTypeEdit, itemWithNewValues.getInfectionType());
+	}
 }

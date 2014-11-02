@@ -91,6 +91,11 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 		return currentActivity;
 	}
 
+	public void assertBothNullOrEqual(String message, Object expected, Object actual) {
+		if (expected == null) assertNull(message, actual);
+		else assertEquals(message,  expected, actual);
+	}
+
 
 
 
