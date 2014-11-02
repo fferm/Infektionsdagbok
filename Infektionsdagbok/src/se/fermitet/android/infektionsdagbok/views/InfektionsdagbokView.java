@@ -13,30 +13,36 @@ public interface InfektionsdagbokView {
 }
 
 class InfektionsdagbokRelativeLayoutView extends RelativeLayout implements InfektionsdagbokView {
+	private InfektionsdagbokViewHandler handler;
+
 	public InfektionsdagbokRelativeLayoutView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+
+		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
+		handler = factory.createInfektionsdagbokViewHandler(getContext());
+		
+		handler.setViewDefaults(this);
 	}
 
 	@Override
 	public void handleException(Exception e) {
-		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
-		InfektionsdagbokViewHandler handler = factory.createInfektionsdagbokViewHandler(getContext());
-		
 		handler.handleExceptionFromView(e);
 	}
 }
 
 class InfektionsdabokLinearLayoutView extends LinearLayout implements InfektionsdagbokView {
 
+	private InfektionsdagbokViewHandler handler;
+
 	public InfektionsdabokLinearLayoutView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-	}
+
+		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
+		handler = factory.createInfektionsdagbokViewHandler(getContext());
+}
 
 	@Override
 	public void handleException(Exception e) {
-		Factory factory = InfektionsdagbokApplication.getApplicationInstance().getFactory();
-		InfektionsdagbokViewHandler handler = factory.createInfektionsdagbokViewHandler(getContext());
-		
 		handler.handleExceptionFromView(e);
 	}
 }

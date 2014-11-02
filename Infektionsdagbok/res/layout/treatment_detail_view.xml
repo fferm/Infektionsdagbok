@@ -3,17 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_not_selected_item" >
-
-    <TextView
+    
+  <!--   <include
+        layout="@layout/screen_header"
+        android:text="Behandling" />
+ -->
+        <TextView
         android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
+  android:text="Behandling"
+          android:layout_margin="10dp"
         android:gravity="center_horizontal"
-        android:text="Behandling"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
+        android:textAppearance="?android:attr/textAppearanceLarge"
+         />
+        
     <ImageButton
         android:id="@+id/saveBTN"
         android:layout_width="wrap_content"
