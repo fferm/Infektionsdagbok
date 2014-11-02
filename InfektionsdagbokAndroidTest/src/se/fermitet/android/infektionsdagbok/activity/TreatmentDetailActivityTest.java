@@ -9,18 +9,21 @@ import se.fermitet.android.infektionsdagbok.model.Treatment;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentDetailActivity> {
+public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, TreatmentDetailActivity> {
 
 	public TreatmentDetailActivityTest() {
 		super(TreatmentDetailActivity.class);
 	}
 
-	public void testInitials() throws Exception {
-		assertTrue("Header text", solo.waitForText("Behandling"));
-
+	@Override
+	protected String getHeaderText() {
+		return "Behandling";
+	}
+	
+	@Override
+	protected void checkSubInitials() {
 		checkHeaderTextView(R.id.startHeader, "Start:");
 		assertNotNull("Start date text field", solo.getView(R.id.startTV));
 
@@ -32,18 +35,6 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 
 		checkHeaderTextView(R.id.infectionTypeHeader, "Sjukdom:");
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
-
-		ImageButton saveBTN = (ImageButton) solo.getView(R.id.saveBTN);
-		assertNotNull("Save button", saveBTN);
-		assertTrue("save button enabled", saveBTN.isEnabled());
-
-		ImageButton cancelBTN = (ImageButton) solo.getView(R.id.cancelBTN);
-		assertNotNull("Cancel button", cancelBTN);
-		assertTrue("cancel button enabled", cancelBTN.isEnabled());
-
-		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
-		assertNotNull("Delete button", deleteBTN);
-		assertFalse("Delete button enabled", deleteBTN.isEnabled());
 	}
 
 	private void checkHeaderTextView(int id, String text) {
@@ -60,13 +51,14 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		LocalDate firstSet = new LocalDate(2012, 1, 1);
 		LocalDate secondSet = new LocalDate(2013, 10, 2);
 
-		testDatePicker("Null start", firstExpected, firstSet);
-		testDatePicker("Value start", firstSet, secondSet);
+		testDatePicker("Null start", firstExpected, firstSet, R.id.startTV);
+		testDatePicker("Value start", firstSet, secondSet, R.id.startTV);
 	}
 
-	private void testDatePicker(String messagePrefix, LocalDate expectedWhenOpeningPicker, LocalDate setTo) throws Exception {
-		TextView startTV = (TextView) solo.getView(R.id.startTV);
-		solo.clickOnView(startTV);
+	// TODO: Should be moved to testing of the widget itself
+	private void testDatePicker(String messagePrefix, LocalDate expectedWhenOpeningPicker, LocalDate setTo, int textViewFieldID) throws Exception {
+		TextView textView = (TextView) solo.getView(textViewFieldID);
+		solo.clickOnView(textView);
 
 		assertTrue(messagePrefix + ": " + "Open date dialog", solo.waitForDialogToOpen());
 
@@ -82,16 +74,16 @@ public class TreatmentDetailActivityTest extends ActivityTestWithSolo<TreatmentD
 		solo.setDatePicker(picker, setTo.getYear(), setTo.getMonthOfYear() - 1, setTo.getDayOfMonth());
 		solo.clickOnButton("StŠll in");
 
-		String startTVText = null;
+		String text = null;
 		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(setTo.toDate());
 		setStart();
 		do {
-			startTVText = startTV.getText().toString();
+			text = textView.getText().toString();
 
 			setElapsed();
-		} while (!expected.equals(startTVText) && notYetTimeout());
+		} while (!expected.equals(text) && notYetTimeout());
 
-		assertEquals(messagePrefix + ": " + "Start date field text", expected, startTV.getText());
+		assertEquals(messagePrefix + ": " + "field text", expected, textView.getText());
 
 		LocalDate newDateFromView = getActivity().view.getModel().getStartingDate();
 		assertEquals(messagePrefix + ": " + "view model date value (year)", setTo.year(), newDateFromView.year());
