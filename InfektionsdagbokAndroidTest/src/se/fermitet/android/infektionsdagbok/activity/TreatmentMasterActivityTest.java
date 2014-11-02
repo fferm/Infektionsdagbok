@@ -209,7 +209,7 @@ Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 
 	@Override
 	protected Treatment getTestItem() {
-		return new Treatment(LocalDate.now().minusMonths(2), 1000, "Fšrkylning", "Doxyferm");
+		return new Treatment(new LocalDate(2000, 1, 1), 1000, "Fšrkylning", "Doxyferm");
 	}
 
 	@Override

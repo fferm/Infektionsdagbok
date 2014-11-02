@@ -36,7 +36,6 @@ public abstract class MasterActivityTest
 		this.masterActivityClass = masterActivityClass;
 		this.detailActivityClass = detailActivityClass;
 		this.itemClass = itemClass;
-
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public abstract class MasterActivityTest
 
 		mm = new ModelManager(new Storage(getInstrumentation().getTargetContext()));
 
-		saveTestData();
+		if (!this.getName().equals("testEnterNewTreatment")) saveTestData();
 	}
 
 	public void testInitials() throws Exception {
