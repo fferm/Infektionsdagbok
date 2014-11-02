@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TreatmentMasterView extends InfektionsdagbokRelativeLayoutView {
+public class TreatmentMasterView extends InfektionsdagbokMasterView {
 
 	private ListView listView;
 	private TextView startListHeader;
