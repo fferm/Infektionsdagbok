@@ -32,49 +32,13 @@ Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 	protected void checkSubInitials() throws Exception {
 		assertTrue("Date list header", solo.waitForText("Start"));
 		assertTrue("numDays list header", solo.waitForText("Dgr"));
-
-		Collection<Treatment> testData = mm.getAllTreatments().values();
-
-		for (Treatment treatment : testData) {
-			searchForTreatmentInListAndCheckDisplayedValues(treatment);
-		}
-		searchForTreatmentInListAndCheckDisplayedValues(nullStartingDate);
-		searchForTreatmentInListAndCheckDisplayedValues(nullInfection);
-		searchForTreatmentInListAndCheckDisplayedValues(nullMedicine);
-		searchForTreatmentInListAndCheckDisplayedValues(nullNumDays);
 	}
 
 	@Override
-	protected String getHeaderText() throws Exception {
+	protected String getExpectedHeaderText() throws Exception {
 		return "Behandlingar";
 	}
 
-	private void searchForTreatmentInListAndCheckDisplayedValues(Treatment treatment) {
-		ListAdapter adapter = getListAdapter();
-
-		int index = indexOfItemInAdapter(treatment);
-		assertFalse("Didn't find treatment: " + treatment, index == -1);
-
-		View treatmentView = adapter.getView(index, null, null);
-		TextView startTv = (TextView) treatmentView.findViewById(R.id.dateValueField);
-		TextView numDaysTV = (TextView) treatmentView.findViewById(R.id.numDaysValueField);
-
-		LocalDate startingDate = treatment.getStartingDate();
-		if (startingDate == null) {
-			assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
-		} else {
-			assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(treatment.getStartingDateString()));
-		}
-
-		Integer numDays = treatment.getNumDays();
-		CharSequence shownText = numDaysTV.getText();
-		if (numDays == null) {
-			assertTrue("Should show numDays as null", shownText == null || shownText.length() == 0);
-		} else {
-			assertTrue("Should show treatment numDays " + treatment.getNumDays(), numDaysTV.getText().equals("" + treatment.getNumDays()));
-		}
-
-	}
 
 
 	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
@@ -238,5 +202,37 @@ Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 		EditText infectionTypeEdit = (EditText) solo.getView(R.id.infectionTypeEdit);
 		solo.clearEditText(infectionTypeEdit);
 		solo.enterText(infectionTypeEdit, itemWithNewValues.getInfectionType());
+	}
+
+	@Override
+	protected Collection<Treatment> getSpecialItemsToCheck() {
+		Collection<Treatment> ret = new ArrayList<Treatment>();
+		ret.add(nullInfection);
+		ret.add(nullMedicine);
+		ret.add(nullNumDays);
+		ret.add(nullStartingDate);
+
+		return ret;
+	}
+
+	@Override
+	protected void checkListSubViewForItemData(View listSubView, Treatment item) {
+		TextView startTv = (TextView) listSubView.findViewById(R.id.dateValueField);
+		TextView numDaysTV = (TextView) listSubView.findViewById(R.id.numDaysValueField);
+
+		LocalDate startingDate = item.getStartingDate();
+		if (startingDate == null) {
+			assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
+		} else {
+			assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(item.getStartingDateString()));
+		}
+
+		Integer numDays = item.getNumDays();
+		CharSequence shownText = numDaysTV.getText();
+		if (numDays == null) {
+			assertTrue("Should show numDays as null", shownText == null || shownText.length() == 0);
+		} else {
+			assertTrue("Should show treatment numDays " + item.getNumDays(), numDaysTV.getText().equals("" + item.getNumDays()));
+		}
 	}
 }

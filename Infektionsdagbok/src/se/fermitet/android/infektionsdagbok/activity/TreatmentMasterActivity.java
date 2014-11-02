@@ -10,9 +10,9 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokMasterView.OnButtonsPressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
-import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView.OnButtonsPressedListener;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -42,7 +42,7 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 	protected void onStart() {
 		super.onStart();
 
-		view.setOnButtonsPressedListener(new OnButtonsPressedListener() {
+		view.setOnButtonsPressedListener(new OnButtonsPressedListener<Treatment>() {
 			@Override
 			public void onNewPressed() throws Exception {
 				Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);

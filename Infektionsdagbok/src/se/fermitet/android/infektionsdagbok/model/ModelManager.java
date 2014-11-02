@@ -107,15 +107,15 @@ public class ModelManager {
 
 	@SuppressWarnings("unchecked")
 	public Map<UUID, Treatment> getAllTreatments() throws Exception {
-		return (Map<UUID, Treatment>) getAllOfCorrectClass(Treatment.class);
+		return (Map<UUID, Treatment>) getAllItemsOfClass(Treatment.class);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<UUID, SickDay> getAllSickDays() throws Exception {
-		return (Map<UUID, SickDay>) getAllOfCorrectClass(SickDay.class);
+		return (Map<UUID, SickDay>) getAllItemsOfClass(SickDay.class);
 	}
 
-	public Map<UUID, ? extends ModelObjectBase> getAllOfCorrectClass(Class<? extends ModelObjectBase> clz) throws Exception {
+	public Map<UUID, ? extends ModelObjectBase> getAllItemsOfClass(Class<? extends ModelObjectBase> clz) throws Exception {
 		if (clz.equals(Treatment.class))
 			return storage.getAllTreatments();
 		else if (clz.equals(SickDay.class))
@@ -158,7 +158,7 @@ public class ModelManager {
 
 	public void save(ModelObjectBase obj) throws Exception {
 		@SuppressWarnings("unchecked")
-		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
+		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllItemsOfClass(obj.getClass());
 
 		alreadySaved.put(obj.getUUID(), obj);
 
@@ -168,7 +168,7 @@ public class ModelManager {
 
 	public void delete(ModelObjectBase obj) throws Exception {
 		@SuppressWarnings("unchecked")
-		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllOfCorrectClass(obj.getClass());
+		Map<UUID, ModelObjectBase> alreadySaved = (Map<UUID, ModelObjectBase>) getAllItemsOfClass(obj.getClass());
 
 		alreadySaved.remove(obj.getUUID());
 

@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,9 +9,11 @@ import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.ModelObjectBase;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokListAdapter;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 @SuppressWarnings("rawtypes")
 public abstract class MasterActivityTest
@@ -24,8 +27,10 @@ public abstract class MasterActivityTest
 	protected Class<ITEM> itemClass;
 
 	protected abstract void saveTestData() throws Exception;
-	protected abstract String getHeaderText() throws Exception;
+	protected abstract String getExpectedHeaderText() throws Exception;
 	protected abstract void checkSubInitials() throws Exception;
+	protected abstract Collection<ITEM> getSpecialItemsToCheck();
+	protected abstract void checkListSubViewForItemData(View listSubView, ITEM item);
 	protected abstract void checkDetailEditorsEmpty();
 	protected abstract ITEM getTestItem() throws Exception;
 	protected abstract void editUIBasedOnItem(ITEM itemWithNewValues) throws Exception;
@@ -48,9 +53,8 @@ public abstract class MasterActivityTest
 	}
 
 	public void testInitials() throws Exception {
-		assertTrue("Header text", solo.waitForText(getHeaderText()));
-
-		assertNotNull("List view", solo.getView(R.id.itemListView));
+		TextView tv = (TextView) solo.getView(R.id.title);
+		assertEquals("Header text", getExpectedHeaderText(), tv.getText());
 
 		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
 		assertNotNull("Edit button", editBTN);
@@ -63,6 +67,19 @@ public abstract class MasterActivityTest
 		ImageButton newBTN = (ImageButton) solo.getView(R.id.newBTN);
 		assertNotNull("New button", newBTN);
 		assertTrue("New button enabled", newBTN.isEnabled());
+
+		assertNotNull("List view", solo.getView(R.id.itemListView));
+
+		@SuppressWarnings("unchecked")
+		Collection<ITEM> testData = (Collection<ITEM>) mm.getAllItemsOfClass(itemClass).values();
+
+		for (ITEM item : testData) {
+			searchForItemInListAndCheckDisplayedValues(item);
+		}
+
+		for (ITEM item : getSpecialItemsToCheck()) {
+			searchForItemInListAndCheckDisplayedValues(item);
+		}
 
 		checkSubInitials();
 	}
@@ -185,7 +202,7 @@ public abstract class MasterActivityTest
 		setStart();
 		do {
 			@SuppressWarnings("unchecked")
-			Map<UUID, ITEM> fromFile = (Map<UUID, ITEM>) mm.getAllOfCorrectClass(itemClass);
+			Map<UUID, ITEM> fromFile = (Map<UUID, ITEM>) mm.getAllItemsOfClass(itemClass);
 
 			contains = fromFile.containsKey(toDelete.getUUID());
 
@@ -227,7 +244,7 @@ public abstract class MasterActivityTest
 		boolean condition;
 		setStart();
 		do {
-			allFromFile = (Map<UUID, ITEM>) mm.getAllOfCorrectClass(itemClass);
+			allFromFile = (Map<UUID, ITEM>) mm.getAllItemsOfClass(itemClass);
 			ITEM fromFile = allFromFile.get(uuid);
 
 			condition = withNewValues.equals(fromFile);
@@ -270,7 +287,7 @@ public abstract class MasterActivityTest
 		Map<UUID, ITEM> allFromFile = null;
 		setStart();
 		do {
-			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllOfCorrectClass(itemClass);
+			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllItemsOfClass(itemClass);
 
 			setElapsed();
 		} while (allFromFile.size() != sizeBefore  && notYetTimeout());
@@ -298,7 +315,7 @@ public abstract class MasterActivityTest
 		Map<UUID, ITEM> allFromFile = null;
 		setStart();
 		do {
-			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllOfCorrectClass(itemClass);
+			allFromFile = (Map<UUID, ITEM>) getActivity().getLocalApplication().getModelManager().getAllItemsOfClass(itemClass);
 
 			setElapsed();
 		} while (allFromFile.size() != sizeBefore + 1 && notYetTimeout());
@@ -320,6 +337,19 @@ public abstract class MasterActivityTest
 		assertEquals("adapter size",  sizeBefore + 1, count);
 		assertEquals("Equals with adapter object", testItem, adapter.getItem(0));
 	}
+
+	private void searchForItemInListAndCheckDisplayedValues(ITEM item) {
+		ListAdapter adapter = getListAdapter();
+
+		int index = indexOfItemInAdapter(item);
+		assertFalse("Didn't find item: " + item, index == -1);
+
+		View listSubView = adapter.getView(index, null, null);
+
+		checkListSubViewForItemData(listSubView, item);
+	}
+
+
 
 	@SuppressWarnings("unchecked")
 	protected ADAPTER getListAdapter() {

@@ -3,8 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <include
-        layout="@layout/screen_header"
-        android:text="Sjukskrivningar" />
+    <include layout="@layout/screen_header" />
 
+    <include layout="@layout/master_buttons"/>
+    
+        <RelativeLayout
+        android:id="@+id/totalList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editBTN"
+        android:background="@drawable/thick_border"
+        android:padding="3dp" >
+
+        <include
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/sick_day_item" />
+
+        <ListView
+            android:id="@+id/itemListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/header"
+            android:background="@drawable/background_not_selected_item" />
+    </RelativeLayout>
+    
 </se.fermitet.android.infektionsdagbok.views.SickDayMasterView>

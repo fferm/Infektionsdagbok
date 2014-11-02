@@ -32,15 +32,15 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	private OnButtonPressedListener onButtonPressedListener;
 
 	public TreatmentDetailView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		super(context, attrs, "Behandling");
 		model = new Treatment();
 	}
 
 	@Override
 	protected void onFinishInflate() {
-		super.onFinishInflate();
 		try {
 			attachWidgets();
+			super.onFinishInflate();
 			setupWidgets();
 		} catch (Exception e) {
 			handleException(e);

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ImageButton
+        android:id="@+id/editBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_action_edit" />
+
+    <ImageButton
+        android:id="@+id/newBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="10dp"
+        android:layout_toLeftOf="@id/editBTN"
+        android:src="@drawable/ic_action_new" />
+
+    <ImageButton
+        android:id="@+id/deleteBTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/editBTN"
+        android:src="@drawable/ic_action_discard" />
+
+</merge>

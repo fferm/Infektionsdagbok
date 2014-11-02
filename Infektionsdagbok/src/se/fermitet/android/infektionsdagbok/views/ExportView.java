@@ -35,8 +35,8 @@ public class ExportView extends InfektionsdagbokRelativeLayoutView {
 	@Override
 	protected void onFinishInflate() {
 		try {
-			super.onFinishInflate();
 			attachWidgets();
+			super.onFinishInflate();
 			setupWidgets();
 		} catch (Exception e) {
 			handleException(e);

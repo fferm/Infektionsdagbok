@@ -18,7 +18,7 @@ public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, T
 	}
 
 	@Override
-	protected String getHeaderText() {
+	protected String getExpectedHeaderText() {
 		return "Behandling";
 	}
 	

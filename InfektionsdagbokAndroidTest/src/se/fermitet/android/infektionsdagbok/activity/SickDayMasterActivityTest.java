@@ -1,11 +1,13 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.views.SickDayAdapter;
+import android.view.View;
 
 public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickDayMasterActivity, SickDayAdapter> {
 
@@ -26,7 +28,7 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 			testData.add(new SickDay(start, end));
 		}
-		
+
 		nullStart = new SickDay(null, LocalDate.now().minusDays(10));
 		nullEnd = new SickDay(LocalDate.now().minusDays(100), null);
 
@@ -37,13 +39,14 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 	}
 
 	@Override
-	protected String getHeaderText() throws Exception {
+	protected String getExpectedHeaderText() throws Exception {
 		return "Sjukskrivningar";
 	}
 
 	@Override
 	protected void checkSubInitials() throws Exception {
-		fail("unimplemented");
+		assertTrue("Start list header", solo.waitForText("Start"));
+		assertTrue("End list header", solo.waitForText("Slut"));
 	}
 
 	@Override
@@ -59,6 +62,21 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 	@Override
 	protected void editUIBasedOnItem(SickDay itemWithNewValues)	throws Exception {
+		fail("unimplemented");
+	}
+
+	@Override
+	protected Collection<SickDay> getSpecialItemsToCheck() {
+		Collection<SickDay> ret = new ArrayList<SickDay>();
+
+		ret.add(nullEnd);
+		ret.add(nullStart);
+
+		return ret;
+	}
+
+	@Override
+	protected void checkListSubViewForItemData(View listSubView, SickDay item) {
 		fail("unimplemented");
 	}
 
