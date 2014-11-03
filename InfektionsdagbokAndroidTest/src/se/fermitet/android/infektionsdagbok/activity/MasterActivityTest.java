@@ -33,6 +33,7 @@ public abstract class MasterActivityTest
 	protected abstract void checkListOrder(ITEM previous, ITEM current);
 	protected abstract void checkListSubViewForItemData(View listSubView, ITEM item);
 	protected abstract void checkDetailEditorsEmpty();
+	protected abstract void checkDetailEditorsContents(ITEM item);
 	protected abstract ITEM getTestItem() throws Exception;
 	protected abstract void editUIBasedOnItem(ITEM itemWithNewValues) throws Exception;
 
@@ -163,6 +164,34 @@ public abstract class MasterActivityTest
 			setElapsed();
 		} while (button.isEnabled() != shouldBeEnabled && notYetTimeout());
 		assertTrue(message, button.isEnabled() == shouldBeEnabled);
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testClickingOnListViewFillsEditors() throws Exception {
+		ListAdapter adapter = getListAdapter();
+
+		// Regular
+		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack((ITEM) adapter.getItem(0));
+
+		// Nulls
+		for (ITEM item : getSpecialItemsToCheck()) {
+			clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(item);
+		}
+	}
+
+	private void clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(ITEM item) throws Exception {
+		assertTrue("Adapter must contain item: " + item, adapterContains(item));
+		int i = indexOfItemInAdapter(item);
+
+		solo.clickInList(i + 1);
+		Thread.sleep(100);
+		solo.clickOnView(solo.getView(R.id.editBTN));
+		timeoutGetCurrentActivity(detailActivityClass);
+		checkDetailEditorsContents(item);
+
+		// Cancel to go back
+		solo.clickOnView(solo.getView(R.id.cancelBTN));
+		timeoutGetCurrentActivity(masterActivityClass);
 	}
 
 	public void testDelete_fromMaster() throws Exception {
