@@ -66,6 +66,10 @@ public class DateTextView extends TextView implements InfektionsdagbokView, OnDa
 		return this.model;
 	}
 
+	public void setModel(LocalDate newDate) throws Exception {
+		this.model = newDate;
+		syncUIWithModelAndNotify();
+	}
 
 	private void setupMainView() throws Exception {
 		setOnClickListener(new OnClickListener() {
@@ -121,20 +125,20 @@ public class DateTextView extends TextView implements InfektionsdagbokView, OnDa
 			LocalDate newDate = LocalDate.now().withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
 			model = newDate;
 
-			syncUIWithModel();
-
-			if (onModelChangedListener != null)	onModelChangedListener.onDateChangedTo(newDate);
+			syncUIWithModelAndNotify();
 		} catch (Exception e) {
 			handleException(e);
 		}
 	}
 
-	private void syncUIWithModel() throws Exception {
+	private void syncUIWithModelAndNotify() throws Exception {
 		if (model == null) {
 			setText(null);
 		} else {
 			setText(df.format(model.toDate()));
 		}
+
+		if (onModelChangedListener != null) onModelChangedListener.onDateChangedTo(model);
 	}
 
 	@Override
@@ -153,4 +157,5 @@ public class DateTextView extends TextView implements InfektionsdagbokView, OnDa
 	public interface OnModelChangedListener {
 		public void onDateChangedTo(LocalDate newDate) throws Exception;
 	}
+
 }

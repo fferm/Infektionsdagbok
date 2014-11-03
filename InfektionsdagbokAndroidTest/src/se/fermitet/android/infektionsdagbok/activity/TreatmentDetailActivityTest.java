@@ -1,7 +1,10 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import org.joda.time.LocalDate;
+
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.widget.DateTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,12 +42,33 @@ public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, T
 
 
 	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
-		fail("needs to be updated with changing also date field");
 		Treatment model = getActivity().view.getModel();
 
+		final LocalDate newDate = LocalDate.now().minusMonths(10);
 		String newMedicine = "NEW MEDICINE";
 		String newInfectionType = "NEW INFECTION TYPE";
 		Integer newNumDays = 1000;
+
+		final DateTextView dtv = (DateTextView) solo.getView(R.id.startTV);
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					dtv.setModel(newDate);
+				} catch (Exception e) {
+					getActivity().view.handleException(e);
+				}
+			}
+		});
+
+		LocalDate dateFromTreatment = null;
+		setStart();
+		do {
+			dateFromTreatment = model.getStartingDate();
+			setElapsed();
+		} while (! newDate.equals(dateFromTreatment) && notYetTimeout());
+		assertEquals("Starting date", newDate, dateFromTreatment);
+
 
 		EditText medicineEdit = (EditText) solo.getView(R.id.medicineEdit);
 		solo.clearEditText(medicineEdit);

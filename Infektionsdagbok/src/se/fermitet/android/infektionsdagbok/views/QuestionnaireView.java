@@ -34,7 +34,7 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 	public void setModel(WeekAnswers model) throws Exception {
 		this.model = model;
 
-		bindUIToModel();
+		syncUIWithModel();
 	}
 
 	public void setOnWeekChangeListener(OnWeekChangeListener listener) throws Exception {
@@ -90,7 +90,7 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 		}
 	}
 
-	private void bindUIToModel() throws Exception {
+	private void syncUIWithModel() throws Exception {
 		weekDisplay.setText(model.week.toString());
 
 		for (int i = 0; i < this.getChildCount(); i++) {
@@ -99,11 +99,11 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 				continue;
 			}
 			QuestionView qv = (QuestionView) view;
-			bindAnswer(qv);
+			syncAnswer(qv);
 		}
 	}
 
-	private void bindAnswer(QuestionView qv) throws Exception {
+	private void syncAnswer(QuestionView qv) throws Exception {
 		qv.setChecked(model.getAnswer(qv.getId()));
 	}
 

@@ -31,9 +31,9 @@ public abstract class MasterActivityTest
 	protected abstract void checkSubInitials() throws Exception;
 	protected abstract Collection<ITEM> getSpecialItemsToCheck();
 	protected abstract void checkListOrder(ITEM previous, ITEM current);
-	protected abstract void checkListSubViewForItemData(View listSubView, ITEM item);
-	protected abstract void checkDetailEditorsEmpty();
-	protected abstract void checkDetailEditorsContents(ITEM item);
+	protected abstract void checkListSubViewForItemData(View listSubView, ITEM item) throws Exception;
+	protected abstract void checkDetailEditorsEmpty() throws Exception;
+	protected abstract void checkDetailEditorsContents(ITEM item) throws Exception;
 	protected abstract ITEM getTestItem() throws Exception;
 	protected abstract void editUIBasedOnItem(ITEM itemWithNewValues) throws Exception;
 
@@ -215,14 +215,14 @@ public abstract class MasterActivityTest
 		ITEM toDelete = adapter.getItem(0);
 
 		solo.clickOnView(solo.getView(R.id.editBTN));
-		timeoutGetCurrentActivity(masterActivityClass);
+		timeoutGetCurrentActivity(detailActivityClass);
 
 		// Check delete button enabled
 		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
 		assertTrue("delete button enabled", deleteBTN.isEnabled());
 
 		solo.clickOnView(solo.getView(R.id.deleteBTN));
-		timeoutGetCurrentActivity(detailActivityClass);
+		timeoutGetCurrentActivity(masterActivityClass);
 
 		checkItemIsDeleted(toDelete);
 	}
@@ -386,7 +386,7 @@ public abstract class MasterActivityTest
 		assertEquals("Equals with adapter object", testItem, adapter.getItem(0));
 	}
 
-	private void searchForItemInListAndCheckDisplayedValues(ITEM item) {
+	private void searchForItemInListAndCheckDisplayedValues(ITEM item) throws Exception {
 		ListAdapter adapter = getListAdapter();
 
 		int index = indexOfItemInAdapter(item);

@@ -35,7 +35,7 @@
         android:layout_toRightOf="@id/saveBTN"
         android:src="@drawable/ic_action_discard" />
 
-    <TextView
+    <se.fermitet.android.infektionsdagbok.widget.DateTextView
         android:id="@+id/startTV"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

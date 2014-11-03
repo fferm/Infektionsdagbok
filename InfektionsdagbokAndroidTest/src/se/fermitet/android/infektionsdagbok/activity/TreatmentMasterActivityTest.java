@@ -8,6 +8,7 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
+import se.fermitet.android.infektionsdagbok.widget.DateTextView;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
@@ -90,7 +91,7 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 	}
 
 	@Override
-	protected void checkDetailEditorsContents(Treatment item) {
+	protected void checkDetailEditorsContents(Treatment item) throws Exception {
 		TextView startTv = (TextView) solo.getView(R.id.startTV);
 		checkTextViewForStart(item, startTv);
 
@@ -112,19 +113,9 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 
 	@Override
 	protected void editUIBasedOnItem(Treatment itemWithNewValues) throws Exception {
-		TreatmentDetailActivity detailActivity = (TreatmentDetailActivity) solo.getCurrentActivity();
-
 		// Start editing
-		TextView startTV = (TextView) solo.getView(R.id.startTV);
-		solo.clickOnView(startTV);
-		solo.waitForDialogToOpen();
-//		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
-//		DatePicker picker = dialog.getDatePicker();
-
-//		LocalDate start = itemWithNewValues.getStartingDate();
-//		solo.setDatePicker(picker, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth());
-//		solo.clickOnButton("StŠll in");
-		fail("had to comment out before");
+		DateTextView startTV = (DateTextView) solo.getView(R.id.startTV);
+		startTV.setModel(itemWithNewValues.getStartingDate());
 
 		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
 		solo.clearEditText(numDaysEdit);

@@ -1,7 +1,11 @@
 package se.fermitet.android.infektionsdagbok.views;
 
+import org.joda.time.LocalDate;
+
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.widget.DateTextView;
+import se.fermitet.android.infektionsdagbok.widget.DateTextView.OnModelChangedListener;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +17,8 @@ import android.widget.TextView;
 
 public class TreatmentDetailView extends InfektionsdagbokDetailView {
 
-	private TextView startTV;
+	private TextView startHeader;
+	private DateTextView startTV;
 	private EditText numDaysEdit;
 	private EditText medicineEdit;
 	private EditText infectionTypeEdit;
@@ -42,7 +47,8 @@ public class TreatmentDetailView extends InfektionsdagbokDetailView {
 	}
 
 	private void attachWidgets() throws Exception {
-		startTV = (TextView) findViewById(R.id.startTV);
+		startHeader = (TextView) findViewById(R.id.startHeader);
+		startTV = (DateTextView) findViewById(R.id.startTV);
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
 		medicineEdit = (EditText) findViewById(R.id.medicineEdit);
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
@@ -52,12 +58,23 @@ public class TreatmentDetailView extends InfektionsdagbokDetailView {
 	}
 
 	private void setupWidgets() throws Exception {
+		setupStartTV();
 		setupMedicineEdit();
 		setupInfectionTypeEdit();
 		setupNumDaysEdit();
 		setupSaveBTN();
 		setupCancelBTN();
 		setupDeleteBTN();
+	}
+
+	private void setupStartTV() {
+		startTV.addAdditionalViewToOpenDialogWhenClicked(startHeader);
+		startTV.setOnModelChangedListener(new OnModelChangedListener() {
+			@Override
+			public void onDateChangedTo(LocalDate newDate) throws Exception {
+				TreatmentDetailView.this.model.setStartingDate(startTV.getModel());
+			}
+		});
 	}
 
 	private void setupMedicineEdit() throws Exception {
@@ -176,11 +193,7 @@ public class TreatmentDetailView extends InfektionsdagbokDetailView {
 	}
 
 	private void syncUIWithModel() throws Exception {
-//		if (model.getStartingDate() == null) {
-//			startTV.setText(null);
-//		} else {
-//			startTV.setText(model.getStartingDateString());
-//		}
+		startTV.setModel(model.getStartingDate());
 
 		if (model.getNumDays() == null) {
 			numDaysEdit.setText(null);

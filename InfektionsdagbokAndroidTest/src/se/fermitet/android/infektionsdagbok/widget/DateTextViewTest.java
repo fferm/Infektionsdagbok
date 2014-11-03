@@ -87,8 +87,39 @@ public class DateTextViewTest extends ActivityTestWithSolo<DateTextViewActivity>
 		solo.clickOnView(dtv);
 		solo.clickOnText("Ställ in");
 
-		verify(listener, timeout(1000)).onDateChangedTo(LocalDate.now());
+		verify(listener, timeout((int) TIMEOUT)).onDateChangedTo(LocalDate.now());
 	}
+
+	public void testSetModelChangesUIAndNotifies() throws Exception {
+		LocalDate newDate = LocalDate.now().minusWeeks(3);
+
+		DateTextView dtv = getActivity().getDateTextView();
+
+		OnModelChangedListener mock = mock(OnModelChangedListener.class);
+		dtv.setOnModelChangedListener(mock);
+
+		getActivity().setDateModel(newDate);
+
+		LocalDate model = null;
+		setStart();
+		do {
+			model = dtv.getModel();
+			setElapsed();
+		} while (! newDate.equals(model) && notYetTimeout());
+		assertEquals("getModel", newDate, dtv.getModel());
+
+		String text = null;
+		String expected = DateFormat.getDateInstance(DateFormat.SHORT).format(newDate.toDate());
+		setStart();
+		do {
+			text = (String) dtv.getText();
+			setElapsed();
+		} while (! expected.equals(text) && notYetTimeout());
+		assertEquals("text", expected, text);
+
+		verify(mock, timeout((int) TIMEOUT)).onDateChangedTo(newDate);
+	}
+
 }
 
 

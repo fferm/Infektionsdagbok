@@ -1,5 +1,7 @@
 package se.fermitet.android.infektionsdagbok.widget;
 
+import org.joda.time.LocalDate;
+
 import se.fermitet.android.infektionsdagbok.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -38,5 +40,19 @@ public class DateTextViewActivity extends Activity {
 
 	public DateTextView getDateTextView() {
 		return dtv;
+	}
+
+	public void setDateModel(final LocalDate newDate) throws Exception {
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					getDateTextView().setModel(newDate);
+				} catch (Exception e) {
+					getDateTextView().handleException(e);
+				}
+			}
+		});
 	}
 }
