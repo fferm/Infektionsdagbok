@@ -52,6 +52,15 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 	}
 
 	@Override
+	protected void checkListOrder(SickDay previous, SickDay current) {
+		LocalDate previousStart = previous.getStart();
+		LocalDate currentStart = current.getStart();
+
+		boolean condition = (previousStart == null) || (currentStart == null) || previousStart.isAfter(currentStart);
+		assertTrue("Wrong order on items starting with the one with start =  " + current.getStart(), condition);
+	}
+
+	@Override
 	protected void checkDetailEditorsEmpty() {
 		fail("unimplemented");
 	}

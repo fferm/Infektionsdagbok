@@ -40,26 +40,6 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 
 
 
-	public void testTreatmentsOrderedByStartDateDescending() throws Exception {
-		ListAdapter adapter = getListAdapter();
-
-		LocalDate previousStartingDate = null;
-		for (int i = 0; i < adapter.getCount(); i++) {
-			Treatment treatment = (Treatment) adapter.getItem(i);
-
-			LocalDate currentStartingDate = treatment.getStartingDate();
-
-			boolean condition = (previousStartingDate == null) || (currentStartingDate == null) || previousStartingDate.isAfter(currentStartingDate);
-
-			assertTrue("Wrong order on treatments starting with the one with startingDate =  " + treatment.getStartingDate(), condition);
-
-			previousStartingDate = currentStartingDate;
-		}
-	}
-
-
-
-
 	public void testClickingOnListViewFillsEditors() throws Exception {
 		ListAdapter adapter = getListAdapter();
 
@@ -233,5 +213,14 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 		} else {
 			assertEquals("Should show treatment numDays ", "" + item.getNumDays(), numDaysTV.getText());
 		}
+	}
+
+	@Override
+	protected void checkListOrder(Treatment previous, Treatment current) {
+		LocalDate previousStart = previous.getStartingDate();
+		LocalDate currentStart = current.getStartingDate();
+
+		boolean condition = (previousStart == null) || (currentStart == null) || previousStart.isAfter(currentStart);
+		assertTrue("Wrong order on treatments starting with the one with startingDate =  " + current.getStartingDate(), condition);
 	}
 }

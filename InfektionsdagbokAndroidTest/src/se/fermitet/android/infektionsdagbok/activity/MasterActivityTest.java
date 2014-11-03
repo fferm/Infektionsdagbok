@@ -30,6 +30,7 @@ public abstract class MasterActivityTest
 	protected abstract String getExpectedHeaderText() throws Exception;
 	protected abstract void checkSubInitials() throws Exception;
 	protected abstract Collection<ITEM> getSpecialItemsToCheck();
+	protected abstract void checkListOrder(ITEM previous, ITEM current);
 	protected abstract void checkListSubViewForItemData(View listSubView, ITEM item);
 	protected abstract void checkDetailEditorsEmpty();
 	protected abstract ITEM getTestItem() throws Exception;
@@ -83,6 +84,24 @@ public abstract class MasterActivityTest
 
 		checkSubInitials();
 	}
+
+	public void testOrderInList() throws Exception {
+		ADAPTER adapter = getListAdapter();
+
+		ITEM previous = null;
+		ITEM current = null;
+
+		for (int i = 0; i < adapter.getCount(); i++) {
+			current = adapter.getItem(i);
+
+			if (i > 1) {
+				checkListOrder(previous, current);
+			}
+
+			previous = current;
+		}
+	}
+
 
 	public void testClickingOnItemHighlightsItAndAffectsButtonsEnabledState() throws Exception {
 		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
