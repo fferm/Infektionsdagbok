@@ -205,6 +205,8 @@ public abstract class MasterActivityTest
 		solo.clickOnView(solo.getView(R.id.deleteBTN));
 
 		checkItemIsDeleted(toDelete);
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 	public void testDelete_fromDetail() throws Exception {
@@ -225,6 +227,8 @@ public abstract class MasterActivityTest
 		timeoutGetCurrentActivity(masterActivityClass);
 
 		checkItemIsDeleted(toDelete);
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 	public void testClickingOnNewOpensEmptyDetailActivityPlusBackNavigation() throws Exception {
@@ -242,6 +246,8 @@ public abstract class MasterActivityTest
 		// Check back navigation
 		solo.clickOnActionBarHomeButton();
 		timeoutGetCurrentActivity(masterActivityClass);
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 	private void checkItemIsDeleted(ITEM toDelete) throws Exception {
@@ -268,7 +274,7 @@ public abstract class MasterActivityTest
 
 	@SuppressWarnings("unchecked")
 	public void testEditAndSave() throws Exception {
-		int sizeBefore = mm.getAllTreatments().size();
+		int sizeBefore = mm.getAllItemsOfClass(itemClass).size();
 
 		solo.clickInList(1);
 		timeoutCheckAdapterSelected(1);
@@ -285,7 +291,7 @@ public abstract class MasterActivityTest
 		editUIBasedOnItem(withNewValues);
 
 		solo.clickOnView(solo.getView(R.id.saveBTN));
-		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
+		timeoutGetCurrentActivity(masterActivityClass);
 
 		// Check file
 		Map<UUID, ITEM> allFromFile = null;
@@ -312,11 +318,13 @@ public abstract class MasterActivityTest
 		} while(!condition && notYetTimeout());
 		assertTrue("Found in adapter", condition);
 		assertEquals("Number of items in adapter", sizeBefore, adapter.getCount());
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 	@SuppressWarnings("unchecked")
 	public void testNewWithCancel() throws Exception {
-		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllTreatments().size();
+		int sizeBefore = getActivity().getLocalApplication().getModelManager().getAllItemsOfClass(itemClass).size();
 
 		ITEM testItem = getTestItem();
 
@@ -340,6 +348,8 @@ public abstract class MasterActivityTest
 			setElapsed();
 		} while (allFromFile.size() != sizeBefore  && notYetTimeout());
 		assertEquals("Size after save", sizeBefore, allFromFile.size());
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 
@@ -384,6 +394,8 @@ public abstract class MasterActivityTest
 		} while (count != 1 && notYetTimeout());
 		assertEquals("adapter size",  sizeBefore + 1, count);
 		assertEquals("Equals with adapter object", testItem, adapter.getItem(0));
+
+		checkNothingSelectedAndCorrectButtonsEnabled();
 	}
 
 	private void searchForItemInListAndCheckDisplayedValues(ITEM item) throws Exception {
@@ -397,6 +409,24 @@ public abstract class MasterActivityTest
 		checkListSubViewForItemData(listSubView, item);
 	}
 
+	private void checkNothingSelectedAndCorrectButtonsEnabled() {
+		ADAPTER adapter = getListAdapter();
+		assertNull("Selection in list", adapter.getSelectedItem());
+
+		ImageButton editBTN = (ImageButton) solo.getView(R.id.editBTN);
+		setStart();
+		do {
+			setElapsed();
+		} while (editBTN.isEnabled() && notYetTimeout());
+		assertFalse("edit button should be disabled", editBTN.isEnabled());
+
+		ImageButton deleteBTN = (ImageButton) solo.getView(R.id.deleteBTN);
+		setStart();
+		do {
+			setElapsed();
+		} while (deleteBTN.isEnabled() && notYetTimeout());
+		assertFalse("delete button should be disabled", deleteBTN.isEnabled());
+	}
 
 
 	@SuppressWarnings("unchecked")

@@ -8,6 +8,7 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.views.SickDayAdapter;
+import se.fermitet.android.infektionsdagbok.widget.DateTextView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -62,12 +63,30 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 	@Override
 	protected void checkDetailEditorsEmpty() {
-		fail("unimplemented");
+		TextView startTV = (TextView) solo.getView(R.id.startTV);
+		CharSequence startText = startTV.getText();
+		assertTrue("Start date empty", startText == null || startText.length() == 0);
+
+		TextView endTV = (TextView) solo.getView(R.id.endTV);
+		CharSequence endText = endTV.getText();
+		assertTrue("End date empty", endText == null || endText.length() == 0);
 	}
 
 	@Override
 	protected void checkDetailEditorsContents(SickDay item) {
-		fail("unimplemented");
+		TextView startTv = (TextView) solo.getView(R.id.startTV);
+		checkTextViewForStart(item, startTv);
+
+		TextView endTv = (TextView) solo.getView(R.id.endTV);
+		checkTextViewForEnd(item, endTv);
+	}
+
+	private void checkTextViewForStart(SickDay item, TextView startTv) {
+		checkDateTextView(item.getStart(), startTv);
+	}
+
+	private void checkTextViewForEnd(SickDay item, TextView endTv) {
+		checkDateTextView(item.getEnd(), endTv);
 	}
 
 	@Override
@@ -79,7 +98,11 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 	@Override
 	protected void editUIBasedOnItem(SickDay itemWithNewValues)	throws Exception {
-		fail("unimplemented");
+		DateTextView startTV = (DateTextView) solo.getView(R.id.startTV);
+		startTV.setModel(itemWithNewValues.getStart());
+
+		DateTextView endTV = (DateTextView) solo.getView(R.id.endTV);
+		endTV.setModel(itemWithNewValues.getEnd());
 	}
 
 	@Override

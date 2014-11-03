@@ -18,11 +18,11 @@ public class InfektionsdagbokApplication extends Application {
 		super();
 		instance = this;
 	}
-	
+
 	public static InfektionsdagbokApplication getApplicationInstance() {
 		return instance;
 	}
-	
+
 	public Storage getStorage() {
 		if (this.storage == null) {
 			this.storage = getFactory().createStorage();
@@ -58,7 +58,6 @@ public class InfektionsdagbokApplication extends Application {
 		return this.emailHandler;
 	}
 
-	// TODO: Does this correspond to some lifecycle method on Application
 	public void clear() {
 		this.modelManager = null;
 		this.storage = null;

@@ -143,7 +143,7 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 		adapter.setSelectedPosition(null);
 	}
 
-	private void handleButtonsEnablement(boolean isEnabled) {
+	public void handleButtonsEnablement(boolean isEnabled) {
 		editBTN.setEnabled(isEnabled);
 		deleteBTN.setEnabled(isEnabled);
 	}

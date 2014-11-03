@@ -51,7 +51,8 @@ public abstract class InfektionsdagbokDetailView<ITEM extends ModelObjectBase> e
 			@Override
 			public void onClick(View v) {
 				try {
-					InfektionsdagbokDetailView.this.onDetailButtonsPressedListener.onSavePressed(getModel());
+					OnDetailButtonsPressedListener<ITEM> listener = InfektionsdagbokDetailView.this.onDetailButtonsPressedListener;
+					if (listener != null) listener.onSavePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -64,7 +65,8 @@ public abstract class InfektionsdagbokDetailView<ITEM extends ModelObjectBase> e
 			@Override
 			public void onClick(View v) {
 				try {
-					InfektionsdagbokDetailView.this.onDetailButtonsPressedListener.onCancelPressed();
+					OnDetailButtonsPressedListener<ITEM> listener = InfektionsdagbokDetailView.this.onDetailButtonsPressedListener;
+					if (listener != null) listener.onCancelPressed();
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -79,7 +81,8 @@ public abstract class InfektionsdagbokDetailView<ITEM extends ModelObjectBase> e
 			@Override
 			public void onClick(View v) {
 				try {
-					InfektionsdagbokDetailView.this.onDetailButtonsPressedListener.onDeletePressed(getModel());
+					OnDetailButtonsPressedListener<ITEM> listener = InfektionsdagbokDetailView.this.onDetailButtonsPressedListener;
+					if (listener != null) listener.onDeletePressed(getModel());
 				} catch (Exception e) {
 					handleException(e);
 				}

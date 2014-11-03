@@ -72,7 +72,6 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 
 	@Override
 	protected void checkDetailEditorsEmpty() {
-		// Check empty
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		CharSequence startText = startTV.getText();
 		assertTrue("Start date empty", startText == null || startText.length() == 0);

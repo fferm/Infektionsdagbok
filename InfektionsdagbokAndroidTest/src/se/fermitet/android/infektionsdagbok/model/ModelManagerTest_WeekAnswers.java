@@ -149,13 +149,5 @@ public class ModelManagerTest_WeekAnswers extends AndroidTestCase {
 
 		return toSave;
 	}
-
-	public void testSaveTreatmentForUpdate() throws Exception {
-
-	}
-
-	public void testSaveTreatmentForInsert() throws Exception {
-		// TODO
-	}
 }
 

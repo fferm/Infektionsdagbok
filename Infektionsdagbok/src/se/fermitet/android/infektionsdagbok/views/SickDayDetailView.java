@@ -73,7 +73,8 @@ public class SickDayDetailView extends InfektionsdagbokDetailView<SickDay> {
 
 	@Override
 	protected void syncUIWithModel() throws Exception {
-		throw new RuntimeException("unimplemented");
+		startTV.setModel(getModel().getStart());
+		endTV.setModel(getModel().getEnd());
 	}
 
 }

@@ -19,11 +19,24 @@ public abstract class InfektionsdagbokMasterActivity<
 	public static final String EXTRA_NAME_ITEM_TO_EDIT = "ITEM";
 	private Class<? extends Activity> detailActivityClass;
 
+	protected abstract ADAPTER createListAdapter() throws Exception;
+
 	public InfektionsdagbokMasterActivity(int viewLayoutId, Class<? extends Activity> detailActivityClass) {
 		super(viewLayoutId);
 
 		this.detailActivityClass = detailActivityClass;
 	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		try {
+			syncViewWithStoredData();
+		} catch (Exception e) {
+			view.handleException(e);
+		}
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -40,7 +53,7 @@ public abstract class InfektionsdagbokMasterActivity<
 			@Override
 			public void onDeletePressed(ITEM item) throws Exception {
 				getLocalApplication().getModelManager().delete(item);
-				syncListViewDataWithStored();
+				syncViewWithStoredData();
 			}
 
 			@Override
@@ -60,26 +73,24 @@ public abstract class InfektionsdagbokMasterActivity<
 		view.setOnMasterButtonsPressedListener(null);
 	}
 
-
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		try {
-//			fillWithTestData();
-
-			syncListViewDataWithStored();
+			syncViewWithStoredData();
 		} catch (Exception e) {
 			view.handleException(e);
 		}
 	}
 
-	protected abstract ADAPTER createListAdapter() throws Exception;
 
 	@SuppressWarnings("unchecked")
-	public void syncListViewDataWithStored() throws Exception {
+	public void syncViewWithStoredData() throws Exception {
 		ADAPTER adapter = createListAdapter();
-
 		view.setAdapter(adapter);
+
+		if (adapter.getSelectedItem() == null) view.handleButtonsEnablement(false);
+		else view.handleButtonsEnablement(true);
 	}
 
 
