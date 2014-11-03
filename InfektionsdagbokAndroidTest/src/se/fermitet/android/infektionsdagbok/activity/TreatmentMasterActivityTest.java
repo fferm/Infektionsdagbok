@@ -16,8 +16,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-public class TreatmentMasterActivityTest extends MasterActivityTest<
-Treatment, TreatmentMasterActivity, TreatmentAdapter> {
+public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 
 	private Treatment nullMedicine;
 	private Treatment nullInfection;
@@ -224,7 +223,7 @@ Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 		if (startingDate == null) {
 			assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
 		} else {
-			assertTrue("Should show treatment date " + startingDate, startTv.getText().equals(item.getStartingDateString()));
+			assertEquals("Should show treatment date ", item.getStartingDateString(), startTv.getText());
 		}
 
 		Integer numDays = item.getNumDays();
@@ -232,7 +231,7 @@ Treatment, TreatmentMasterActivity, TreatmentAdapter> {
 		if (numDays == null) {
 			assertTrue("Should show numDays as null", shownText == null || shownText.length() == 0);
 		} else {
-			assertTrue("Should show treatment numDays " + item.getNumDays(), numDaysTV.getText().equals("" + item.getNumDays()));
+			assertEquals("Should show treatment numDays ", "" + item.getNumDays(), numDaysTV.getText());
 		}
 	}
 }

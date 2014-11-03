@@ -14,9 +14,8 @@ import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokMasterView.OnB
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
 import android.content.Intent;
-import android.os.Bundle;
 
-public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentMasterView> {
+public class TreatmentMasterActivity extends MasterActivity<TreatmentMasterView, Treatment, TreatmentAdapter> {
 
 	public static final int REQUEST_CODE_NEW = 0;
 	public static final int REQUEST_CODE_EDIT = 1;
@@ -27,15 +26,9 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		try {
-//			fillWithTestData();
-
-			syncListViewDataWithStored();
-		} catch (Exception e) {
-			view.handleException(e);
-		}
+	protected TreatmentAdapter createListAdapter() throws Exception {
+		Collection<Treatment> unsorted = getLocalApplication().getModelManager().getAllTreatments().values();
+		return new TreatmentAdapter(this,  sortedListOfTreatments(unsorted));
 	}
 
 	@Override
@@ -81,13 +74,6 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 		}
 	}
 
-	public void syncListViewDataWithStored() throws Exception {
-		Collection<Treatment> allTreatments = getLocalApplication().getModelManager().getAllTreatments().values();
-
-		TreatmentAdapter adapter = new TreatmentAdapter(this, sortedListOfTreatments(allTreatments));
-
-		view.setAdapter(adapter);
-	}
 
 /*	private void savePressed(Treatment treatment) throws Exception {
 		getLocalApplication().getModelManager().saveTreatment(treatment);
@@ -148,5 +134,6 @@ public class TreatmentMasterActivity extends InfektionsdagbokActivity<TreatmentM
 
 		mm.saveAll(testData);
 	}
+
 }
 

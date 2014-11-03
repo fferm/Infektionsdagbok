@@ -58,6 +58,13 @@ public class SickDayTest extends TestCase {
 		assertEquals("End text", df.format(testEnd.toDate()), sickDay.getEndString());
 	}
 
+	public void testNullsForStrings() throws Exception {
+		SickDay sickDay = new SickDay();
+
+		assertNull("Start", sickDay.getStartString());
+		assertNull("End", sickDay.getEndString());
+	}
+
 	public void testToString() throws Exception {
 		LocalDate start = new LocalDate(2014,10,31);
 		LocalDate end = new LocalDate(2015,1,1);

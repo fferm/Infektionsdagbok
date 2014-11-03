@@ -5,9 +5,11 @@ import java.util.Collection;
 
 import org.joda.time.LocalDate;
 
+import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.SickDay;
 import se.fermitet.android.infektionsdagbok.views.SickDayAdapter;
 import android.view.View;
+import android.widget.TextView;
 
 public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickDayMasterActivity, SickDayAdapter> {
 
@@ -77,7 +79,22 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 	@Override
 	protected void checkListSubViewForItemData(View listSubView, SickDay item) {
-		fail("unimplemented");
+		TextView startTv = (TextView) listSubView.findViewById(R.id.startValueField);
+		TextView endTv = (TextView) listSubView.findViewById(R.id.endValueField);
+
+		LocalDate start = item.getStart();
+		if (start == null) {
+			assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
+		} else {
+			assertEquals("Should show start date ", item.getStartString(), startTv.getText());
+		}
+
+		LocalDate end = item.getEnd();
+		if (end == null) {
+			assertTrue("Should show null date", (endTv.getText() == null) || (endTv.getText().length() == 0));
+		} else {
+			assertEquals("Should show end date ", item.getEndString(), endTv.getText());
+		}
 	}
 
 }
