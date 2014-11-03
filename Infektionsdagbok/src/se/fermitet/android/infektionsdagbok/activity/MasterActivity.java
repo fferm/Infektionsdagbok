@@ -52,6 +52,7 @@ public abstract class MasterActivity<
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onStop() {
 		super.onStop();
