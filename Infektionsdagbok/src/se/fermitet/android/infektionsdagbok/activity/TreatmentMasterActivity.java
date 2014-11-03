@@ -10,58 +10,20 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokMasterView.OnButtonsPressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
 import android.content.Intent;
 
 public class TreatmentMasterActivity extends MasterActivity<TreatmentMasterView, Treatment, TreatmentAdapter> {
 
-	public static final int REQUEST_CODE_NEW = 0;
-	public static final int REQUEST_CODE_EDIT = 1;
-	public static final String EXTRA_NAME_TREATMENT = "TREATMENT";
-
 	public TreatmentMasterActivity() {
-		super(R.layout.treatment_master_view);
+		super(R.layout.treatment_master_view, TreatmentDetailActivity.class);
 	}
 
 	@Override
 	protected TreatmentAdapter createListAdapter() throws Exception {
 		Collection<Treatment> unsorted = getLocalApplication().getModelManager().getAllTreatments().values();
 		return new TreatmentAdapter(this,  sortedListOfTreatments(unsorted));
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		view.setOnButtonsPressedListener(new OnButtonsPressedListener<Treatment>() {
-			@Override
-			public void onNewPressed() throws Exception {
-				Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
-				startActivityForResult(newIntent, REQUEST_CODE_NEW);
-			}
-
-			@Override
-			public void onDeletePressed(Treatment treatment) throws Exception {
-				getLocalApplication().getModelManager().delete(treatment);
-				syncListViewDataWithStored();
-			}
-
-			@Override
-			public void onEditPressed(Treatment treatment) throws Exception {
-				Intent newIntent = new Intent(TreatmentMasterActivity.this, TreatmentDetailActivity.class);
-				newIntent.putExtra(EXTRA_NAME_TREATMENT, treatment);
-				startActivityForResult(newIntent, REQUEST_CODE_EDIT);
-			}
-		});
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-
-		view.setOnButtonsPressedListener(null);
 	}
 
 	@Override

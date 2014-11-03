@@ -13,7 +13,6 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, TreatmentMasterActivity, TreatmentAdapter> {
@@ -39,64 +38,6 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 	}
 
 
-
-	public void testClickingOnListViewFillsEditors() throws Exception {
-		ListAdapter adapter = getListAdapter();
-
-		// Regular
-		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack((Treatment) adapter.getItem(0));
-
-		// Nulls
-		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullStartingDate);
-		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullMedicine);
-		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullInfection);
-		clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(nullNumDays);
-	}
-
-	private void clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(Treatment treatment) throws Exception {
-		assertTrue("Adapter must contain treatment: " + treatment, adapterContains(treatment));
-		int i = indexOfItemInAdapter(treatment);
-
-		solo.clickInList(i + 1);
-		Thread.sleep(100);
-		solo.clickOnView(solo.getView(R.id.editBTN));
-		timeoutGetCurrentActivity(TreatmentDetailActivity.class);
-
-		CharSequence dateTextFromUI = ((TextView) solo.getView(R.id.startTV)).getText();
-		if (treatment.getStartingDate() == null) {
-			assertTrue("Date text for treatment " + treatment + "  was: " + dateTextFromUI, (dateTextFromUI == null) || (dateTextFromUI.length() == 0));
-		} else {
-			assertEquals("Date text for treatment " + treatment, treatment.getStartingDateString(), dateTextFromUI);
-		}
-
-
-		String numDaysTextFromUI = ((TextView) solo.getView(R.id.numDaysEdit)).getText().toString();
-		if (treatment.getNumDays() == null) {
-			assertTrue("NumDays text for treatment " + treatment + "  was: " + numDaysTextFromUI, (numDaysTextFromUI == null) || (numDaysTextFromUI.length() == 0));
-		} else {
-			assertEquals("NumDays text for treatment " + treatment, treatment.getNumDays().toString(), numDaysTextFromUI);
-		}
-
-
-		String medicineTextFromUI = ((TextView) solo.getView(R.id.medicineEdit)).getText().toString();
-		if (treatment.getMedicine() == null) {
-			assertTrue("Medicine text for treatment " + treatment + "  was: " + medicineTextFromUI, (medicineTextFromUI == null) || (medicineTextFromUI.length() == 0));
-		} else {
-			assertEquals("Medicine text for treatment " + treatment, treatment.getMedicine(), medicineTextFromUI);
-		}
-
-
-		String infectionTypeTextFromUI = ((TextView) solo.getView(R.id.infectionTypeEdit)).getText().toString();
-		if (treatment.getInfectionType() == null) {
-			assertTrue("Infection type text for treatment " + treatment + "  was: " + infectionTypeTextFromUI, (infectionTypeTextFromUI == null) || (infectionTypeTextFromUI.length() == 0));
-		} else {
-			assertEquals("Infection type text for treatment " + treatment, treatment.getInfectionType(), infectionTypeTextFromUI);
-		}
-
-		// Cancel to go back
-		solo.clickOnView(solo.getView(R.id.cancelBTN));
-		timeoutGetCurrentActivity(TreatmentMasterActivity.class);
-	}
 
 	@Override
 	protected void saveTestData() throws Exception {
@@ -151,6 +92,22 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 	}
 
 	@Override
+	protected void checkDetailEditorsContents(Treatment item) {
+		TextView startTv = (TextView) solo.getView(R.id.startTV);
+		checkTextViewForStart(item, startTv);
+
+		TextView numDaysTv = (TextView) solo.getView(R.id.numDaysEdit);
+		checkTextViewForNumDays(item, numDaysTv);
+
+		TextView medicineTv = (TextView) solo.getView(R.id.medicineEdit);
+		checkTextViewForMedicine(item, medicineTv);
+
+		TextView infectionTypeTv = (TextView) solo.getView(R.id.infectionTypeEdit);
+		checkTextViewForInfectionType(item, infectionTypeTv);
+	}
+
+
+	@Override
 	protected Treatment getTestItem() {
 		return new Treatment(new LocalDate(2000, 1, 1), 1000, "Fšrkylning", "Doxyferm");
 	}
@@ -199,21 +156,27 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 		TextView startTv = (TextView) listSubView.findViewById(R.id.dateValueField);
 		TextView numDaysTV = (TextView) listSubView.findViewById(R.id.numDaysValueField);
 
-		LocalDate startingDate = item.getStartingDate();
-		if (startingDate == null) {
-			assertTrue("Should show null date", (startTv.getText() == null) || (startTv.getText().length() == 0));
-		} else {
-			assertEquals("Should show treatment date ", item.getStartingDateString(), startTv.getText());
-		}
-
-		Integer numDays = item.getNumDays();
-		CharSequence shownText = numDaysTV.getText();
-		if (numDays == null) {
-			assertTrue("Should show numDays as null", shownText == null || shownText.length() == 0);
-		} else {
-			assertEquals("Should show treatment numDays ", "" + item.getNumDays(), numDaysTV.getText());
-		}
+		checkTextViewForStart(item, startTv);
+		checkTextViewForNumDays(item, numDaysTV);
 	}
+
+	private void checkTextViewForStart(Treatment item, TextView startTv) {
+		checkDateTextView(item.getStartingDate(), startTv);
+	}
+
+	private void checkTextViewForNumDays(Treatment item, TextView numDaysTV) {
+		checkIntegerTextView(item.getNumDays(), numDaysTV);
+	}
+
+	private void checkTextViewForInfectionType(Treatment treatment,	TextView infectionTypeTv) {
+		checkStringTextView(treatment.getInfectionType(), infectionTypeTv);
+	}
+
+	private void checkTextViewForMedicine(Treatment treatment, TextView medicineTv) {
+		checkStringTextView(treatment.getMedicine(), medicineTv);
+	}
+
+
 
 	@Override
 	protected void checkListOrder(Treatment previous, Treatment current) {

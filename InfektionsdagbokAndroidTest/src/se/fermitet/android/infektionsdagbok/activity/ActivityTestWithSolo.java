@@ -1,6 +1,9 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import java.text.DateFormat;
+
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.app.Factory;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
@@ -8,6 +11,7 @@ import se.fermitet.android.infektionsdagbok.test.DoNotHandleExceptionsFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.widget.TextView;
 
 import com.robotium.solo.Solo;
 import com.robotium.solo.Solo.Config;
@@ -95,6 +99,35 @@ public class ActivityTestWithSolo<T extends Activity> extends ActivityInstrument
 		if (expected == null) assertNull(message, actual);
 		else assertEquals(message,  expected, actual);
 	}
+
+	protected void checkDateTextView(LocalDate date, TextView tv) {
+		DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+		String shownText = tv.getText().toString();
+		if (date == null) {
+			assertTrue("Should show null date", (shownText == null) || (shownText.length() == 0));
+		} else {
+			assertEquals("Should show date string", df.format(date.toDate()), shownText);
+		}
+	}
+
+	protected void checkStringTextView(String expected, TextView tv) {
+		String shownText = tv.getText().toString();
+		if (expected == null) {
+			assertTrue("Null text", shownText == null || shownText.length() == 0);
+		} else {
+			assertEquals("Actual text", expected, shownText);
+		}
+	}
+
+	protected void checkIntegerTextView(Integer expected, TextView tv) {
+		String shownText = tv.getText().toString();
+		if (expected == null) {
+			assertTrue("Should show null integer", shownText == null || shownText.length() == 0);
+		} else {
+			assertEquals("Integer text", "" + expected, shownText);
+		}
+	}
+
 
 
 

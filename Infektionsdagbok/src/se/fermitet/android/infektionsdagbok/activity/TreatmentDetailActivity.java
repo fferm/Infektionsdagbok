@@ -19,7 +19,7 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 			super.onCreate(savedInstanceState);
 
 			Intent intent = getIntent();
-			Treatment toEdit = (Treatment) intent.getSerializableExtra(TreatmentMasterActivity.EXTRA_NAME_TREATMENT);
+			Treatment toEdit = (Treatment) intent.getSerializableExtra(MasterActivity.EXTRA_NAME_ITEM_TO_EDIT);
 			if (toEdit != null) {
 				view.selectTreatment(toEdit);
 			}

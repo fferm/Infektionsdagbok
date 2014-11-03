@@ -17,7 +17,7 @@ import se.fermitet.android.infektionsdagbok.views.SickDayMasterView;
 public class SickDayMasterActivity extends MasterActivity<SickDayMasterView, SickDay, SickDayAdapter>{
 
 	public SickDayMasterActivity() {
-		super(R.layout.sick_day_master_view);
+		super(R.layout.sick_day_master_view, SickDayDetailActivity.class);
 	}
 
 	@Override

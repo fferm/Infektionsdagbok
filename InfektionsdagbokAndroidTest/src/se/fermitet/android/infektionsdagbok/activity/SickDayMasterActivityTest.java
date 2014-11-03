@@ -66,6 +66,11 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 	}
 
 	@Override
+	protected void checkDetailEditorsContents(SickDay item) {
+		fail("unimplemented");
+	}
+
+	@Override
 	protected SickDay getTestItem() throws Exception {
 		fail("unimplemented");
 		return null;
@@ -105,5 +110,6 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 			assertEquals("Should show end date ", item.getEndString(), endTv.getText());
 		}
 	}
+
 
 }
