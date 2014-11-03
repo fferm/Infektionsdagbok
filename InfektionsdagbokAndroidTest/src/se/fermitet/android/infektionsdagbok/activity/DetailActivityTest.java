@@ -8,8 +8,9 @@ import android.widget.TextView;
 @SuppressWarnings("rawtypes")
 public abstract class DetailActivityTest<ITEM extends ModelObjectBase, ACTIVITY extends InfektionsdagbokActivity> extends ActivityTestWithSolo<ACTIVITY> {
 
-	protected abstract String getExpectedHeaderText();
-	protected abstract void checkSubInitials();
+	protected abstract String getExpectedHeaderText() throws Exception;
+	protected abstract void checkSubInitials() throws Exception;
+	public abstract void testChangingFieldsChangesModel() throws Exception;
 
 	public DetailActivityTest(Class<ACTIVITY> detailActivityClass) {
 		super(detailActivityClass);
@@ -33,6 +34,13 @@ public abstract class DetailActivityTest<ITEM extends ModelObjectBase, ACTIVITY 
 
 		checkSubInitials();
 	}
+
+	protected void checkHeaderTextView(int id, String text) {
+		TextView headerView = (TextView) solo.getView(id);
+		assertNotNull(text + " header null", headerView);
+		assertEquals(text + " header text", text, headerView.getText());
+	}
+
 
 
 

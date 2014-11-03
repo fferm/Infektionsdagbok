@@ -16,7 +16,7 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 	private ImageButton deleteBTN;
 	private ImageButton newBTN;
 	private ListView listView;
-	private OnButtonsPressedListener<ITEM> onButtonsPressedListener;
+	private OnMasterButtonsPressedListener<ITEM> onMasterButtonsPressedListener;
 
 	public InfektionsdagbokMasterView(Context context, AttributeSet attrs, String headerText) {
 		super(context, attrs, headerText);
@@ -71,7 +71,7 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 					@SuppressWarnings("unchecked")
 					ADAPTER adapter = (ADAPTER) listView.getAdapter();
 					ITEM selected = adapter.getSelectedItem();
-					InfektionsdagbokMasterView.this.onButtonsPressedListener.onEditPressed(selected);
+					InfektionsdagbokMasterView.this.onMasterButtonsPressedListener.onEditPressed(selected);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -88,7 +88,7 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 					@SuppressWarnings("unchecked")
 					ADAPTER adapter = (ADAPTER) listView.getAdapter();
 					ITEM selected = adapter.getSelectedItem();
-					InfektionsdagbokMasterView.this.onButtonsPressedListener.onDeletePressed(selected);
+					InfektionsdagbokMasterView.this.onMasterButtonsPressedListener.onDeletePressed(selected);
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -101,7 +101,7 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 			@Override
 			public void onClick(View v) {
 				try {
-					InfektionsdagbokMasterView.this.onButtonsPressedListener.onNewPressed();
+					InfektionsdagbokMasterView.this.onMasterButtonsPressedListener.onNewPressed();
 				} catch (Exception e) {
 					handleException(e);
 				}
@@ -155,11 +155,11 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 
 
 
-	public void setOnButtonsPressedListener(OnButtonsPressedListener<ITEM> listener) {
-		this.onButtonsPressedListener = listener;
+	public void setOnMasterButtonsPressedListener(OnMasterButtonsPressedListener<ITEM> listener) {
+		this.onMasterButtonsPressedListener = listener;
 	}
 
-	public interface OnButtonsPressedListener<ITEM extends ModelObjectBase> {
+	public interface OnMasterButtonsPressedListener<ITEM extends ModelObjectBase> {
 		public void onNewPressed() throws Exception;
 		public void onDeletePressed(ITEM item) throws Exception;
 		public void onEditPressed(ITEM item) throws Exception;

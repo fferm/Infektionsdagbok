@@ -14,7 +14,7 @@ import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
 import se.fermitet.android.infektionsdagbok.views.TreatmentMasterView;
 import android.content.Intent;
 
-public class TreatmentMasterActivity extends MasterActivity<TreatmentMasterView, Treatment, TreatmentAdapter> {
+public class TreatmentMasterActivity extends InfektionsdagbokMasterActivity<TreatmentMasterView, Treatment, TreatmentAdapter> {
 
 	public TreatmentMasterActivity() {
 		super(R.layout.treatment_master_view, TreatmentDetailActivity.class);

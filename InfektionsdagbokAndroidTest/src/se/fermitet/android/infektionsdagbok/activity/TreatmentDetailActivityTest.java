@@ -6,7 +6,6 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.widget.DateTextView;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, TreatmentDetailActivity> {
 
@@ -20,9 +19,11 @@ public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, T
 	}
 
 	@Override
-	protected void checkSubInitials() {
+	protected void checkSubInitials() throws Exception {
+		Thread.sleep(10000);
 		checkHeaderTextView(R.id.startHeader, "Start:");
 		assertNotNull("Start date text field", solo.getView(R.id.startTV));
+		assertTrue("Start date field class", solo.getView(R.id.startTV) instanceof DateTextView);
 
 		checkHeaderTextView(R.id.numDaysHeader, "Dagar:");
 		assertNotNull("Num days edit text", solo.getView(R.id.numDaysEdit));
@@ -34,14 +35,8 @@ public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, T
 		assertNotNull("Infection type field", solo.getView(R.id.infectionTypeEdit));
 	}
 
-	private void checkHeaderTextView(int id, String text) {
-		TextView headerView = (TextView) solo.getView(id);
-		assertNotNull(text + " header null", headerView);
-		assertEquals(text + " header text", text, headerView.getText());
-	}
-
-
-	public void testChangingOtherFieldsThanStartingDateChangesModel() throws Exception {
+	@Override
+	public void testChangingFieldsChangesModel() throws Exception {
 		Treatment model = getActivity().view.getModel();
 
 		final LocalDate newDate = LocalDate.now().minusMonths(10);
@@ -85,4 +80,10 @@ public class TreatmentDetailActivityTest extends DetailActivityTest<Treatment, T
 		solo.enterText(numDaysEdit, newNumDays.toString());
 		assertEquals("Num days", newNumDays, model.getNumDays());
 	}
+
+	public void testClickingHeadersOpensDateEditors() throws Exception {
+		solo.clickOnView(solo.getView(R.id.startHeader));
+		assertTrue("Wait for dialog to open on start", solo.waitForDialogToOpen());
+	}
+
 }

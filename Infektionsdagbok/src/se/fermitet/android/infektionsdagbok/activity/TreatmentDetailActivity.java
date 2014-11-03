@@ -2,8 +2,8 @@ package se.fermitet.android.infektionsdagbok.activity;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
+import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokDetailView.OnDetailButtonsPressedListener;
 import se.fermitet.android.infektionsdagbok.views.TreatmentDetailView;
-import se.fermitet.android.infektionsdagbok.views.TreatmentDetailView.OnButtonPressedListener;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,9 +19,9 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 			super.onCreate(savedInstanceState);
 
 			Intent intent = getIntent();
-			Treatment toEdit = (Treatment) intent.getSerializableExtra(MasterActivity.EXTRA_NAME_ITEM_TO_EDIT);
+			Treatment toEdit = (Treatment) intent.getSerializableExtra(InfektionsdagbokMasterActivity.EXTRA_NAME_ITEM_TO_EDIT);
 			if (toEdit != null) {
-				view.selectTreatment(toEdit);
+				view.setModel(toEdit);
 			}
 		} catch (Exception e) {
 			view.handleException(e);
@@ -32,10 +32,11 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 	protected void onStart() {
 		super.onStart();
 
-		view.setOnButtonPressedListener(new OnButtonPressedListener() {
+		view.setOnDetailButtonsPressedListener(new OnDetailButtonsPressedListener<Treatment>() {
+
 			@Override
-			public void onSavePressed(Treatment treatment) throws Exception {
-				getLocalApplication().getModelManager().save(treatment);
+			public void onSavePressed(Treatment item) throws Exception {
+				getLocalApplication().getModelManager().save(item);
 				finish();
 			}
 
@@ -45,8 +46,8 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 			}
 
 			@Override
-			public void onDeletePressed(Treatment treatment) throws Exception {
-				getLocalApplication().getModelManager().delete(treatment);
+			public void onDeletePressed(Treatment item) throws Exception {
+				getLocalApplication().getModelManager().delete(item);
 				finish();
 			}
 		});
@@ -56,7 +57,7 @@ public class TreatmentDetailActivity extends InfektionsdagbokActivity<TreatmentD
 	protected void onStop() {
 		super.onStop();
 
-		view.setOnButtonPressedListener(null);
+		view.setOnDetailButtonsPressedListener(null);
 	}
 
 
