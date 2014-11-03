@@ -31,6 +31,7 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 
 	private String TESTNAME = "TESTNAME";
 	private String TESTSSN = "123456-7890";
+	private Storage storage;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -38,7 +39,8 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 
 		this.kee = new KarolinskaExcelExporter();
 
-		this.mm = new ModelManager(new Storage(getContext()));
+		this.storage = new Storage(getContext());
+		this.mm = new ModelManager(storage);
 
 		this.testData = ModelManagerTest_WeekAnswers.prepareTestDataIndexedByWeek(year);
 		mm.saveWeekAnswers(this.testData.values());
@@ -55,6 +57,10 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		super.tearDown();
 
 		this.mm.reset();
+	}
+
+	public void testSendWorkbookToFileSoThatItCanBeShown() throws Exception {
+		storage.sendWorkbookToFile(createWorkbook(year), year);
 	}
 
 	public void testWorkbookHasWorksheet() throws Exception {
@@ -144,8 +150,12 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		checkRowHeight(0, 8);
 		checkRowHeight(1, 16);
 		checkRowHeight(2, 16);
-		for (int idx = 3; idx <= 14; idx++) {
+		for (int idx = 3; idx <= 15; idx++) {
 			checkRowHeight(idx, 13);
+		}
+
+		for (int idx = 17; idx <= 25; idx++) {
+			checkRowHeight(idx, 24);
 		}
 	}
 
@@ -226,7 +236,7 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		}
 	}
 
-	public void testHeaders() throws Exception {
+	public void testPersonHeaders() throws Exception {
 		Row row1 = sheet.getRow(1);
 		Row row2 = sheet.getRow(2);
 
@@ -246,12 +256,40 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		assertEquals("Header cell text", "Infektionsdagbok", headerCell.getStringCellValue());
 	}
 
+	public void testBottomHeaders() throws Exception {
+		Row row16 = sheet.getRow(16);
+
+		Cell treatmentHeaderCell = row16.getCell(0);
+		assertEquals("Treatment header cell text", "Antibiotikabehandling", treatmentHeaderCell.getStringCellValue());
+
+		Cell sickDayHeaderCell = row16.getCell(33);
+		assertEquals("Sick day header cell text", "Sjukskrivning", sickDayHeaderCell.getStringCellValue());
+
+		Row row17 = sheet.getRow(17);
+
+		assertEquals("First infectionType", "Typ av infektion", row17.getCell(0).getStringCellValue());
+		assertEquals("First medicine", "Preparat", row17.getCell(1).getStringCellValue());
+		assertEquals("First startingDate", "Insatt datum", row17.getCell(6).getStringCellValue());
+		assertEquals("First numDays", "Dgr", row17.getCell(11).getStringCellValue());
+
+		assertEquals("Second infectionType", "Typ av infektion", row17.getCell(13).getStringCellValue());
+		assertEquals("Second medicine", "Preparat", row17.getCell(21).getStringCellValue());
+		assertEquals("Second startingDate", "Insatt datum", row17.getCell(26).getStringCellValue());
+		assertEquals("Second numDays", "Dgr", row17.getCell(31).getStringCellValue());
+
+		assertEquals("First from", "FrŒn", row17.getCell(33).getStringCellValue());
+		assertEquals("First to", "Till", row17.getCell(38).getStringCellValue());
+		assertEquals("Second from", "FrŒn", row17.getCell(43).getStringCellValue());
+		assertEquals("Second to", "Till", row17.getCell(48).getStringCellValue());
+
+}
+
 	public void testYearNumber() throws Exception {
 		assertEquals("Year text", (double) year, sheet.getRow(3).getCell(1).getNumericCellValue());
 	}
 
 	protected Sheet getSheet(int year) throws Exception {
-		Workbook wb = kee.createWorkbook(year, this.mm, TESTNAME, TESTSSN);
+		Workbook wb = createWorkbook(year);
 		String nameToLookFor = "Infektionsdagbok";
 
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
@@ -261,6 +299,11 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 			}
 		}
 		return null;
+	}
+
+	private Workbook createWorkbook(int year) throws Exception {
+		Workbook wb = kee.createWorkbook(year, this.mm, TESTNAME, TESTSSN);
+		return wb;
 	}
 
 }

@@ -21,8 +21,10 @@ public class KarolinskaExcelExporter {
 	private Font verdana21Bold;
 	private Font verdana12Bold;
 	private Font verdana12Normal;
+	private Font verdana10Bold;
 	private Font verdana10Normal;
 	private Font verdana8Bold;
+	private Font verdana8Normal;
 	private Font verdana6Bold;
 	private Font verdana6Normal;
 
@@ -42,25 +44,30 @@ public class KarolinskaExcelExporter {
 		setColumnWidths(sheet);
 
 		addRows(sheet);
-		writeHeaders(sheet, wb, name, ssn);
+		writePersonHeaders(sheet, wb, name, ssn);
 		writeYear(sheet, wb, year);
 		writeRowHeaders(sheet, wb);
 		writeWeekHeaders(sheet, wb);
 		writeAnswers(sheet, wb, mm, year);
 
+		handleTreatments(sheet, wb, mm, year);
+		handleSickDays(sheet, wb, mm, year);
 		Workbook ret = wb;
 
 		return ret;
 	}
 
+
 	private void createFonts(Workbook wb) {
-		this.verdana21Bold = createFont(wb, 21, Font.BOLDWEIGHT_BOLD);
-		this.verdana12Bold = createFont(wb, 12, Font.BOLDWEIGHT_BOLD);
-		this.verdana12Normal = createFont(wb, 12, Font.BOLDWEIGHT_NORMAL);
-		this.verdana10Normal = createFont(wb, 10, Font.BOLDWEIGHT_NORMAL);
-		this.verdana8Bold = createFont(wb, 8, Font.BOLDWEIGHT_BOLD);
-		this.verdana6Bold = createFont(wb, 6, Font.BOLDWEIGHT_BOLD);
-		this.verdana6Normal = createFont(wb, 6, Font.BOLDWEIGHT_NORMAL);
+		this.verdana21Bold 		= createFont(wb, 21, Font.BOLDWEIGHT_BOLD);
+		this.verdana12Bold 		= createFont(wb, 12, Font.BOLDWEIGHT_BOLD);
+		this.verdana12Normal 	= createFont(wb, 12, Font.BOLDWEIGHT_NORMAL);
+		this.verdana10Normal 	= createFont(wb, 10, Font.BOLDWEIGHT_NORMAL);
+		this.verdana10Bold 		= createFont(wb, 10, Font.BOLDWEIGHT_BOLD);
+		this.verdana8Bold 		= createFont(wb, 8, Font.BOLDWEIGHT_BOLD);
+		this.verdana8Normal 	= createFont(wb, 8, Font.BOLDWEIGHT_NORMAL);
+		this.verdana6Bold 		= createFont(wb, 6, Font.BOLDWEIGHT_BOLD);
+		this.verdana6Normal 	= createFont(wb, 6, Font.BOLDWEIGHT_NORMAL);
 	}
 
 	private Font createFont(Workbook wb, int points, short bold) {
@@ -78,8 +85,8 @@ public class KarolinskaExcelExporter {
 
 		sheet.setAutobreaks(true);
 
-	    sheet.getPrintSetup().setFitHeight((short)1);
-	    sheet.getPrintSetup().setFitWidth((short)1);
+		sheet.getPrintSetup().setFitHeight((short)1);
+		sheet.getPrintSetup().setFitWidth((short)1);
 	}
 
 	private void setColumnWidths(Sheet sheet) {
@@ -100,12 +107,17 @@ public class KarolinskaExcelExporter {
 		Row row2 = sheet.createRow(2);
 		row2.setHeight((short) 320);
 
-		for (int idx = 3; idx <=14; idx++) {
+		for (int idx = 3; idx <= 16; idx++) {
 			sheet.createRow(idx);
+		}
+
+		for (int idx = 17; idx <= 25; idx++) {
+			Row row = sheet.createRow(idx);
+			row.setHeight((short) 480);
 		}
 	}
 
-	private void writeHeaders(Sheet sheet, Workbook wb, String name, String ssn) {
+	private void writePersonHeaders(Sheet sheet, Workbook wb, String name, String ssn) {
 		writeNameHeader(sheet, wb);
 		writeNameValue(sheet, wb, name);
 		writeSSNHeader(sheet, wb);
@@ -239,7 +251,7 @@ public class KarolinskaExcelExporter {
 
 		for (int weeknum = 1; weeknum <= weeksInYear; weeknum++) {
 			Week wk = new Week(year, weeknum);
-		WeekAnswers wa = weekAnswers.get(wk);
+			WeekAnswers wa = weekAnswers.get(wk);
 
 			for (int rowIdx = 5; rowIdx <= 14; rowIdx++) {
 
@@ -290,6 +302,98 @@ public class KarolinskaExcelExporter {
 			return false;
 		}
 	}
+
+	private void handleTreatments(Sheet sheet, Workbook wb, ModelManager mm, int year) {
+		writeTreatmentTopHeader(sheet, wb);
+		writeTreatmentCellsWithoutText(sheet, wb, 0, 1, 6, 11, 12);
+		writeTreatmentCellsWithoutText(sheet, wb, 13, 21, 26, 31, 32);
+	}
+
+	private void handleSickDays(Sheet sheet, Workbook wb, ModelManager mm, int year) {
+		writeSickDayTopHeader(sheet, wb);
+		writeSickDaysCellsWithoutText(sheet, wb, 33, 38, 42);
+		writeSickDaysCellsWithoutText(sheet, wb, 43, 48, 52);
+	}
+
+	private void writeTreatmentTopHeader(Sheet sheet, Workbook wb) {
+		for (int col = 0; col <= 32; col++) {
+			Cell cell = createCell(sheet, wb, 16, col, null, this.verdana10Bold,
+					(col == 0 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
+					(col == 32 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
+					CellStyle.BORDER_MEDIUM,
+					CellStyle.BORDER_MEDIUM);
+			cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
+
+		}
+		sheet.getRow(16).getCell(0).setCellValue("Antibiotikabehandling");
+
+		sheet.addMergedRegion(new CellRangeAddress(16, 16, 0, 32));
+	}
+
+	private void writeTreatmentCellsWithoutText(Sheet sheet, Workbook wb, int infTypeLeft, int medicineLeft, int dateLeft, int numDaysLeft, int numDaysRight) {
+		for (int row = 17; row <= 25; row++) {
+			for (int col = infTypeLeft; col <= numDaysRight; col++) {
+				Cell cell = createCell(sheet, wb, row, col, null,
+						(row == 17 ? verdana8Bold : verdana8Normal),
+						(col == infTypeLeft ? CellStyle.BORDER_MEDIUM : (col == medicineLeft || col == dateLeft || col == numDaysLeft ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE)),
+						(col == numDaysRight ? CellStyle.BORDER_MEDIUM : (col == (medicineLeft - 1) || col == (dateLeft - 1) || col == (numDaysLeft - 1) ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE)),
+						(row == 17 || row == 18 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
+						(row == 17 || row == 25 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN));
+				cell.getCellStyle().setVerticalAlignment(CellStyle.VERTICAL_TOP);
+				cell.getCellStyle().setWrapText(true);
+			}
+			sheet.addMergedRegion(new CellRangeAddress(row, row, infTypeLeft, medicineLeft - 1));
+			sheet.addMergedRegion(new CellRangeAddress(row, row, medicineLeft, dateLeft - 1));
+			sheet.addMergedRegion(new CellRangeAddress(row, row, dateLeft, numDaysLeft - 1));
+			sheet.addMergedRegion(new CellRangeAddress(row, row, numDaysLeft, numDaysRight));
+
+		}
+		sheet.getRow(17).getCell(infTypeLeft).setCellValue("Typ av infektion");
+		sheet.getRow(17).getCell(medicineLeft).setCellValue("Preparat");
+		sheet.getRow(17).getCell(dateLeft).setCellValue("Insatt datum");
+		sheet.getRow(17).getCell(numDaysLeft).setCellValue("Dgr");
+	}
+
+	private void writeSickDaysCellsWithoutText(Sheet sheet, Workbook wb, int startLeft, int endLeft, int endRight) {
+		for (int row = 17; row <= 25; row++) {
+			for (int col = startLeft; col <= endRight; col++) {
+				Cell cell = createCell(sheet, wb, row, col, null,
+						(row == 17 ? verdana8Bold : verdana8Normal),
+						(col == startLeft ? CellStyle.BORDER_MEDIUM : (col == endLeft ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE)),
+						(col == endRight ? CellStyle.BORDER_MEDIUM : (col == (endLeft - 1) ? CellStyle.BORDER_THIN : CellStyle.BORDER_NONE)),
+						(row == 17 || row == 18 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN),
+						(row == 17 || row == 25 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN));
+				cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
+				cell.getCellStyle().setVerticalAlignment(CellStyle.VERTICAL_TOP);
+				cell.getCellStyle().setWrapText(true);
+			}
+			sheet.addMergedRegion(new CellRangeAddress(row, row, startLeft, endLeft - 1));
+			sheet.addMergedRegion(new CellRangeAddress(row, row, endLeft, endRight));
+		}
+		sheet.getRow(17).getCell(startLeft).setCellValue("FrŒn");
+		sheet.getRow(17).getCell(endLeft).setCellValue("Till");
+	}
+
+
+
+
+	private void writeSickDayTopHeader(Sheet sheet, Workbook wb) {
+		for (int col = 33; col <= 52; col++) {
+			Cell cell = createCell(sheet, wb, 16, col, null, this.verdana10Bold,
+					(col == 33 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
+					(col == 52 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_NONE),
+					CellStyle.BORDER_MEDIUM,
+					CellStyle.BORDER_MEDIUM);
+			cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
+
+		}
+		sheet.getRow(16).getCell(33).setCellValue("Sjukskrivning");
+
+		sheet.addMergedRegion(new CellRangeAddress(16, 16, 33, 52));
+	}
+
+
+
 
 	private Cell createCell(Sheet sheet,
 			Workbook wb,
