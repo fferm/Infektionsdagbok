@@ -8,10 +8,8 @@ import org.joda.time.LocalDate;
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.views.TreatmentAdapter;
-import android.app.DatePickerDialog;
 import android.text.Editable;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -120,12 +118,13 @@ public class TreatmentMasterActivityTest extends MasterActivityTest<Treatment, T
 		TextView startTV = (TextView) solo.getView(R.id.startTV);
 		solo.clickOnView(startTV);
 		solo.waitForDialogToOpen();
-		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
-		DatePicker picker = dialog.getDatePicker();
+//		DatePickerDialog dialog = detailActivity.view.getDatePickerDialog();
+//		DatePicker picker = dialog.getDatePicker();
 
-		LocalDate start = itemWithNewValues.getStartingDate();
-		solo.setDatePicker(picker, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth());
-		solo.clickOnButton("StŠll in");
+//		LocalDate start = itemWithNewValues.getStartingDate();
+//		solo.setDatePicker(picker, start.getYear(), start.getMonthOfYear() - 1, start.getDayOfMonth());
+//		solo.clickOnButton("StŠll in");
+		fail("had to comment out before");
 
 		EditText numDaysEdit = (EditText) solo.getView(R.id.numDaysEdit);
 		solo.clearEditText(numDaysEdit);

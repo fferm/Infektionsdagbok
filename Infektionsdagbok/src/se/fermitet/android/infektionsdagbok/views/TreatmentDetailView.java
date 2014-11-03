@@ -1,22 +1,17 @@
 package se.fermitet.android.infektionsdagbok.views;
 
-import org.joda.time.LocalDate;
-
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.Treatment;
-import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView implements OnDateSetListener {
+public class TreatmentDetailView extends InfektionsdagbokDetailView {
 
 	private TextView startTV;
 	private EditText numDaysEdit;
@@ -25,7 +20,6 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	private ImageButton saveBTN;
 	private ImageButton cancelBTN;
 	private ImageButton deleteBTN;
-	private DatePickerDialog dp;
 
 	private Treatment model;
 
@@ -58,26 +52,12 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	}
 
 	private void setupWidgets() throws Exception {
-		setupStartTV();
 		setupMedicineEdit();
 		setupInfectionTypeEdit();
 		setupNumDaysEdit();
 		setupSaveBTN();
 		setupCancelBTN();
 		setupDeleteBTN();
-	}
-
-	private void setupStartTV() throws Exception {
-		startTV.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					dateClicked();
-				} catch (Exception e) {
-					handleException(e);
-				}
-			}
-		});
 	}
 
 	private void setupMedicineEdit() throws Exception {
@@ -196,11 +176,11 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 	}
 
 	private void syncUIWithModel() throws Exception {
-		if (model.getStartingDate() == null) {
-			startTV.setText(null);
-		} else {
-			startTV.setText(model.getStartingDateString());
-		}
+//		if (model.getStartingDate() == null) {
+//			startTV.setText(null);
+//		} else {
+//			startTV.setText(model.getStartingDateString());
+//		}
 
 		if (model.getNumDays() == null) {
 			numDaysEdit.setText(null);
@@ -221,32 +201,8 @@ public class TreatmentDetailView extends InfektionsdagbokRelativeLayoutView impl
 		}
 	}
 
-	private void dateClicked() throws Exception {
-		LocalDate startDate = model.getStartingDate();
-		if (startDate == null) startDate = LocalDate.now();
-
-		dp = new DatePickerDialog(getContext(), this, startDate.getYear(), startDate.getMonthOfYear() - 1, startDate.getDayOfMonth());
-		dp.show();
-	}
-
-	public DatePickerDialog getDatePickerDialog() throws Exception {
-		return dp;
-	}
-
 	public Treatment getModel() throws Exception {
 		return this.model;
-	}
-
-	@Override
-	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		try {
-			LocalDate newDate = LocalDate.now().withYear(year).withMonthOfYear(monthOfYear + 1).withDayOfMonth(dayOfMonth);
-			model.setStartingDate(newDate);
-
-			syncUIWithModel();
-		} catch (Exception e) {
-			handleException(e);
-		}
 	}
 
 	public interface OnButtonPressedListener {

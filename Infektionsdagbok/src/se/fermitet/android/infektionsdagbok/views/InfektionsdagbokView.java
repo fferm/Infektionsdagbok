@@ -29,3 +29,5 @@ class InfektionsdabokLinearLayoutView extends LinearLayout implements Infektions
 	}
 }
 
+
+

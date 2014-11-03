@@ -72,8 +72,9 @@ public class SickDayMasterActivityTest extends MasterActivityTest<SickDay, SickD
 
 	@Override
 	protected SickDay getTestItem() throws Exception {
-		fail("unimplemented");
-		return null;
+		LocalDate start = new LocalDate(1990, 1, 1);
+		LocalDate end = new LocalDate(1991, 1, 1);
+		return new SickDay(start, end);
 	}
 
 	@Override
