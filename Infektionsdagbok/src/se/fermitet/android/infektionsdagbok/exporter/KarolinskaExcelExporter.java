@@ -437,7 +437,6 @@ public class KarolinskaExcelExporter {
 
 	private void writeSickDayValues(Sheet sheet, Workbook wb, ModelManager mm, int year) throws Exception {
 		List<SickDay> sickDays = new ArrayList<SickDay>(mm.getAllSickDaysForYear(year));
-		System.out.println("!!!! sick days for year: " + year + "    " + sickDays.size());
 		Collections.sort(sickDays, new Comparator<SickDay>() {
 			@Override
 			public int compare(SickDay lhs, SickDay rhs) {

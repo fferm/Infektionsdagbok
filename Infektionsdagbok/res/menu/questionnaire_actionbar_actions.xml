@@ -1,22 +1,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/actionSickDay"
-        android:icon="@drawable/ic_sick_day"
-        android:showAsAction="ifRoom"
-        android:title="Sjukskrivningar">
-    </item>
-    <item
-        android:id="@+id/actionTreatment"
-        android:icon="@drawable/pills_icon"
-        android:showAsAction="ifRoom"
-        android:title="Behandlingar">
-    </item>
-    <item
-        android:id="@+id/actionExport"
-        android:icon="@drawable/ic_action_email"
-        android:showAsAction="ifRoom"
-        android:title="Export">
+        android:id="@+id/more"
+        android:icon="@drawable/ic_action_overflow"
+        android:showAsAction="always"
+        android:title="">
+        <menu>
+            <item
+                android:id="@+id/actionSickDay"
+                android:icon="@drawable/ic_sick_day"
+                android:showAsAction="ifRoom"
+                android:title="Sjukskrivningar">
+            </item>
+            <item
+                android:id="@+id/actionTreatment"
+                android:icon="@drawable/pills_icon"
+                android:showAsAction="ifRoom"
+                android:title="Behandlingar">
+            </item>
+            <item
+                android:id="@+id/actionExport"
+                android:icon="@drawable/ic_action_email"
+                android:showAsAction="ifRoom"
+                android:title="Export">
+            </item>
+        </menu>
     </item>
 
 </menu>
