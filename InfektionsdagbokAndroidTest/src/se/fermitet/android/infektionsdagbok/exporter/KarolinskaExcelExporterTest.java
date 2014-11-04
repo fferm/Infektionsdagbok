@@ -1,5 +1,9 @@
 package se.fermitet.android.infektionsdagbok.exporter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -8,9 +12,12 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.ModelManagerTest_WeekAnswers;
+import se.fermitet.android.infektionsdagbok.model.SickDay;
+import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
@@ -32,6 +39,8 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 	private String TESTNAME = "TESTNAME";
 	private String TESTSSN = "123456-7890";
 	private Storage storage;
+	private List<SickDay> testSickDays;
+	private List<Treatment> testTreatments;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -47,6 +56,9 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 
 		this.testData53 = ModelManagerTest_WeekAnswers.prepareTestDataIndexedByWeek(year53);
 		mm.saveWeekAnswers(this.testData53.values());
+
+		testSickDays = prepareTestSickDays();
+		testTreatments = prepareTestTreatments();
 
 		this.sheet = getSheet(year);
 		this.sheet53 = getSheet(year53);
@@ -281,8 +293,152 @@ public class KarolinskaExcelExporterTest extends AndroidTestCase {
 		assertEquals("First to", "Till", row17.getCell(38).getStringCellValue());
 		assertEquals("Second from", "Från", row17.getCell(43).getStringCellValue());
 		assertEquals("Second to", "Till", row17.getCell(48).getStringCellValue());
+	}
 
-}
+	public void testTreatmentContents() throws Exception {
+		Collections.sort(testTreatments, new Comparator<Treatment>() {
+			@Override
+			public int compare(Treatment lhs, Treatment rhs) {
+				if (lhs.getStartingDate().isBefore(rhs.getStartingDate())) return -1;
+				else return 1;
+			}
+		});
+
+		int[] rowsToSearch 			= {18, 19, 20, 21, 22, 23, 24, 25, 18, 19, 20, 21, 22, 23, 24, 25};
+		int[] infColsToSearch 		= {0,  0,  0,  0,  0,  0,  0,  0,  13, 13, 13, 13, 13, 13, 13, 13};
+		int[] medColsToSearch		= {1,  1,  1,  1,  1,  1,  1,  1,  21, 21, 21, 21, 21, 21, 21, 21};
+		int[] dateColsToSearch		= {6,  6,  6,  6,  6,  6,  6,  6,  26, 26, 26, 26, 26, 26, 26, 26};
+		int[] numDaysColsToSearch	= {11, 11, 11, 11, 11, 11, 11, 11, 31, 31, 31, 31, 31, 31, 31, 31};
+
+		assertTrue("More test data than space in excel", testTreatments.size() <= rowsToSearch.length);
+
+		for (int i = 0; i < rowsToSearch.length && i < testTreatments.size(); i++) {
+			Treatment treatment = testTreatments.get(i);
+			int rowIdx = rowsToSearch[i];
+			int infCol = infColsToSearch[i];
+			int medCol = medColsToSearch[i];
+			int dateCol = dateColsToSearch[i];
+			int numDaysCol = numDaysColsToSearch[i];
+
+			Row row = sheet.getRow(rowIdx);
+			Cell infCell = row.getCell(infCol);
+			Cell medCell = row.getCell(medCol);
+			Cell dateCell = row.getCell(dateCol);
+			Cell numDaysCell = row.getCell(numDaysCol);
+
+			if (treatment.getStartingDate() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + dateCol + " date null", dateCell.getStringCellValue() == null || dateCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + dateCol + " date value", treatment.getStartingDate().toDate(), dateCell.getDateCellValue());
+			}
+
+			if (treatment.getNumDays() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + numDaysCol + " numDays null", numDaysCell.getStringCellValue() == null || numDaysCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + numDaysCol + " numDays value", (double) treatment.getNumDays(), numDaysCell.getNumericCellValue());
+			}
+
+			if (treatment.getInfectionType() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + infCol + " infectionType null", infCell.getStringCellValue() == null || infCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + infCol + " infectionType value", treatment.getInfectionType(), infCell.getStringCellValue());
+			}
+
+			if (treatment.getMedicine() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + medCol + " medicine null", medCell.getStringCellValue() == null || medCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + medCol + " medicine value", treatment.getMedicine(), medCell.getStringCellValue());
+			}
+		}
+	}
+
+	private List<Treatment> prepareTestTreatments() throws Exception{
+		List<Treatment> testTreatments = new ArrayList<Treatment>();
+
+		testTreatments.add(new Treatment(new LocalDate(year, 1, 1), 1, "INFECTION 1", "MEDICINE 1"));
+		testTreatments.add(new Treatment(new LocalDate(year, 2, 2), 2, "INFECTION 2", "MEDICINE 2"));
+		testTreatments.add(new Treatment(new LocalDate(year, 3, 3), 3, "INFECTION 3", "MEDICINE 3"));
+		testTreatments.add(new Treatment(new LocalDate(year, 4, 4), 4, "INFECTION 4", "MEDICINE 4"));
+		testTreatments.add(new Treatment(new LocalDate(year, 5, 5), 5, "INFECTION 5", "MEDICINE 5"));
+		testTreatments.add(new Treatment(new LocalDate(year, 6, 6), 6, "INFECTION 6", "MEDICINE 6"));
+		testTreatments.add(new Treatment(new LocalDate(year, 7, 7), 7, "INFECTION 7", "MEDICINE 7"));
+		testTreatments.add(new Treatment(new LocalDate(year, 8, 8), 8, "INFECTION 8", "MEDICINE 8"));
+		testTreatments.add(new Treatment(new LocalDate(year, 9, 9), null, "INFECTION 9", "MEDICINE 9"));
+		testTreatments.add(new Treatment(new LocalDate(year, 10, 10), 10, null, "MEDICINE 10"));
+		testTreatments.add(new Treatment(new LocalDate(year, 11, 11), 11, "INFECTION 11", null));
+
+		Collections.shuffle(testTreatments);  // Shuffle to ensure sorting must be done
+		mm.saveAll(testTreatments);
+		return testTreatments;
+	}
+
+	public void testSickDayContents() throws Exception {
+		Collections.sort(testSickDays, new Comparator<SickDay>() {
+			@Override
+			public int compare(SickDay lhs, SickDay rhs) {
+				LocalDate lhsDate = lhs.getStart();
+				LocalDate rhsDate = rhs.getStart();
+
+				if (lhsDate == null) return 1;
+				if (rhsDate == null) return -1;
+
+				if (lhsDate.isBefore(rhsDate)) return -1;
+				else if (lhsDate.equals(rhsDate)) return 0;
+				else return 1;
+			}
+		});
+
+		int[] rowsToSearch 			= {18, 19, 20, 21, 22, 23, 24, 25, 18, 19, 20, 21, 22, 23, 24, 25};
+		int[] fromColsToSearch 		= {33, 33, 33, 33, 33, 33, 33, 33, 43, 43, 43, 43, 43, 43, 43, 43};
+		int[] toColsToSearch		= {38, 38, 38, 38, 38, 38, 38, 38, 48, 48, 48, 48, 48, 48, 48, 48};
+
+		assertTrue("More test data than space in excel", testSickDays.size() <= rowsToSearch.length);
+
+		for (int i = 0; i < rowsToSearch.length && i < testSickDays.size(); i++) {
+			SickDay item = testSickDays.get(i);
+			int rowIdx = rowsToSearch[i];
+			int fromCol = fromColsToSearch[i];
+			int toCol = toColsToSearch[i];
+
+			Row row = sheet.getRow(rowIdx);
+			Cell fromCell = row.getCell(fromCol);
+			Cell toCell = row.getCell(toCol);
+
+			if (item.getStart() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + fromCol + " from date null", fromCell.getStringCellValue() == null || fromCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + fromCol + " from date value", item.getStart().toDate(), fromCell.getDateCellValue());
+			}
+
+			if (item.getEnd() == null) {
+				assertTrue("Row: " + rowIdx + " col: " + toCol + " to date null", toCell.getStringCellValue() == null || toCell.getStringCellValue().length() == 0);
+			} else {
+				assertEquals("Row: " + rowIdx + " col: " + toCol + " to date value", item.getEnd().toDate(), toCell.getDateCellValue());
+			}
+		}
+	}
+
+
+	private List<SickDay> prepareTestSickDays() throws Exception{
+		List<SickDay> testSickDays= new ArrayList<SickDay>();
+
+		testSickDays.add(new SickDay(new LocalDate(year, 1, 1), new LocalDate(year, 1, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 2, 1), new LocalDate(year, 2, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 3, 1), new LocalDate(year, 3, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 4, 1), new LocalDate(year, 4, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 5, 1), new LocalDate(year, 5, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 6, 1), new LocalDate(year, 6, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 7, 1), new LocalDate(year, 7, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 8, 1), new LocalDate(year, 8, 2)));
+		testSickDays.add(new SickDay(null, new LocalDate(year, 9, 2)));
+		testSickDays.add(new SickDay(new LocalDate(year, 10, 1), null));
+
+		Collections.shuffle(testSickDays);  // Shuffle to ensure sorting must be done
+		mm.saveAll(testSickDays);
+		return testSickDays;
+	}
+
+
 
 	public void testYearNumber() throws Exception {
 		assertEquals("Year text", (double) year, sheet.getRow(3).getCell(1).getNumericCellValue());

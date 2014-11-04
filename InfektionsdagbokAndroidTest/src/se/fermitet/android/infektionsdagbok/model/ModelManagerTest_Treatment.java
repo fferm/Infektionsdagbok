@@ -92,16 +92,19 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 
 	public void testGetAllForYear() throws Exception {
 		int year = 2014;
-		Treatment incl1 = new Treatment(new LocalDate(2014,1,1), 1, "INF1", "MED1");	// Fully in year
-		Treatment incl2 = new Treatment(new LocalDate(2014,2,1), 1, "INF2", "MED2");	// Fully in year
-		Treatment incl3 = new Treatment(new LocalDate(2013,12,30), 10, "INF3", "MED3");	// Starting previous year, but going into current
-		Treatment incl4 = new Treatment(new LocalDate(2014,12,30), 10, "INF4", "MED4");	// Starting current year, but going into next
-		Treatment incl5 = new Treatment(new LocalDate(2013,12,30), 500, "INF5", "MED5");// Stretches over current year
-		Treatment incl6 = new Treatment(new LocalDate(2014, 3, 1), null, "INF6", "MED6");	// Starting in current year with null days
-		Treatment excl1 = new Treatment(new LocalDate(2013,12,30), 1, "INF7", "MED7");
-		Treatment excl2 = new Treatment(new LocalDate(2015,1,1), 1, "INF8", "MED8");
-		Treatment excl3 = new Treatment(new LocalDate(2015,1,1), null, "INF8", "MED8");
-		Treatment excl4 = new Treatment(new LocalDate(2013,12,31), null, "INF8", "MED8");
+		int prev = year - 1;
+		int next = year + 1;
+
+		Treatment incl1 = new Treatment(new LocalDate(year,1,1), 1, "INF1", "MED1");	// Fully in year
+		Treatment incl2 = new Treatment(new LocalDate(year,2,1), 1, "INF2", "MED2");	// Fully in year
+		Treatment incl3 = new Treatment(new LocalDate(prev,12,30), 10, "INF3", "MED3");	// Starting previous year, but going into current
+		Treatment incl4 = new Treatment(new LocalDate(year,12,30), 10, "INF4", "MED4");	// Starting current year, but going into next
+		Treatment incl5 = new Treatment(new LocalDate(prev,12,29), 500, "INF5", "MED5");// Stretches over current year
+		Treatment incl6 = new Treatment(new LocalDate(year, 3, 1), null, "INF6", "MED6");	// Starting in current year with null days
+		Treatment excl1 = new Treatment(new LocalDate(prev,12,30), 1, "INF7", "MED7");
+		Treatment excl2 = new Treatment(new LocalDate(next,1,1), 1, "INF8", "MED8");
+		Treatment excl3 = new Treatment(new LocalDate(next,1,1), null, "INF8", "MED8");
+		Treatment excl4 = new Treatment(new LocalDate(prev,12,31), null, "INF8", "MED8");
 		Treatment excl5 = new Treatment(null, 1, "INF8", "MED8");
 		Treatment excl6 = new Treatment(null, null, "INF9", "MED9");
 

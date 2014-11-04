@@ -1,18 +1,26 @@
 package se.fermitet.android.infektionsdagbok.exporter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.joda.time.LocalDate;
 
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
+import se.fermitet.android.infektionsdagbok.model.SickDay;
+import se.fermitet.android.infektionsdagbok.model.Treatment;
 import se.fermitet.android.infektionsdagbok.model.Week;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 
@@ -37,6 +45,7 @@ public class KarolinskaExcelExporter {
 	public Workbook createWorkbook(int year, ModelManager mm, String name, String ssn) throws Exception {
 		weeksInYear = Week.weeksInTheYear(year);
 		Workbook wb = new HSSFWorkbook();
+		CreationHelper ch = wb.getCreationHelper();
 		createFonts(wb);
 
 		Sheet sheet = wb.createSheet("Infektionsdagbok");
@@ -50,8 +59,8 @@ public class KarolinskaExcelExporter {
 		writeWeekHeaders(sheet, wb);
 		writeAnswers(sheet, wb, mm, year);
 
-		handleTreatments(sheet, wb, mm, year);
-		handleSickDays(sheet, wb, mm, year);
+		handleTreatments(sheet, wb, mm, year, ch);
+		handleSickDays(sheet, wb, mm, year, ch);
 		Workbook ret = wb;
 
 		return ret;
@@ -303,16 +312,18 @@ public class KarolinskaExcelExporter {
 		}
 	}
 
-	private void handleTreatments(Sheet sheet, Workbook wb, ModelManager mm, int year) {
+	private void handleTreatments(Sheet sheet, Workbook wb, ModelManager mm, int year, CreationHelper ch) throws Exception {
 		writeTreatmentTopHeader(sheet, wb);
-		writeTreatmentCellsWithoutText(sheet, wb, 0, 1, 6, 11, 12);
-		writeTreatmentCellsWithoutText(sheet, wb, 13, 21, 26, 31, 32);
+		writeTreatmentCellsWithoutText(sheet, wb, 0, 1, 6, 11, 12, ch);
+		writeTreatmentCellsWithoutText(sheet, wb, 13, 21, 26, 31, 32, ch);
+		writeTreatmentValues(sheet, wb, mm, year);
 	}
 
-	private void handleSickDays(Sheet sheet, Workbook wb, ModelManager mm, int year) {
+	private void handleSickDays(Sheet sheet, Workbook wb, ModelManager mm, int year, CreationHelper ch) throws Exception {
 		writeSickDayTopHeader(sheet, wb);
-		writeSickDaysCellsWithoutText(sheet, wb, 33, 38, 42);
-		writeSickDaysCellsWithoutText(sheet, wb, 43, 48, 52);
+		writeSickDaysCellsWithoutText(sheet, wb, 33, 38, 42, ch);
+		writeSickDaysCellsWithoutText(sheet, wb, 43, 48, 52, ch);
+		writeSickDayValues(sheet, wb, mm, year);
 	}
 
 	private void writeTreatmentTopHeader(Sheet sheet, Workbook wb) {
@@ -330,7 +341,7 @@ public class KarolinskaExcelExporter {
 		sheet.addMergedRegion(new CellRangeAddress(16, 16, 0, 32));
 	}
 
-	private void writeTreatmentCellsWithoutText(Sheet sheet, Workbook wb, int infTypeLeft, int medicineLeft, int dateLeft, int numDaysLeft, int numDaysRight) {
+	private void writeTreatmentCellsWithoutText(Sheet sheet, Workbook wb, int infTypeLeft, int medicineLeft, int dateLeft, int numDaysLeft, int numDaysRight, CreationHelper ch) {
 		for (int row = 17; row <= 25; row++) {
 			for (int col = infTypeLeft; col <= numDaysRight; col++) {
 				Cell cell = createCell(sheet, wb, row, col, null,
@@ -341,6 +352,11 @@ public class KarolinskaExcelExporter {
 						(row == 17 || row == 25 ? CellStyle.BORDER_MEDIUM : CellStyle.BORDER_THIN));
 				cell.getCellStyle().setVerticalAlignment(CellStyle.VERTICAL_TOP);
 				cell.getCellStyle().setWrapText(true);
+
+				if (col == dateLeft) {
+					cell.getCellStyle().setDataFormat(ch.createDataFormat().getFormat("yyyy-mm-dd"));
+				}
+
 			}
 			sheet.addMergedRegion(new CellRangeAddress(row, row, infTypeLeft, medicineLeft - 1));
 			sheet.addMergedRegion(new CellRangeAddress(row, row, medicineLeft, dateLeft - 1));
@@ -354,7 +370,47 @@ public class KarolinskaExcelExporter {
 		sheet.getRow(17).getCell(numDaysLeft).setCellValue("Dgr");
 	}
 
-	private void writeSickDaysCellsWithoutText(Sheet sheet, Workbook wb, int startLeft, int endLeft, int endRight) {
+	private void writeTreatmentValues(Sheet sheet, Workbook wb,	ModelManager mm, int year) throws Exception {
+		List<Treatment> treatments = new ArrayList<Treatment>(mm.getAllTreatmentsForYear(year));
+		Collections.sort(treatments, new Comparator<Treatment>() {
+			@Override
+			public int compare(Treatment lhs, Treatment rhs) {
+				if (lhs.getStartingDate().isBefore(rhs.getStartingDate())) return -1;
+				else return 1;
+			}
+		});
+
+		int[] rows 			= {18, 19, 20, 21, 22, 23, 24, 25, 18, 19, 20, 21, 22, 23, 24, 25};
+		int[] infCols 		= {0,  0,  0,  0,  0,  0,  0,  0,  13, 13, 13, 13, 13, 13, 13, 13};
+		int[] medCols		= {1,  1,  1,  1,  1,  1,  1,  1,  21, 21, 21, 21, 21, 21, 21, 21};
+		int[] dateCols		= {6,  6,  6,  6,  6,  6,  6,  6,  26, 26, 26, 26, 26, 26, 26, 26};
+		int[] numDaysCols	= {11, 11, 11, 11, 11, 11, 11, 11, 31, 31, 31, 31, 31, 31, 31, 31};
+
+		for (int i = 0; i < treatments.size() && i < rows.length; i++) {
+			Treatment treatment = treatments.get(i);
+
+			Row row = sheet.getRow(rows[i]);
+
+			if (treatment.getInfectionType() != null) {
+				row.getCell(infCols[i]).setCellValue(treatment.getInfectionType());
+			}
+
+			if (treatment.getMedicine() != null) {
+				row.getCell(medCols[i]).setCellValue(treatment.getMedicine());
+			}
+
+			if (treatment.getStartingDate() != null) {
+				row.getCell(dateCols[i]).setCellValue(treatment.getStartingDate().toDate());
+			}
+
+			if (treatment.getNumDays() != null) {
+				row.getCell(numDaysCols[i]).setCellValue(treatment.getNumDays());
+			}
+		}
+	}
+
+
+	private void writeSickDaysCellsWithoutText(Sheet sheet, Workbook wb, int startLeft, int endLeft, int endRight, CreationHelper ch) {
 		for (int row = 17; row <= 25; row++) {
 			for (int col = startLeft; col <= endRight; col++) {
 				Cell cell = createCell(sheet, wb, row, col, null,
@@ -366,12 +422,55 @@ public class KarolinskaExcelExporter {
 				cell.getCellStyle().setAlignment(CellStyle.ALIGN_CENTER);
 				cell.getCellStyle().setVerticalAlignment(CellStyle.VERTICAL_TOP);
 				cell.getCellStyle().setWrapText(true);
+
+				if (col == startLeft || col == endLeft) {
+					cell.getCellStyle().setDataFormat(ch.createDataFormat().getFormat("yyyy-mm-dd"));
+				}
+
 			}
 			sheet.addMergedRegion(new CellRangeAddress(row, row, startLeft, endLeft - 1));
 			sheet.addMergedRegion(new CellRangeAddress(row, row, endLeft, endRight));
 		}
 		sheet.getRow(17).getCell(startLeft).setCellValue("FrŒn");
 		sheet.getRow(17).getCell(endLeft).setCellValue("Till");
+	}
+
+	private void writeSickDayValues(Sheet sheet, Workbook wb, ModelManager mm, int year) throws Exception {
+		List<SickDay> sickDays = new ArrayList<SickDay>(mm.getAllSickDaysForYear(year));
+		System.out.println("!!!! sick days for year: " + year + "    " + sickDays.size());
+		Collections.sort(sickDays, new Comparator<SickDay>() {
+			@Override
+			public int compare(SickDay lhs, SickDay rhs) {
+				LocalDate lhsDate = lhs.getStart();
+				LocalDate rhsDate = rhs.getStart();
+
+				if (lhsDate == null) return 1;
+				if (rhsDate == null) return -1;
+
+				if (lhsDate.isBefore(rhsDate)) return -1;
+				else if (lhsDate.equals(rhsDate)) return 0;
+				else return 1;
+			}
+		});
+
+		int[] rows 			= {18, 19, 20, 21, 22, 23, 24, 25, 18, 19, 20, 21, 22, 23, 24, 25};
+		int[] fromCols 		= {33, 33, 33, 33, 33, 33, 33, 33, 43, 43, 43, 43, 43, 43, 43, 43};
+		int[] toCols		= {38, 38, 38, 38, 38, 38, 38, 38, 48, 48, 48, 48, 48, 48, 48, 48};
+
+		for (int i = 0; i < sickDays.size() && i < rows.length; i++) {
+			SickDay item = sickDays.get(i);
+
+			Row row = sheet.getRow(rows[i]);
+
+			if (item.getStart() != null) {
+				row.getCell(fromCols[i]).setCellValue(item.getStart().toDate());
+			}
+
+			if (item.getEnd() != null) {
+				row.getCell(toCols[i]).setCellValue(item.getEnd().toDate());
+			}
+
+		}
 	}
 
 
