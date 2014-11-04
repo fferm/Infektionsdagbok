@@ -118,7 +118,7 @@ public class ModelManager {
 			LocalDate startDate = treatment.getStartingDate();
 			if (startDate == null) continue;
 
-			boolean startingInCurrentYear = startDate.year().get() == year;
+			boolean startingInCurrentYear = startDate.getYear() == year;
 
 			boolean hasNumDays = treatment.getNumDays() != null;
 
@@ -128,9 +128,9 @@ public class ModelManager {
 				}
 			} else {
 				LocalDate endDate = startDate.plusDays(treatment.getNumDays() - 1);
-				boolean endsInCurrentYear = endDate.year().get() == year;
+				boolean endsInCurrentYear = endDate.getYear() == year;
 
-				boolean spansCurrentYear = startDate.year().get() < year && year < endDate.year().get();
+				boolean spansCurrentYear = startDate.getYear() < year && year < endDate.getYear();
 
 				if (startingInCurrentYear || endsInCurrentYear || spansCurrentYear) ret.add(treatment);
 			}
@@ -144,9 +144,30 @@ public class ModelManager {
 		return (Map<UUID, SickDay>) getAllItemsOfClass(SickDay.class);
 	}
 
-	public Collection<SickDay> getAllSickDaysForYear(int year) {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<SickDay> getAllSickDaysForYear(int year) throws Exception {
+		Collection<SickDay> ret = new ArrayList<SickDay>();
+
+		Collection<SickDay> allSickDays = getAllSickDays().values();
+		for (SickDay sickDay : allSickDays) {
+			boolean toAdd = false;
+			LocalDate start = sickDay.getStart();
+			LocalDate end = sickDay.getEnd();
+
+			if (start == null && end != null) {
+				toAdd = end.getYear() >= year;
+			} else if (end == null && start != null)  {
+				toAdd = start.getYear() <= year;
+			} else if (start != null && end != null) {
+				boolean startsInCurrent = start.getYear() == year;
+				boolean endsInCurrent = end.getYear() == year;
+				boolean spansCurrent = start.getYear() < year && year < end.getYear();
+
+				toAdd = startsInCurrent || endsInCurrent || spansCurrent;
+			}
+
+			if (toAdd) ret.add(sickDay);
+		}
+		return ret;
 	}
 
 

@@ -98,11 +98,13 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		SickDay incl5 = new SickDay(new LocalDate(2013,1,1), new LocalDate(2015,2,1));	// Stretches over current year
 		SickDay incl6 = new SickDay(new LocalDate(2014,1,1), null);						// Starting in current year with null end
 		SickDay incl7 = new SickDay(null, new LocalDate(2014,2,1));						// Null start with end in current
+		SickDay incl8 = new SickDay(null, new LocalDate(2015,1,1));						// Null start with end in future year
+		SickDay incl9 = new SickDay(new LocalDate(2013,1,1), null);						// Starting in previous, null end
 
 		SickDay excl1 = new SickDay(new LocalDate(2013,1,1), new LocalDate(2013,2,2));
 		SickDay excl2 = new SickDay(new LocalDate(2015,1,1), new LocalDate(2015,2,2));
 		SickDay excl3 = new SickDay(new LocalDate(2015,1,1), null);
-		SickDay excl4 = new SickDay(null, new LocalDate(2014,2,2));
+		SickDay excl4 = new SickDay(null, new LocalDate(2013,2,2));
 		SickDay excl5 = new SickDay(null, null);
 
 		Collection<SickDay> toSave = new ArrayList<SickDay>();
@@ -113,6 +115,8 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		toSave.add(incl5);
 		toSave.add(incl6);
 		toSave.add(incl7);
+		toSave.add(incl8);
+		toSave.add(incl9);
 		toSave.add(excl1);
 		toSave.add(excl2);
 		toSave.add(excl3);
@@ -127,6 +131,8 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		expected.add(incl5);
 		expected.add(incl6);
 		expected.add(incl7);
+		expected.add(incl8);
+		expected.add(incl9);
 
 		modelManager.saveAll(toSave);
 
