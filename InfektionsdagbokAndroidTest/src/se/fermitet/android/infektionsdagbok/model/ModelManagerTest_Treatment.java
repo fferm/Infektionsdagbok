@@ -90,4 +90,49 @@ public class ModelManagerTest_Treatment extends AndroidTestCase {
 		assertFalse("Contains", fromFile.contains(t1));
 	}
 
+	public void testGetAllForYear() throws Exception {
+		int year = 2014;
+		Treatment incl1 = new Treatment(new LocalDate(2014,1,1), 1, "INF1", "MED1");	// Fully in year
+		Treatment incl2 = new Treatment(new LocalDate(2014,2,1), 1, "INF2", "MED2");	// Fully in year
+		Treatment incl3 = new Treatment(new LocalDate(2013,12,30), 10, "INF3", "MED3");	// Starting previous year, but going into current
+		Treatment incl4 = new Treatment(new LocalDate(2014,12,30), 10, "INF4", "MED4");	// Starting current year, but going into next
+		Treatment incl5 = new Treatment(new LocalDate(2013,12,30), 500, "INF5", "MED5");// Stretches over current year
+		Treatment incl6 = new Treatment(new LocalDate(2014, 3, 1), null, "INF6", "MED6");	// Starting in current year with null days
+		Treatment excl1 = new Treatment(new LocalDate(2013,12,30), 1, "INF7", "MED7");
+		Treatment excl2 = new Treatment(new LocalDate(2015,1,1), 1, "INF8", "MED8");
+		Treatment excl3 = new Treatment(new LocalDate(2015,1,1), null, "INF8", "MED8");
+		Treatment excl4 = new Treatment(new LocalDate(2013,12,31), null, "INF8", "MED8");
+		Treatment excl5 = new Treatment(null, 1, "INF8", "MED8");
+		Treatment excl6 = new Treatment(null, null, "INF9", "MED9");
+
+		Collection<Treatment> toSave = new ArrayList<Treatment>();
+		toSave.add(incl1);
+		toSave.add(incl2);
+		toSave.add(incl3);
+		toSave.add(incl4);
+		toSave.add(incl5);
+		toSave.add(incl6);
+		toSave.add(excl1);
+		toSave.add(excl2);
+		toSave.add(excl3);
+		toSave.add(excl4);
+		toSave.add(excl5);
+		toSave.add(excl6);
+
+		Collection<Treatment> expected = new ArrayList<Treatment>();
+		expected.add(incl1);
+		expected.add(incl2);
+		expected.add(incl3);
+		expected.add(incl4);
+		expected.add(incl5);
+		expected.add(incl6);
+
+		modelManager.saveAll(toSave);
+
+		Collection<Treatment> fromFile = modelManager.getAllTreatmentsForYear(year);
+
+		assertEquals("size", expected.size(), fromFile.size());
+		assertTrue("contains all", fromFile.containsAll(expected));
+	}
+
 }

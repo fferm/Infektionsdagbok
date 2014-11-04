@@ -89,5 +89,53 @@ public class ModelManagerTest_SickDay extends AndroidTestCase {
 		assertFalse("Contains", fromFile.contains(obj1));
 	}
 
+	public void testGetAllForYear() throws Exception {
+		int year = 2014;
+		SickDay incl1 = new SickDay(new LocalDate(2014,1,1), new LocalDate(2014,2,1));	// Fully in year
+		SickDay incl2 = new SickDay(new LocalDate(2014,2,1), new LocalDate(2014,3,1));	// Fully in year
+		SickDay incl3 = new SickDay(new LocalDate(2013,12,1), new LocalDate(2014,2,1));	// Starting previous year, but going into current
+		SickDay incl4 = new SickDay(new LocalDate(2014,12,1), new LocalDate(2015,2,1));	// Starting current year, but going into next
+		SickDay incl5 = new SickDay(new LocalDate(2013,1,1), new LocalDate(2015,2,1));	// Stretches over current year
+		SickDay incl6 = new SickDay(new LocalDate(2014,1,1), null);						// Starting in current year with null end
+		SickDay incl7 = new SickDay(null, new LocalDate(2014,2,1));						// Null start with end in current
+
+		SickDay excl1 = new SickDay(new LocalDate(2013,1,1), new LocalDate(2013,2,2));
+		SickDay excl2 = new SickDay(new LocalDate(2015,1,1), new LocalDate(2015,2,2));
+		SickDay excl3 = new SickDay(new LocalDate(2015,1,1), null);
+		SickDay excl4 = new SickDay(null, new LocalDate(2014,2,2));
+		SickDay excl5 = new SickDay(null, null);
+
+		Collection<SickDay> toSave = new ArrayList<SickDay>();
+		toSave.add(incl1);
+		toSave.add(incl2);
+		toSave.add(incl3);
+		toSave.add(incl4);
+		toSave.add(incl5);
+		toSave.add(incl6);
+		toSave.add(incl7);
+		toSave.add(excl1);
+		toSave.add(excl2);
+		toSave.add(excl3);
+		toSave.add(excl4);
+		toSave.add(excl5);
+
+		Collection<SickDay> expected = new ArrayList<SickDay>();
+		expected.add(incl1);
+		expected.add(incl2);
+		expected.add(incl3);
+		expected.add(incl4);
+		expected.add(incl5);
+		expected.add(incl6);
+		expected.add(incl7);
+
+		modelManager.saveAll(toSave);
+
+		Collection<SickDay> fromFile = modelManager.getAllSickDaysForYear(year);
+
+		assertEquals("size", expected.size(), fromFile.size());
+		assertTrue("contains all", fromFile.containsAll(expected));
+	}
+
+
 
 }

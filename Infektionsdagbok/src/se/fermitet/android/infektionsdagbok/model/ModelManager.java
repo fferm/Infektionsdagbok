@@ -110,10 +110,45 @@ public class ModelManager {
 		return (Map<UUID, Treatment>) getAllItemsOfClass(Treatment.class);
 	}
 
+	public Collection<Treatment> getAllTreatmentsForYear(int year) throws Exception {
+		Collection<Treatment> ret = new ArrayList<Treatment>();
+
+		Collection<Treatment> allTreatments = getAllTreatments().values();
+		for (Treatment treatment : allTreatments) {
+			LocalDate startDate = treatment.getStartingDate();
+			if (startDate == null) continue;
+
+			boolean startingInCurrentYear = startDate.year().get() == year;
+
+			boolean hasNumDays = treatment.getNumDays() != null;
+
+			if (!hasNumDays) {
+				if (startingInCurrentYear) {
+					ret.add(treatment);
+				}
+			} else {
+				LocalDate endDate = startDate.plusDays(treatment.getNumDays() - 1);
+				boolean endsInCurrentYear = endDate.year().get() == year;
+
+				boolean spansCurrentYear = startDate.year().get() < year && year < endDate.year().get();
+
+				if (startingInCurrentYear || endsInCurrentYear || spansCurrentYear) ret.add(treatment);
+			}
+		}
+		return ret;
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public Map<UUID, SickDay> getAllSickDays() throws Exception {
 		return (Map<UUID, SickDay>) getAllItemsOfClass(SickDay.class);
 	}
+
+	public Collection<SickDay> getAllSickDaysForYear(int year) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	public Map<UUID, ? extends ModelObjectBase> getAllItemsOfClass(Class<? extends ModelObjectBase> clz) throws Exception {
 		if (clz.equals(Treatment.class))
@@ -174,6 +209,8 @@ public class ModelManager {
 
 		saveAllForClass(alreadySaved.values(), obj.getClass());
 	}
+
+
 
 
 }
