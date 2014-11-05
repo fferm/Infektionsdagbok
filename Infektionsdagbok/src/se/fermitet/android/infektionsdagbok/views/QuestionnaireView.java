@@ -2,6 +2,7 @@ package se.fermitet.android.infektionsdagbok.views;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
+import se.fermitet.android.infektionsdagbok.widget.OnSwipeTouchListener;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -51,8 +52,23 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 
 
 	private void setupWidgets() throws Exception {
+		setupSwipes();
 		setupWeekNavigationButtons();
 		setupQuestions();
+	}
+
+	private void setupSwipes() {
+		this.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+			@Override
+			public void onSwipeLeft() {
+				QuestionnaireView.this.weekChangeListener.onWeekIncrement();
+			}
+
+			@Override
+			public void onSwipeRight() {
+				QuestionnaireView.this.weekChangeListener.onWeekDecrement();
+			}
+		});
 	}
 
 	private void setupWeekNavigationButtons() throws Exception {
