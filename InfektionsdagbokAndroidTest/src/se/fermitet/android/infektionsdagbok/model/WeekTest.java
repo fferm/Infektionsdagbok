@@ -45,6 +45,9 @@ public class WeekTest extends TestCase {
 
 		assertEquals("Year", 2014, wk.year());
 		assertEquals("Weeknum", 2, wk.weeknum());
+
+		assertEquals("Start date", "2014-01-06", wk.getMondayString());
+		assertEquals("End date", "2014-01-12", wk.getSundayString());
 	}
 
 	public void testWeeksInAYear() throws Exception {

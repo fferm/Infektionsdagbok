@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<se.fermitet.android.infektionsdagbok.views.QuestionnaireView 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<se.fermitet.android.infektionsdagbok.views.QuestionnaireView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/questionnaireView"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
- >
+    android:layout_height="wrap_content" >
 
     <TextView
         android:id="@+id/weekDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
         android:layout_margin="10dp"
-        />
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView 
+    <ImageView
         android:id="@+id/previousWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:src="@drawable/ic_action_previous_item"
-        android:layout_toLeftOf="@id/weekDisplay"
         android:layout_margin="10dp"
-        android:contentDescription="Föregående"/>
-    
-    <ImageView 
+        android:layout_toLeftOf="@id/weekDisplay"
+        android:contentDescription="Föregående"
+        android:scaleType="center"
+        android:src="@drawable/ic_action_previous_item" />
+
+    <ImageView
         android:id="@+id/nextWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:src="@drawable/ic_action_next_item"
-        android:layout_toRightOf="@id/weekDisplay"
         android:layout_margin="10dp"
-        android:contentDescription="Nästa"/>
-    
+        android:layout_toRightOf="@id/weekDisplay"
+        android:contentDescription="Nästa"
+        android:scaleType="center"
+        android:src="@drawable/ic_action_next_item" />
+
+    <TextView
+        android:id="@+id/mondayTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@id/weekDisplay"
+        android:layout_alignParentLeft="true"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/sundayTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_below="@id/weekDisplay"
+        android:layout_alignParentRight="true"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/generallyWell"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/weekDisplay"
-        android:text="Väsentligen frisk" />    
+        android:layout_below="@id/mondayTV"
+        android:layout_marginTop="20dp"
+        android:text="Väsentligen frisk" />
 
     <se.fermitet.android.infektionsdagbok.views.QuestionView
         android:id="@+id/malaise"

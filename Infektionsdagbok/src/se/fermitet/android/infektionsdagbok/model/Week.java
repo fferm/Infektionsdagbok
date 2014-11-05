@@ -1,5 +1,6 @@
 package se.fermitet.android.infektionsdagbok.model;
 
+import java.text.DateFormat;
 import java.util.StringTokenizer;
 
 import org.joda.time.LocalDate;
@@ -72,6 +73,22 @@ public class Week {
 		return weeknum;
 	}
 
+	private LocalDate getMonday() {
+		return getDayInWeek(year, weeknum).withDayOfWeek(1);
+	}
+
+	public String getMondayString() {
+		return DateFormat.getDateInstance(DateFormat.SHORT).format(getMonday().toDate());
+	}
+
+	private LocalDate getSunday() {
+		return getDayInWeek(year, weeknum).withDayOfWeek(7);
+	}
+
+	public String getSundayString() {
+		return DateFormat.getDateInstance(DateFormat.SHORT).format(getSunday().toDate());
+	}
+
 	public boolean isBefore(Week other) {
 		if (this.year == other.year) {
 			return this.weeknum < other.weeknum;
@@ -103,4 +120,5 @@ public class Week {
 	public int hashCode() {
 		return 21 * weeknum() + year();
 	}
+
 }

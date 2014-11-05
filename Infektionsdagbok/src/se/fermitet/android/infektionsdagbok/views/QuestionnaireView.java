@@ -11,6 +11,8 @@ import android.widget.TextView;
 public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 
 	private TextView weekDisplay;
+	private TextView mondayTV;
+	private TextView sundayTV;
 	private SparseArray<QuestionView> questions;
 
 	private WeekAnswers model;
@@ -43,6 +45,8 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 
 	private void attachWidgets() throws Exception {
 		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
+		mondayTV = (TextView) findViewById(R.id.mondayTV);
+		sundayTV = (TextView) findViewById(R.id.sundayTV);
 	}
 
 
@@ -101,6 +105,9 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 			QuestionView qv = (QuestionView) view;
 			syncAnswer(qv);
 		}
+
+		mondayTV.setText(model.week.getMondayString());
+		sundayTV.setText(model.week.getSundayString());
 	}
 
 	private void syncAnswer(QuestionView qv) throws Exception {
