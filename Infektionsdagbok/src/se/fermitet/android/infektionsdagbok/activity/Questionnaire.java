@@ -5,6 +5,7 @@ import org.joda.time.DateTimeConstants;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
+import se.fermitet.android.infektionsdagbok.demo.DemoDataProvider;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.receiver.NotificationAlarmReceiver;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
@@ -72,10 +73,37 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 		case R.id.actionSickDay:
 			startActivity(new Intent(this, SickDayMasterActivity.class));
 			return true;
+		case R.id.actionSetupDemo:
+			setupDemoData();
+			return true;
+		case R.id.actionClear:
+			clearData();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+    // TODO: Delete.  Also delete menu option
+	private void setupDemoData() {
+		DemoDataProvider ddp = new DemoDataProvider(getLocalApplication().getModelManager());
+		try {
+			ddp.saveDemoData();
+		} catch (Exception e) {
+			view.handleException(e);
+		}
+	}
+
+    // TODO: Delete.  Also delete menu option
+	private void clearData() {
+		try {
+			getLocalApplication().getModelManager().reset();
+		} catch (Exception e) {
+			view.handleException(e);
+		}
+	}
+
+
 
 	@Override
 	public void onWeekIncrement() {

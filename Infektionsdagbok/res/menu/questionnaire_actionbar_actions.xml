@@ -7,22 +7,32 @@
         android:title="">
         <menu>
             <item
-                android:id="@+id/actionSickDay"
-                android:icon="@drawable/ic_sick_day"
-                android:showAsAction="ifRoom"
-                android:title="Sjukskrivningar">
-            </item>
-            <item
                 android:id="@+id/actionTreatment"
                 android:icon="@drawable/pills_icon"
                 android:showAsAction="ifRoom"
                 android:title="Behandlingar">
             </item>
             <item
+                android:id="@+id/actionSickDay"
+                android:icon="@drawable/ic_sick_day"
+                android:showAsAction="ifRoom"
+                android:title="Sjukskrivningar">
+            </item>
+            <item
                 android:id="@+id/actionExport"
                 android:icon="@drawable/ic_action_email"
                 android:showAsAction="ifRoom"
                 android:title="Export">
+            </item>
+            <item
+                android:id="@+id/actionSetupDemo"
+                android:showAsAction="ifRoom"
+                android:title="Demodata">
+            </item>
+            <item
+                android:id="@+id/actionClear"
+                android:showAsAction="ifRoom"
+                android:title="Rensa">
             </item>
         </menu>
     </item>
