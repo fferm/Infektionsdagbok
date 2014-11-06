@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -57,6 +58,20 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 					clickOnPosition(position);
 				} catch (Exception e) {
 					handleException(e);
+				}
+			}
+		});
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				try {
+					clickOnPosition(position);
+					editBTN.performClick();
+					return true;
+				} catch (Exception e) {
+					handleException(e);
+					return false;
 				}
 			}
 		});

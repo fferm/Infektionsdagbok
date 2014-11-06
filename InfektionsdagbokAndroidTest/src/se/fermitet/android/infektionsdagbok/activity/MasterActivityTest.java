@@ -183,13 +183,20 @@ public abstract class MasterActivityTest
 		}
 	}
 
+	private static int incrementer = 0;
+
 	private void clickOnItemInListClickEditAndCheckEditorContentsThenGoBack(ITEM item) throws Exception {
 		assertTrue("Adapter must contain item: " + item, adapterContains(item));
 		int i = indexOfItemInAdapter(item);
 
-		solo.clickInList(i + 1);
-		Thread.sleep(100);
-		solo.clickOnView(solo.getView(R.id.editBTN));
+		// Every other time through clicking the item and clicking the edit button, every other time through long click
+		if (incrementer++ % 2 == 0) {
+			solo.clickInList(i + 1);
+			Thread.sleep(100);
+			solo.clickOnView(solo.getView(R.id.editBTN));
+		} else {
+			solo.clickLongInList(i + 1);
+		}
 		timeoutGetCurrentActivity(detailActivityClass);
 		checkDetailEditorsContents(item);
 
