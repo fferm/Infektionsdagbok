@@ -24,17 +24,8 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		listView = (ListView) findViewById(R.id.itemListView);
 
 		editBTN = (ImageButton) findViewById(R.id.editBTN);
@@ -42,7 +33,9 @@ public abstract class InfektionsdagbokMasterView<ITEM extends ModelObjectBase, A
 		newBTN = (ImageButton) findViewById(R.id.newBTN);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupEditBTN();
 		setupDeleteBTN();
 		setupNewBTN();

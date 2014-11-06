@@ -32,30 +32,23 @@ public class ExportView extends InfektionsdagbokRelativeLayoutView {
 		super(context, attrs);
 	}
 
-	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
 	public void setYearsToShow(List<Integer> yearsToShow) throws Exception {
 		this.yearsToShow = yearsToShow;
 		setupSpinner();
 	}
 
-	private void attachWidgets() throws Exception {
+	@Override
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		exportBTN = (Button) findViewById(R.id.exportBTN);
 		yearSpinner = (Spinner) findViewById(R.id.yearSpinner);
 		nameEdit = (EditText) findViewById(R.id.nameEdit);
 		ssnEdit = (EditText) findViewById(R.id.ssnEdit);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		exportBTN.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

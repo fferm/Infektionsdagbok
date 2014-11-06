@@ -22,24 +22,17 @@ public class SickDayDetailView extends InfektionsdagbokDetailView<SickDay> {
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		startHeader = (TextView) findViewById(R.id.startHeader);
 		startTV = (DateTextView) findViewById(R.id.startTV);
 		endHeader = (TextView) findViewById(R.id.endHeader);
 		endTV = (DateTextView) findViewById(R.id.endTV);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupStartTV();
 		setupEndTV();
 	}

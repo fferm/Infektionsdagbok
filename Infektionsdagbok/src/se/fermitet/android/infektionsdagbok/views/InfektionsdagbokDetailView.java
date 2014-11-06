@@ -24,23 +24,16 @@ public abstract class InfektionsdagbokDetailView<ITEM extends ModelObjectBase> e
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		saveBTN = (ImageButton) findViewById(R.id.saveBTN);
 		cancelBTN = (ImageButton) findViewById(R.id.cancelBTN);
 		deleteBTN = (ImageButton) findViewById(R.id.deleteBTN);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupSaveBTN();
 		setupCancelBTN();
 		setupDeleteBTN();

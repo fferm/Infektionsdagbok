@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class InfektionsdagbokRelativeLayoutView extends RelativeLayout implements InfektionsdagbokView {
+public abstract class InfektionsdagbokRelativeLayoutView extends RelativeLayout implements InfektionsdagbokView {
 	private InfektionsdagbokViewHandler handler;
 	private String headerText;
 
@@ -28,19 +28,30 @@ public class InfektionsdagbokRelativeLayoutView extends RelativeLayout implement
 	}
 
 	@Override
-	public void handleException(Exception e) {
-		handler.handleExceptionFromView(e);
+	protected void onFinishInflate() {
+		try {
+			attachWidgets();
+			super.onFinishInflate();
+			setupWidgets();
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
-	@Override
-	protected void onFinishInflate() {
-		super.onFinishInflate();
+	protected void attachWidgets() throws Exception {
+	}
 
+	protected void setupWidgets() throws Exception {
 		if (headerText != null) {
 			TextView titleTV = (TextView) findViewById(R.id.title);
 			if (titleTV != null) titleTV.setText(headerText);
 		}
 	}
 
+
+	@Override
+	public void handleException(Exception e) {
+		handler.handleExceptionFromView(e);
+	}
 }
 

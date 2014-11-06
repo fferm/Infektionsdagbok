@@ -17,23 +17,16 @@ public class SickDayMasterView extends InfektionsdagbokMasterView<SickDay, SickD
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		ViewGroup headerRow = (ViewGroup) findViewById(R.id.header);
 		startHeader = (TextView) headerRow.findViewById(R.id.startValueField);
 		endHeader = (TextView) headerRow.findViewById(R.id.endValueField);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupListViewHeader();
 	}
 

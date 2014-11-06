@@ -30,19 +30,9 @@ public class TreatmentDetailView extends InfektionsdagbokDetailView<Treatment> {
 		return new Treatment();
 	}
 
-
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		startHeader = (TextView) findViewById(R.id.startHeader);
 		startTV = (DateTextView) findViewById(R.id.startTV);
 		numDaysEdit = (EditText) findViewById(R.id.numDaysEdit);
@@ -50,7 +40,9 @@ public class TreatmentDetailView extends InfektionsdagbokDetailView<Treatment> {
 		infectionTypeEdit = (EditText) findViewById(R.id.infectionTypeEdit);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupStartTV();
 		setupMedicineEdit();
 		setupInfectionTypeEdit();

@@ -17,23 +17,16 @@ public class TreatmentMasterView extends InfektionsdagbokMasterView<Treatment, T
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-
-	private void attachWidgets() throws Exception {
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
 		ViewGroup headerRow = (ViewGroup) findViewById(R.id.header);
 		startListHeader = (TextView) headerRow.findViewById(R.id.dateValueField);
 		numDaysListHeader = (TextView) headerRow.findViewById(R.id.numDaysValueField);
 	}
 
-	private void setupWidgets() throws Exception {
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
 		setupListViewHeader();
 	}
 

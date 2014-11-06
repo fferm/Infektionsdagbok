@@ -24,14 +24,20 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 	}
 
 	@Override
-	protected void onFinishInflate() {
-		try {
-			attachWidgets();
-			super.onFinishInflate();
-			setupWidgets();
-		} catch (Exception e) {
-			handleException(e);
-		}
+	protected void attachWidgets() throws Exception {
+		super.attachWidgets();
+		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
+		mondayTV = (TextView) findViewById(R.id.mondayTV);
+		sundayTV = (TextView) findViewById(R.id.sundayTV);
+	}
+
+
+	@Override
+	protected void setupWidgets() throws Exception {
+		super.setupWidgets();
+		setupSwipes();
+		setupWeekNavigationButtons();
+		setupQuestions();
 	}
 
 	public void setModel(WeekAnswers model) throws Exception {
@@ -42,19 +48,6 @@ public class QuestionnaireView extends InfektionsdagbokRelativeLayoutView {
 
 	public void setOnWeekChangeListener(OnWeekChangeListener listener) throws Exception {
 		this.weekChangeListener = listener;
-	}
-
-	private void attachWidgets() throws Exception {
-		weekDisplay = (TextView) findViewById(R.id.weekDisplay);
-		mondayTV = (TextView) findViewById(R.id.mondayTV);
-		sundayTV = (TextView) findViewById(R.id.sundayTV);
-	}
-
-
-	private void setupWidgets() throws Exception {
-		setupSwipes();
-		setupWeekNavigationButtons();
-		setupQuestions();
 	}
 
 	private void setupSwipes() {
