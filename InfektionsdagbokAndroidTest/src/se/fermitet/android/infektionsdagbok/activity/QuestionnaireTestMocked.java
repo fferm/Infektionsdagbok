@@ -20,6 +20,7 @@ import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
 import android.app.AlarmManager;
 import android.app.Instrumentation;
 import android.app.PendingIntent;
+import android.os.Vibrator;
 import android.view.View;
 
 public class QuestionnaireTestMocked extends QuestionnaireTest {
@@ -120,10 +121,7 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 	}
 
 	public void testAlarmForNotificationIsSet() throws Exception {
-		InfektionsdagbokActivity<QuestionnaireView> questionnaire = getActivity();
-		InfektionsdagbokApplication app = (InfektionsdagbokApplication) questionnaire.getApplication();
-
-		AlarmManager mgr = app.getAlarmManager();
+		AlarmManager mgr = getActivity().getLocalApplication().getAlarmManager();
 
 		DateTime startInstant = new DateTime();
 		startInstant = startInstant.dayOfWeek().setCopy(DateTimeConstants.SUNDAY);
@@ -133,6 +131,18 @@ public class QuestionnaireTestMocked extends QuestionnaireTest {
 
 		// I was unable to check the intent...
 		verify(mgr, timeout((int) TIMEOUT)).setRepeating(eq(AlarmManager.RTC_WAKEUP), eq(startInstant.getMillis()), eq(week), (PendingIntent) isNotNull());
+	}
+
+	public void testVibrateWhenChangingWeeks() throws Exception {
+		Vibrator vib = getActivity().getLocalApplication().getVibrator();
+
+		solo.clickOnView(solo.getView(R.id.nextWeek));
+		verify(vib, timeout((int) TIMEOUT)).vibrate(anyInt());
+
+		reset(vib);
+
+		solo.clickOnView(solo.getView(R.id.previousWeek));
+		verify(vib, timeout((int) TIMEOUT)).vibrate(anyInt());
 	}
 }
 

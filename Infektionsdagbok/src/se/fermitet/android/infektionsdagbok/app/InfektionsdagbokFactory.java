@@ -5,6 +5,7 @@ import se.fermitet.android.infektionsdagbok.storage.Storage;
 import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokViewHandler;
 import android.app.AlarmManager;
 import android.content.Context;
+import android.os.Vibrator;
 
 public class InfektionsdagbokFactory implements Factory {
 	private Context context;
@@ -34,6 +35,10 @@ public class InfektionsdagbokFactory implements Factory {
 	@Override
 	public InfektionsdagbokViewHandler createInfektionsdagbokViewHandler(Context context) {
 		return new InfektionsdagbokViewHandler(context);
+	}
+	@Override
+	public Vibrator getVibrator() {
+		return (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 }
 

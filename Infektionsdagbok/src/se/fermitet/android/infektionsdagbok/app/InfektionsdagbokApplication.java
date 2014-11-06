@@ -5,6 +5,7 @@ import se.fermitet.android.infektionsdagbok.storage.EmailHandler;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
 import android.app.AlarmManager;
 import android.app.Application;
+import android.os.Vibrator;
 
 public class InfektionsdagbokApplication extends Application {
 	private ModelManager modelManager = null;
@@ -12,6 +13,7 @@ public class InfektionsdagbokApplication extends Application {
 	private Factory factory = null;
 	private AlarmManager alarmManager = null;
 	private EmailHandler emailHandler = null;
+	private Vibrator vibrator;
 
 	private static InfektionsdagbokApplication instance = null;
 	public InfektionsdagbokApplication() {
@@ -58,11 +60,20 @@ public class InfektionsdagbokApplication extends Application {
 		return this.emailHandler;
 	}
 
+	public Vibrator getVibrator() {
+		if (this.vibrator == null) {
+			this.vibrator = getFactory().getVibrator();
+		}
+		return this.vibrator;
+	}
+
 	public void clear() {
 		this.modelManager = null;
 		this.storage = null;
 		this.factory = null;
 		this.alarmManager = null;
+		this.vibrator = null;
+		this.emailHandler = null;
 	}
 
 	public void setFactory(Factory factory) {
