@@ -7,6 +7,12 @@
         android:title="">
         <menu>
             <item
+                android:id="@+id/actionQuestionnaire"
+                android:icon="@drawable/ic_question"
+                android:showAsAction="ifRoom"
+                android:title="Veckofrågor">
+            </item>
+            <item
                 android:id="@+id/actionTreatment"
                 android:icon="@drawable/pills_icon"
                 android:showAsAction="ifRoom"

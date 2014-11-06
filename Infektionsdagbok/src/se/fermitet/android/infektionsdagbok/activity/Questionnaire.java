@@ -5,7 +5,6 @@ import org.joda.time.DateTimeConstants;
 
 import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.app.InfektionsdagbokApplication;
-import se.fermitet.android.infektionsdagbok.demo.DemoDataProvider;
 import se.fermitet.android.infektionsdagbok.model.WeekAnswers;
 import se.fermitet.android.infektionsdagbok.receiver.NotificationAlarmReceiver;
 import se.fermitet.android.infektionsdagbok.views.QuestionnaireView;
@@ -14,8 +13,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> implements OnWeekChangeListener {
 
@@ -53,57 +50,6 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 
 		am.setRepeating(AlarmManager.RTC_WAKEUP, sundayAtSevenPM, week, pIntent);
 	}
-
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
- 	   	getMenuInflater().inflate(R.menu.questionnaire_actionbar_actions, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-		case R.id.actionExport:
-			startActivity(new Intent(this, ExportActivity.class));
-			return true;
-		case R.id.actionTreatment:
-			startActivity(new Intent(this, TreatmentMasterActivity.class));
-			return true;
-		case R.id.actionSickDay:
-			startActivity(new Intent(this, SickDayMasterActivity.class));
-			return true;
-		case R.id.actionSetupDemo:
-			setupDemoData();
-			return true;
-		case R.id.actionClear:
-			clearData();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-    // TODO: Delete.  Also delete menu option
-	private void setupDemoData() {
-		DemoDataProvider ddp = new DemoDataProvider(getLocalApplication().getModelManager());
-		try {
-			ddp.saveDemoData();
-		} catch (Exception e) {
-			view.handleException(e);
-		}
-	}
-
-    // TODO: Delete.  Also delete menu option
-	private void clearData() {
-		try {
-			getLocalApplication().getModelManager().reset();
-		} catch (Exception e) {
-			view.handleException(e);
-		}
-	}
-
-
 
 	@Override
 	public void onWeekIncrement() {
