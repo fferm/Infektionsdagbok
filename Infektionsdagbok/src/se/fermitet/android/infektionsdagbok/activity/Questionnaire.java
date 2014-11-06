@@ -54,7 +54,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 	@Override
 	public void onWeekIncrement() {
 		try {
-			getLocalApplication().getVibrator().vibrate(75);
+			getLocalApplication().vibrate();
 			setNewWeek(getLocalApplication().getModelManager().getNextWeekAnswers(this.model));
 		} catch (Exception e) {
 			view.handleException(e);
@@ -65,7 +65,7 @@ public class Questionnaire extends InfektionsdagbokActivity<QuestionnaireView> i
 	@Override
 	public void onWeekDecrement() {
 		try {
-			getLocalApplication().getVibrator().vibrate(75);
+			getLocalApplication().vibrate();
 			setNewWeek(getLocalApplication().getModelManager().getPreviousWeekAnswers(this.model));
 		} catch (Exception e) {
 			view.handleException(e);

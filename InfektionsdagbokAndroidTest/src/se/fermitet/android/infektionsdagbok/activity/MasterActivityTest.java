@@ -1,5 +1,8 @@
 package se.fermitet.android.infektionsdagbok.activity;
 
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.*;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
@@ -8,6 +11,7 @@ import se.fermitet.android.infektionsdagbok.R;
 import se.fermitet.android.infektionsdagbok.model.ModelManager;
 import se.fermitet.android.infektionsdagbok.model.ModelObjectBase;
 import se.fermitet.android.infektionsdagbok.storage.Storage;
+import se.fermitet.android.infektionsdagbok.test.MockedVibratorFactory;
 import se.fermitet.android.infektionsdagbok.views.InfektionsdagbokListAdapter;
 import android.view.View;
 import android.widget.ImageButton;
@@ -38,7 +42,7 @@ public abstract class MasterActivityTest
 	protected abstract void editUIBasedOnItem(ITEM itemWithNewValues) throws Exception;
 
 	public MasterActivityTest(Class<ACTIVITY> masterActivityClass, Class<? extends InfektionsdagbokActivity> detailActivityClass, Class<ITEM> itemClass) {
-		super(masterActivityClass);
+		super(masterActivityClass, MockedVibratorFactory.class);
 
 		this.masterActivityClass = masterActivityClass;
 		this.detailActivityClass = detailActivityClass;
@@ -203,7 +207,7 @@ public abstract class MasterActivityTest
 		ITEM toDelete = adapter.getItem(0);
 
 		solo.clickOnView(solo.getView(R.id.deleteBTN));
-
+		verify(getActivity().getLocalApplication().getVibrator(), timeout((int) TIMEOUT)).vibrate(anyInt());
 		checkItemIsDeleted(toDelete);
 
 		checkNothingSelectedAndCorrectButtonsEnabled();
@@ -291,6 +295,7 @@ public abstract class MasterActivityTest
 		editUIBasedOnItem(withNewValues);
 
 		solo.clickOnView(solo.getView(R.id.saveBTN));
+		verify(getActivity().getLocalApplication().getVibrator(), timeout((int) TIMEOUT)).vibrate(anyInt());
 		timeoutGetCurrentActivity(masterActivityClass);
 
 		// Check file
@@ -367,6 +372,7 @@ public abstract class MasterActivityTest
 
 		// Click save
 		solo.clickOnView(solo.getView(R.id.saveBTN));
+		verify(getActivity().getLocalApplication().getVibrator(), timeout((int) TIMEOUT)).vibrate(anyInt());
 		timeoutGetCurrentActivity(masterActivityClass);
 
 		// Check saved data

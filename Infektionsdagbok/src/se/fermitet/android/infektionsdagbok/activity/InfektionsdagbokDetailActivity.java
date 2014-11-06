@@ -38,6 +38,7 @@ public class InfektionsdagbokDetailActivity<VIEW extends InfektionsdagbokDetailV
 
 			@Override
 			public void onSavePressed(ITEM item) throws Exception {
+				getLocalApplication().vibrate();
 				getLocalApplication().getModelManager().save(item);
 				finish();
 			}
@@ -49,6 +50,7 @@ public class InfektionsdagbokDetailActivity<VIEW extends InfektionsdagbokDetailV
 
 			@Override
 			public void onDeletePressed(ITEM item) throws Exception {
+				getLocalApplication().vibrate();
 				getLocalApplication().getModelManager().delete(item);
 				finish();
 			}

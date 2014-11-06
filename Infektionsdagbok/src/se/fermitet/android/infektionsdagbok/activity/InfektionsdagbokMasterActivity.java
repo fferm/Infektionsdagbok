@@ -52,6 +52,7 @@ public abstract class InfektionsdagbokMasterActivity<
 
 			@Override
 			public void onDeletePressed(ITEM item) throws Exception {
+				getLocalApplication().vibrate();
 				getLocalApplication().getModelManager().delete(item);
 				syncViewWithStoredData();
 			}

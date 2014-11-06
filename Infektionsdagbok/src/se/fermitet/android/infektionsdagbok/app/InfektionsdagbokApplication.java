@@ -67,6 +67,10 @@ public class InfektionsdagbokApplication extends Application {
 		return this.vibrator;
 	}
 
+	public void vibrate() {
+		getVibrator().vibrate(75);
+	}
+
 	public void clear() {
 		this.modelManager = null;
 		this.storage = null;

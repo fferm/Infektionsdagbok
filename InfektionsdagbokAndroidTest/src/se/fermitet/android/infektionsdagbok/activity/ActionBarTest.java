@@ -4,11 +4,11 @@ import se.fermitet.android.infektionsdagbok.R;
 import android.app.ActionBar;
 import android.app.Activity;
 
-public abstract class TestActionBar<ACTIVITY extends Activity> extends ActivityTestWithSolo<ACTIVITY> {
+public abstract class ActionBarTest<ACTIVITY extends Activity> extends ActivityTestWithSolo<ACTIVITY> {
 
 	private Class<? extends Activity> startingClass;
 
-	public TestActionBar(Class<ACTIVITY> startingClass) {
+	public ActionBarTest(Class<ACTIVITY> startingClass) {
 		super(startingClass);
 		this.startingClass = startingClass;
 	}
